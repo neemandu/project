@@ -31,6 +31,8 @@ jQuery(function($){
             IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('error', IO.error );
+            // Our Bindings:
+            IO.socket.on('signInPlayer', IO.signInPlayer);
         },
 
         /**
@@ -109,6 +111,17 @@ jQuery(function($){
         error : function(data) {
             alert(data.message);
         }
+        
+        /**
+         * *************************************************************************
+         * our IO functions:
+         */
+        
+        signInPlayer : function()
+        {
+        	App.$gameArea.html(App.$CT_signedIn);
+            App.doTextFit('.title');
+        }
 
     };
 
@@ -168,6 +181,8 @@ jQuery(function($){
             App.$templateJoinGame = $('#join-game-template').html();
             App.$hostGame = $('#host-game-template').html();
             App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
+            // our templates:
+            App.$CT_signedIn = $('#CT_signedIn').html();
         },
 
         /**
@@ -182,6 +197,8 @@ jQuery(function($){
             App.$doc.on('click', '#btnStart',App.Player.onPlayerStartClick);
             App.$doc.on('click', '.btnAnswer',App.Player.onPlayerAnswerClick);
             App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
+            // our changes:
+            App.$doc.on('click', '#btnSingIn', App.Player.onSignIn);
         },
 
         /* *************************************
@@ -558,6 +575,16 @@ jQuery(function($){
                             .addClass('btn')
                             .addClass('btnGameOver')
                     );
+            }
+            
+            /**
+             * ************************************************************************
+             * our functions:
+             */
+            
+            onSignIn : function()
+            {
+                IO.socket.emit('signInPlayer');
             }
         },
 

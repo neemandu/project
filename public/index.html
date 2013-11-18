@@ -15,119 +15,147 @@
 <body>
 
 
-    <div id="gameArea">
-        <!-- This is where the templates defined below will be used -->
+<div id="gameArea">
+    <!-- This is where the templates defined below will be used -->
+</div>
+
+
+<!-- our templates -------------------------------------------- -->
+
+<!-- Main Title Screen that appears when the page loads for the first time -->
+<script id="CT-intro-screen-template" type="text/template">
+
+    <div class="topDiv">
+
+        <div>
+            COLOR-TRAILS
+        </div>
+
+        <div class="buttons">
+
+            <button id="btnCreateGame" class="BigButton">CREATE</button>
+            <button id="btnJoinGame" class="BigButton">JOIN</button>
+            <button id="btnSingIn" class="BigButton">Sign In</button>
+            <div style="clear:both"></div>
+        </div>
+
     </div>
 
-    <!-- Main Title Screen that appears when the page loads for the first time -->
-    <script id="intro-screen-template" type="text/template">
+</script>
 
-        <div class="titleWrapper">
+<script id="CT_signedIn" type="text/template">
 
-            <div class="title">
-                ANAGRAMMATIX
-            </div>
+    <div class="topDiv">
 
-            <div class="buttons">
-
-                <button id="btnCreateGame" class="btn left">CREATE</button>
-                <button id="btnJoinGame" class="btn right">JOIN</button>
-                <div style="clear:both"></div>
-            </div>
-
+        <div>
+            SIGNED IN !!!
         </div>
 
-    </script>
+        <div class="buttons">
 
- 	<!-- Main Title Screen that appears when the page loads for the first time -->
-    <script id="CT-intro-screen-template" type="text/template">
-
-        <div class="titleWrapper">
-
-            <div class="title">
-                COLOR-TRAILS
-            </div>
-
-            <div class="buttons">
-
-                <button id="btnCreateGame" class="btn left">CREATE</button>
-                <button id="btnJoinGame" class="btn right">JOIN</button>
-                <div style="clear:both"></div>
-            </div>
-
+            <button id="btnCreateGame" class="BigButton">CREATE</button>
+            <button id="btnJoinGame" class="BigButton">JOIN</button>
+            <button id="btnSingIn" class="BigButton">Sign In</button>
+            <div style="clear:both"></div>
         </div>
 
-    </script>
+    </div>
 
-    <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
-    <script id="create-game-template" type="text/template">
-        <div class="createGameWrapper">
+</script>
 
-            <div class="info">Open this site on your mobile device:</div>
-            <div id="gameURL" class="infoBig">Error!</div>
 
-            <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
-            <div id="spanNewGameCode" class="gameId">Error!</div>
+<!-- their templates -------------------------------------------- -->
 
-            <div id="playersWaiting"></div>
+
+<!-- Main Title Screen that appears when the page loads for the first time -->
+<script id="intro-screen-template" type="text/template">
+
+    <div class="titleWrapper">
+
+        <div class="title">
+            ANAGRAMMATIX
         </div>
-    </script>
 
-    <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
-    <script id="join-game-template" type="text/template">
-        <div class="joinGameWrapper">
-            <div class="info">
-                <label for="inputPlayerName">Your Name:</label>
-                <input id="inputPlayerName" type="text" />
-            </div>
+        <div class="buttons">
 
-            <div class="info">
-                <label for="inputGameId">Game ID:</label>
-                <input id="inputGameId" type="text"/>
-            </div>
-
-            <div class="info buttons">
-                <button id="btnStart" class="btn">Start</button>
-                <div id="playerWaitingMessage"></div>
-            </div>
+            <button id="btnCreateGame" class="btn left">CREATE</button>
+            <button id="btnJoinGame" class="btn right">JOIN</button>
+            <div style="clear:both"></div>
         </div>
-    </script>
 
-    <!-- This is the 'Host' screen. It displays the word for each player to match -->
-    <script id="host-game-template" type="text/template">
-        <div id="wordArea">
-            <div id="hostWord">5</div>
+    </div>
+
+</script>
+
+<!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
+<script id="create-game-template" type="text/template">
+    <div class="createGameWrapper">
+
+        <div class="info">Open this site on your mobile device:</div>
+        <div id="gameURL" class="infoBig">Error!</div>
+
+        <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
+        <div id="spanNewGameCode" class="gameId">Error!</div>
+
+        <div id="playersWaiting"></div>
+    </div>
+</script>
+
+<!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
+<script id="join-game-template" type="text/template">
+    <div class="joinGameWrapper">
+        <div class="info">
+            <label for="inputPlayerName">Your Name:</label>
+            <input id="inputPlayerName" type="text" />
         </div>
-        <div id="playerScores">
-            <div id="player1Score" class="playerScore">
-                <span class="score">0</span><span class="playerName">Player 1</span>
-            </div>
-            <div id="player2Score" class="playerScore">
-                <span class="playerName">Player 2</span><span class="score">0</span>
-            </div>
+
+        <div class="info">
+            <label for="inputGameId">Game ID:</label>
+            <input id="inputGameId" type="text"/>
         </div>
-    </script>
 
-    <!-- JavaScript Libraries -->
+        <div class="info buttons">
+            <button id="btnStart" class="btn">Start</button>
+            <div id="playerWaitingMessage"></div>
+        </div>
+    </div>
+</script>
 
-    <!-- jQuery! -->
-    <script src="libs/jquery-2.0.2.min.js"></script>
+<!-- This is the 'Host' screen. It displays the word for each player to match -->
+<script id="host-game-template" type="text/template">
+    <div id="wordArea">
+        <div id="hostWord">5</div>
+    </div>
+    <div id="playerScores">
+        <div id="player1Score" class="playerScore">
+            <span class="score">0</span><span class="playerName">Player 1</span>
+        </div>
+        <div id="player2Score" class="playerScore">
+            <span class="playerName">Player 2</span><span class="score">0</span>
+        </div>
+    </div>
+</script>
 
-    <!-- TextFit resizes text to fill a container.
-        It's used so the titles and game words fit properly on any size screen.
-        https://github.com/STRML/textFit   -->
-    <script src="libs/textFit.min.js"></script>
+<!-- JavaScript Libraries -->
 
-    <!-- FastClick is used to eliminate the 300ms delay when clicking items on a mobile device
-        https://github.com/ftlabs/fastclick -->
-    <script src="libs/fastclick.js"></script>
+<!-- jQuery! -->
+<script src="libs/jquery-2.0.2.min.js"></script>
 
-    <!-- If Socket.IO is used with Express, then the /socket.io/ path will
-        serve the proper Socket.IO javascript files used by the browser -->
-    <script src="/socket.io/socket.io.js"></script>
+<!-- TextFit resizes text to fill a container.
+    It's used so the titles and game words fit properly on any size screen.
+    https://github.com/STRML/textFit   -->
+<script src="libs/textFit.min.js"></script>
 
-    <!-- app.js is where all the client-side Anagrammatix game logic -->
-    <script src="app.js"></script>
+<!-- FastClick is used to eliminate the 300ms delay when clicking items on a mobile device
+    https://github.com/ftlabs/fastclick -->
+<script src="libs/fastclick.js"></script>
+
+<!-- If Socket.IO is used with Express, then the /socket.io/ path will
+    serve the proper Socket.IO javascript files used by the browser -->
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- app.js is where all the client-side Anagrammatix game logic -->
+<script src="app.js"></script>
 
 </body>
 </html>
