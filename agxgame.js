@@ -1,6 +1,6 @@
 var io;
 var gameSocket;
-/**DDDDDDDDDDDD*/
+/**signInPlayer*/
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -19,6 +19,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('hostRoomFull', hostPrepareGame);
     gameSocket.on('hostCountdownFinished', hostStartGame);
     gameSocket.on('hostNextRound', hostNextRound);
+    gameSocket.on('signInPlayer', signInPlayer);
 
     // Player Events
     gameSocket.on('playerJoinGame', playerJoinGame);
@@ -44,6 +45,15 @@ function hostCreateNewGame() {
 
     // Join the Room and wait for the players
     this.join(thisGameId.toString());
+};
+
+ /**
+ * sign in a new player!!
+ */
+function signInPlayer() {
+
+    this.emit('signInPlayer');
+
 };
 
 /*
