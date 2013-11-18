@@ -167,6 +167,7 @@ jQuery(function($){
             App.$templateNewGame = $('#create-game-template').html();
             App.$templateJoinGame = $('#join-game-template').html();
             App.$hostGame = $('#host-game-template').html();
+            App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
         },
 
         /**
@@ -192,7 +193,7 @@ jQuery(function($){
          * (with Start and Join buttons)
          */
         showInitScreen: function() {
-            App.$gameArea.html(App.$templateIntroScreen);
+            App.$gameArea.html(App.$CTtemplateIntroScreen);
             App.doTextFit('.title');
         },
 
