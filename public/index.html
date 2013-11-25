@@ -50,7 +50,6 @@
 
             <div class="buttons">
 
-                <button id="btnCreateGame" class="btn left">CREATE</button>
                 <button id="btnJoinGame" class="btn right">JOIN</button>
                 <div style="clear:both"></div>
             </div>
@@ -84,6 +83,21 @@
             <div class="info">
                 <label for="inputGameId">Game ID:</label>
                 <input id="inputGameId" type="text"/>
+            </div>
+
+            <div class="info buttons">
+                <button id="btnStart" class="btn">Start</button>
+                <div id="playerWaitingMessage"></div>
+            </div>
+        </div>
+    </script>
+
+
+    <script id="join-game-CT" type="text/template">
+        <div class="joinGameWrapper">
+            <div class="info">
+                <label for="inputPlayerName">Your Name:</label>
+                <input id="inputPlayerName" type="text" />
             </div>
 
             <div class="info buttons">

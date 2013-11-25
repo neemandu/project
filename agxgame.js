@@ -1,5 +1,6 @@
 var io;
 var gameSocket;
+var shouldCreate = 0;
 /**aslkdjas l kdjalsk djaslkj dlaskjdlaksjdlkasd */
 
 /**
@@ -23,6 +24,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('playerJoinGame', playerJoinGame);
     gameSocket.on('playerAnswer', playerAnswer);
     gameSocket.on('playerRestart', playerRestart);
+    gameSocket.on('enterGame', enterGame);
 }
 
 /* *******************************
@@ -36,13 +38,23 @@ exports.initGame = function(sio, socket){
  */
 function hostCreateNewGame() {
     // Create a unique Socket.IO Room
-    var thisGameId = ( Math.random() * 100000 ) | 0;
+    var thisGameId = '2';//( Math.random() * 100000 ) | 0;
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
 
     // Join the Room and wait for the players
     this.join(thisGameId.toString());
+};
+
+
+function enterGame() {
+console.log(shouldCreate);
+    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
+    this.emit('enterGame', {shouldCreate: shouldCreate});
+
+    shouldCreate++;
+    console.log(shouldCreate);
 };
 
 /*
