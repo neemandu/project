@@ -70,14 +70,18 @@ console.log(shouldCreate);
  * @param gameId The game ID / room ID
  */
 function hostPrepareGame(gameId) {
+	console.log('hostPrepareGame');
+	
     var sock = this;
     var data = {
         mySocketId : sock.id,
         gameId : gameId
     };
+    console.log('mySocketId: '+sock.id);
+	console.log('gameId: '+gameId);
     //console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
-}
+};
 
 /*
  * The Countdown has finished, and the game begins!
@@ -85,7 +89,21 @@ function hostPrepareGame(gameId) {
  */
 function hostStartGame(gameId) {
     console.log('Game Started.');
-    sendWord(0,gameId);
+    var playerList = {};
+    var i=0;
+    for (var k in idSocketPair) {
+        if (idSocketPair.hasOwnProperty(k)) {
+            playerList[i] = k;
+            console.log('player #: '+playerList[i])
+            i++;
+        }
+    }
+    var data ={
+    		playerList : playerList,
+            gameId : gameId	
+    };
+    io.sockets.in(data.gameId).emit('GameStarted', data);
+   // sendWord(0,gameId);
 };
 
 /**

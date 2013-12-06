@@ -33,6 +33,7 @@ jQuery(function($){
             IO.socket.on('error', IO.error );
             IO.socket.on('enterGame', App.enterGame );
             IO.socket.on('recieveMessage', IO.recieveMessage );
+            IO.socket.on('GameStarted', IO.GameStarted );
         },
 
         /**
@@ -71,7 +72,8 @@ jQuery(function($){
          * @param data
          */
         beginNewGame : function(data) {
-            App[App.myRole].gameCountdown(data);
+        	App.Host.gameCountdown(data);
+            App[Player].gameCountdown(data);
         },
 
         /**
@@ -84,6 +86,25 @@ jQuery(function($){
 
             // Change the word for the Host and Player
             App[App.myRole].newWord(data);
+        },
+        /**
+         * @param data playerList: the players list, gameId
+         */
+        GameStarted : function(data) {
+            // Update the current round
+        	alert('GameStarted');
+            App.currentRound = data.round;
+            //alert as number of players to see if it passed .
+            var PList = data.playerList;
+            for (var k in PList) {
+                if (PList.hasOwnProperty(k)) {
+                	alert('key is: ' + k + ', value is: ' + PList[k]);
+                }
+            }
+            
+            App.$gameArea.html(App.$CTtemplateIntroScreen);
+            // Change the word for the Host and Player
+            
         },
 
         /**
@@ -114,7 +135,7 @@ jQuery(function($){
         
         recieveMessage : function(data) {
         	alert('recieveMessage: '+ data.msg);
-        	App[Player].recieveMessage(data); 	
+        //	App[Player].recieveMessage(data); 	
         }
 
     };
@@ -293,9 +314,9 @@ jQuery(function($){
                     App.Host.displayNewGameScreen();
                 }
                 // Update host screen
-                $('#playersWaiting')
-                    .append('<p/>')
-                    .text('Player ' + data.playerName + ' joined the game.');
+//                $('#playersWaiting')
+//                    .append('<p/>')
+//                    .text('Player ' + data.playerName + ' joined the game.');
 
                 // Store the new player's data on the Host.
                 App.Host.players.push(data);
@@ -341,29 +362,31 @@ jQuery(function($){
              * Show the countdown screen
              */
             gameCountdown : function() {
-
+            	
+            //	alert('gameCountdown');
                 // Prepare the game screen with new HTML
-                App.$gameArea.html(App.$hostGame);
-                App.doTextFit('#hostWord');
-
-                // Begin the on-screen countdown timer
-                var $secondsLeft = $('#hostWord');
-                App.countDown( $secondsLeft, 5, function(){
-                    IO.socket.emit('hostCountdownFinished', App.gameId);
-                });
+//                App.$gameArea.html(App.$hostGame);
+//                App.doTextFit('#hostWord');
+//
+//                // Begin the on-screen countdown timer
+//                var $secondsLeft = $('#hostWord');
+            	IO.socket.emit('hostCountdownFinished', App.gameId);
+//                App.countDown( $secondsLeft, 5, function(){
+//                    IO.socket.emit('hostCountdownFinished', App.gameId);
+//                });
 
                 // Display the players' names on screen
-                $('#player1Score')
-                    .find('.playerName')
-                    .html(App.Host.players[0].playerName);
-
-                $('#player2Score')
-                    .find('.playerName')
-                    .html(App.Host.players[1].playerName);
-
-                // Set the Score section on screen to 0 for each player.
-                $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
-                $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
+//                $('#player1Score')
+//                    .find('.playerName')
+//                    .html(App.Host.players[0].playerName);
+//
+//                $('#player2Score')
+//                    .find('.playerName')
+//                    .html(App.Host.players[1].playerName);
+//
+//                // Set the Score section on screen to 0 for each player.
+//                $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
+//                $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
             },
 
             /**
@@ -503,7 +526,7 @@ jQuery(function($){
             	// }
             	
             	
-            	
+            	alert('msg was sent');
             	// console.log('Player clicked "Start"');
 
                 // collect data to send to the server
@@ -576,6 +599,7 @@ jQuery(function($){
              * @param hostData
              */
             gameCountdown : function(hostData) {
+            	alert('gameCountdown');
                 App.Player.hostSocketId = hostData.mySocketId;
                 $('#gameArea')
                     .html('<div class="gameOver">Get Ready!</div>');
@@ -606,6 +630,8 @@ jQuery(function($){
                 // Insert the list onto the screen.
                 $('#gameArea').html($list);
             },
+            
+            
 
             /**
              * Show the "Game Over" screen.
@@ -644,8 +670,8 @@ jQuery(function($){
         countDown : function( $el, startTime, callback) {
 
             // Display the starting time on the screen.
-            $el.text(startTime);
-            App.doTextFit('#hostWord');
+//            $el.text(startTime);
+//            App.doTextFit('#hostWord');
 
             // console.log('Starting Countdown...');
 
@@ -655,11 +681,11 @@ jQuery(function($){
             // Decrement the displayed timer value on each 'tick'
             function countItDown(){
                 startTime -= 1
-                $el.text(startTime);
-                App.doTextFit('#hostWord');
+//                $el.text(startTime);
+//                App.doTextFit('#hostWord');
 
                 if( startTime <= 0 ){
-                    // console.log('Countdown Finished.');
+                   // console.log('Countdown Finished.');
 
                     // Stop the timer and do the callback.
                     clearInterval(timer);
