@@ -32,6 +32,7 @@ jQuery(function($){
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('error', IO.error );
             IO.socket.on('enterGame', App.enterGame );
+            IO.socket.on('recieveMessage', IO.recieveMessage );
         },
 
         /**
@@ -109,6 +110,11 @@ jQuery(function($){
          */
         error : function(data) {
             alert(data.message);
+        },
+        
+        recieveMessage : function(data) {
+        	alert('recieveMessage: '+ data.msg);
+        	App[Player].recieveMessage(data); 	
         }
 
     };
@@ -477,6 +483,7 @@ jQuery(function($){
                 // console.log('Clicked "Join A Game"');
 
                 // Display the Join Game HTML on the player's screen.
+            	
                 App.$gameArea.html(App.$CTJoinGame);
             },
 
@@ -485,9 +492,20 @@ jQuery(function($){
              * and clicked Start.
              */
             onPlayerStartClick: function() {
-                // console.log('Player clicked "Start"');
+                
+            	var data = {
+                        msg : 'hello',
+                        //gameId : +($('#inputGameId').val()),
+                        recieverId : 1
+                    };
+            	
+            	IO.socket.emit('sendMessage', data);
+            	
+            	
+            	// console.log('Player clicked "Start"');
 
                 // collect data to send to the server
+            	
                 var data = {
                     gameId : '2',
                     //gameId : +($('#inputGameId').val()),
@@ -600,7 +618,13 @@ jQuery(function($){
                             .addClass('btn')
                             .addClass('btnGameOver')
                     );
+            },
+            recieveMessage : function(data) {
+            	
+            	 $('#gameArea')
+                 .html('<div class="gameOver">'+data.msg+'</div>');
             }
+           
         },
 
 
