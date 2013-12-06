@@ -492,7 +492,7 @@ jQuery(function($){
              * and clicked Start.
              */
             onPlayerStartClick: function() {
-                
+                //sending msg to clinet number 1 {
             	var data = {
                         msg : 'hello',
                         //gameId : +($('#inputGameId').val()),
@@ -500,6 +500,8 @@ jQuery(function($){
                     };
             	
             	IO.socket.emit('sendMessage', data);
+            	// }
+            	
             	
             	
             	// console.log('Player clicked "Start"');

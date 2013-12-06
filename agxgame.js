@@ -174,7 +174,7 @@ function sendMessage(data) {
 	console.log('sendMessage');
 	var socket = idSocketPair[data.recieverId];
 	if(socket == null){
-		console.log('no such id')
+		console.log('trying to send message but the #id: '+recieverId+' doesnt exist')
 	}
 	else{
 		console.log(data.msg);
