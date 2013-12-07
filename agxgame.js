@@ -16,11 +16,11 @@ exports.initGame = function(sio, socket){
 	console.log('socket: '+socket.id+' joined');
 	idSocketPair[playerCounter] = socket;
 	console.log('playerCounter: '+playerCounter);
-	playerCounter++;
+	
     io = sio;
     gameSocket = socket;
-    gameSocket.emit('connected', { message: "You are connected!" });
-
+    gameSocket.emit('connected', { playerCounter: playerCounter });
+	playerCounter++;
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
     gameSocket.on('hostRoomFull', hostPrepareGame);

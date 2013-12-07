@@ -7,6 +7,7 @@ jQuery(function($){
      *
      * @type {{init: Function, bindEvents: Function, onConnected: Function, onNewGameCreated: Function, playerJoinedRoom: Function, beginNewGame: Function, onNewWordData: Function, hostCheckAnswer: Function, gameOver: Function, error: Function}}
      */
+	var myid =0;
     var IO = {
 
         /**
@@ -39,9 +40,11 @@ jQuery(function($){
         /**
          * The client is successfully connected!
          */
-        onConnected : function() {
+        onConnected : function(data) {
             // Cache a copy of the client's socket.IO session ID on the App
             App.mySocketId = IO.socket.socket.sessionid;
+			myid = data.playerCounter;
+		//	alert(myid);
             // console.log(data.message);
         },
 
@@ -98,7 +101,7 @@ jQuery(function($){
             var PList = data.playerList;
 			App.$gameArea.html(App.$CTtemplateIntroScreen1);
             for (var k in PList) {
-                if (PList.hasOwnProperty(k)) {
+                if (PList.hasOwnProperty(k)&&k!=myid) {
 					$('#playersTable tr:last').after('<tr><td>'+k+'</td><td>'+PList[k]+'</td></tr>');
 				
                 //	alert('key is: ' + k + ', value is: ' + PList[k]);
