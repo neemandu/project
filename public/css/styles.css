@@ -45,8 +45,8 @@ div.offersList
 	
 div.playersList
 {
-	width:250px;
-	height:450px;
+	width:150px;
+	height:250px;
 	border-style:groove;
 	background-color:#CCCCCC;
 	float:right;

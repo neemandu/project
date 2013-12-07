@@ -92,17 +92,28 @@ jQuery(function($){
          */
         GameStarted : function(data) {
             // Update the current round
-        	alert('GameStarted');
+        	//alert('GameStarted');
             App.currentRound = data.round;
             //alert as number of players to see if it passed .
             var PList = data.playerList;
+			App.$gameArea.html(App.$CTtemplateIntroScreen1);
             for (var k in PList) {
                 if (PList.hasOwnProperty(k)) {
-                	alert('key is: ' + k + ', value is: ' + PList[k]);
+					$('#playersTable tr:last').after('<tr><td>'+k+'</td><td>'+PList[k]+'</td></tr>');
+				
+                //	alert('key is: ' + k + ', value is: ' + PList[k]);
                 }
             }
-            
-            App.$gameArea.html(App.$CTtemplateIntroScreen);
+            		$('#playersTable').find('tr').click( function(){
+						var row = $(this).find('td:first').text();
+						   	var data = {
+								msg : 'hello',
+								//gameId : +($('#inputGameId').val()),
+								recieverId : row
+							};
+            	
+						IO.socket.emit('sendMessage', data);
+					});
             // Change the word for the Host and Player
             
         },
@@ -196,6 +207,7 @@ jQuery(function($){
             App.$templateJoinGame = $('#join-game-template').html();
             App.$hostGame = $('#host-game-template').html();
             App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
+			App.$CTtemplateIntroScreen1 = $('#CT-intro-screen-template1').html();
             App.$CTJoinGame = $('#join-game-CT').html();
         },
 
@@ -516,17 +528,11 @@ jQuery(function($){
              */
             onPlayerStartClick: function() {
                 //sending msg to clinet number 1 {
-            	var data = {
-                        msg : 'hello',
-                        //gameId : +($('#inputGameId').val()),
-                        recieverId : 1
-                    };
-            	
-            	IO.socket.emit('sendMessage', data);
+         
             	// }
             	
             	
-            	alert('msg was sent');
+            	//alert('msg was sent');
             	// console.log('Player clicked "Start"');
 
                 // collect data to send to the server
