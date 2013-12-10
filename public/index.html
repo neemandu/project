@@ -52,23 +52,152 @@
 
                 <button id="btnJoinGame" class="btn center">JOIN</button>
                 <div style="clear:both"></div>
+				<div id="playerWaitingMessage"></div>
             </div>
 
         </div>
 
     </script>
 	
+	<script id="CT-OfferToGet" type="text/template">
+		<table style="border:1px solid black;">
+			<tr>
+				<td id="SentBy">
+					Player: 
+				</td>
+				<td>
+					makes an offer of:
+				</td>	
+				<td>
+					<table id="colorsToOffer" style="border:1px solid black;">
+						<tr>
+							<td bgcolor="red" width="8"/>
+							<td>1</td>
+							<td bgcolor="green" width="8"/>
+							<td>2</td>
+							<td bgcolor="blue" width="8"/>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td bgcolor="purple" width="8"/>
+							<td>1</td>
+							<td bgcolor="yellow" width="8"/>
+							<td>2</td>
+							<td bgcolor="orange" width="8"/>
+							<td>3</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					in exchange for:
+				</td>
+				<td>
+					<table id="colorsToGet" style="border:1px solid black;">
+						<tr>
+							<td bgcolor="red" width="8"/>
+							<td>1</td>
+							<td bgcolor="green" width="8"/>
+							<td>2</td>
+							<td bgcolor="blue" width="8"/>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td bgcolor="purple" width="8"/>
+							<td>1</td>
+							<td bgcolor="yellow" width="8"/>
+							<td>2</td>
+							<td bgcolor="orange" width="8"/>
+							<td>3</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<div><button id="acceptOffer"> Accept </button></div>
+					<div><button id="rejectOffer"> Reject </button></div>
+				</td>
+			</tr>
+		</table>
+    </script>
+	
     <script id="CT-intro-screen-template1" type="text/template">
 
-        <div id="playersList" class="playersList">
-			<table id="playersTable" class="playersList">
-				<tr>
-					<td>Players</td>
-					<td>List</td>
-				</tr>
-			</table>
+	<body onload="paintBoard(8,8,5); addPlayers(); showMessages();">
+	<center>
+		<div class="gameMainContent">
+		<br>
+			<div class="topDiv">
+				<div id="board" class="gameBoard"">
+					<!-- Board elements -->
+				</div>
+				<div id="list" class="playersList">
+					<!-- players elements --> 
+				</div>
+			</div>
+			<div id="CTmessages" class="offersList">
+				<table id="offersTable" style="border:1px solid black;">
+					<tr>
+						<td>
+						make an offer to:
+						</td>	
+						<td>
+						<select id="playersDropDown">
+							<option value="empty"></option>
+						</select>
+						</td>
+						<td>
+						of:
+						</td>
+						<td>
+							<table id="colorsToOffer">
+								<tr>
+									<td bgcolor="red" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="green" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="blue" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+								</tr>
+								<tr>
+									<td bgcolor="purple" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="yellow" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="orange" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+								</tr>
+							</table>
+						</td>
+						<td>
+						in exchange for:
+						</td>
+						<td>
+							<table id="colorsToGet">
+								<tr>
+									<td bgcolor="red" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="green" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="blue" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+								</tr>
+								<tr>
+									<td bgcolor="purple" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="yellow" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+									<td bgcolor="orange" width="8"/>
+									<td><input type="number" style="width:30px;"></td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<div><button id="sendOffer"> send </button></div>							</td>
+						</tr>
+					</table>
+			</div>
 		</div>
-
+	</center>
+	</body>
     </script>
 
     <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->

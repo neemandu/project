@@ -102,21 +102,46 @@ jQuery(function($){
 			App.$gameArea.html(App.$CTtemplateIntroScreen1);
             for (var k in PList) {
                 if (PList.hasOwnProperty(k)&&k!=myid) {
-					$('#playersTable tr:last').after('<tr><td>'+k+'</td><td>'+PList[k]+'</td></tr>');
+					$('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
 				
                 //	alert('key is: ' + k + ', value is: ' + PList[k]);
                 }
             }
-            		$('#playersTable').find('tr').click( function(){
-						var row = $(this).find('td:first').text();
-						   	var data = {
-								msg : 'hello',
-								//gameId : +($('#inputGameId').val()),
-								recieverId : row
-							};
-            	
-						IO.socket.emit('sendMessage', data);
-					});
+			
+			$('#sendOffer').click( function(){
+					var player = $('#playersDropDown').val();
+					var colorsToOffer = new Array();
+					var colorsToGet = new Array();
+					var i=0;
+					$('#colorsToOffer tr').each(function(){
+						$(this).find('td').each(function(){
+							if ($(this).find('input').length) { 	
+							colorsToOffer[i]=$(this).find('input').val();
+							i++;
+							}
+						})
+					})
+					i=0;
+					$('#colorsToGet tr').each(function(){
+						$(this).find('td').each(function(){
+							if ($(this).find('input').length) { 	
+							colorsToGet[i]=$(this).find('input').val();
+							i++;
+							}
+						})
+					})
+					
+					var JcolorsToOffer = JSON.stringify(colorsToOffer); 
+					var JcolorsToGet = JSON.stringify(colorsToGet); 
+					var data = {
+						JcolorsToOffer : JcolorsToOffer,
+						JcolorsToGet : JcolorsToGet,
+						msg : 'hello',
+						recieverId : player,
+						sentFrom : myid
+					};
+					IO.socket.emit('sendMessage', data);
+			});
             // Change the word for the Host and Player
             
         },
@@ -149,7 +174,24 @@ jQuery(function($){
         
         recieveMessage : function(data) {
         	alert('recieveMessage: '+ data.msg);
-        //	App[Player].recieveMessage(data); 	
+			$('#CTmessages').html(App.$CTOfferToGet);
+			var k =0;
+			$('#colorsToOffer tr').each(function(){
+						$(this).find('td:odd').each(function(){
+								$(this).text(JSON.parse(data.JcolorsToOffer)[k]);
+								k++;
+						})
+			})
+
+			k=0;
+			$('#colorsToGet tr').each(function(){
+						$(this).find('td:odd').each(function(){
+								$(this).text(JSON.parse(data.JcolorsToGet)[k]);
+								k++;
+						})
+			})
+			$('#SentBy').text('Player '+data.sentFrom);
+	
         }
 
     };
@@ -212,6 +254,7 @@ jQuery(function($){
             App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
 			App.$CTtemplateIntroScreen1 = $('#CT-intro-screen-template1').html();
             App.$CTJoinGame = $('#join-game-CT').html();
+			App.$CTOfferToGet = $('#CT-OfferToGet').html();
         },
 
         /**
@@ -518,11 +561,25 @@ jQuery(function($){
              * Click handler for the 'JOIN' button
              */
             onJoinClick: function () {
+            	//alert('join!@!');
                 // console.log('Clicked "Join A Game"');
 
                 // Display the Join Game HTML on the player's screen.
+
+                var data = {
+                    gameId : '2',
+                    //gameId : +($('#inputGameId').val()),
+                  //  playerName : $('#inputPlayerName').val() || 'anon'
+                };
+
+                // Send the gameId and playerName to the server
+                IO.socket.emit('playerJoinGame', data);
+
+                // Set the appropriate properties for the current player.
+                App.myRole = 'Player';
+       //         App.Player.myName = data.playerName;
             	
-                App.$gameArea.html(App.$CTJoinGame);
+             //   App.$gameArea.html(App.$CTJoinGame);
             },
 
             /**
@@ -592,6 +649,7 @@ jQuery(function($){
              * @param data
              */
             updateWaitingScreen : function(data) {
+            	//alert('updateWaitingScreen');
                 App.Host.updateWaitingScreen1();
                 if(IO.socket.socket.sessionid === data.mySocketId){
                     App.myRole = 'Player';
