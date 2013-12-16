@@ -43,7 +43,7 @@ jQuery(function($){
         onConnected : function(data) {
             // Cache a copy of the client's socket.IO session ID on the App
             App.mySocketId = IO.socket.socket.sessionid;
-			myid = data.playerCounter;
+		//	myid = data.playerCounter;
 		//	alert(myid);
             // console.log(data.message);
         },
@@ -58,7 +58,7 @@ jQuery(function($){
 
         /**
          * A player has successfully joined the game.
-         * @param data {{playerName: string, gameId: int, mySocketId: int}}
+         * @param data {{playerName: string, gameId: int, mySocketId: int, playerId: int}}
          */
         playerJoinedRoom : function(data) {
             // When a player joins a room, do the updateWaitingScreen funciton.
@@ -67,7 +67,11 @@ jQuery(function($){
             //
             // So on the 'host' browser window, the App.Host.updateWiatingScreen function is called.
             // And on the player's browser, App.Player.updateWaitingScreen is called.
-            App[App.myRole].updateWaitingScreen(data);
+//            App.Host.updateWaitingScreen(data);
+//            App[Player].updateWaitingScreen(data);
+        	//alert('myRole: '+App.myRole);
+        	App[App.myRole].updateWaitingScreen(data);
+           
         },
 
         /**
@@ -76,7 +80,7 @@ jQuery(function($){
          */
         beginNewGame : function(data) {
         	App.Host.gameCountdown(data);
-            App[Player].gameCountdown(data);
+            App[App.myRole].gameCountdown(data);
         },
 
         /**
@@ -93,58 +97,63 @@ jQuery(function($){
         /**
          * @param data playerList: the players list, gameId
          */
+        
         GameStarted : function(data) {
-            // Update the current round
-        	//alert('GameStarted');
-            App.currentRound = data.round;
-            //alert as number of players to see if it passed .
-            var PList = data.playerList;
-			App.$gameArea.html(App.$CTtemplateIntroScreen1);
-            for (var k in PList) {
-                if (PList.hasOwnProperty(k)&&k!=myid) {
-					$('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
-				
-                //	alert('key is: ' + k + ', value is: ' + PList[k]);
-                }
-            }
-			
-			$('#sendOffer').click( function(){
-					var player = $('#playersDropDown').val();
-					var colorsToOffer = new Array();
-					var colorsToGet = new Array();
-					var i=0;
-					$('#colorsToOffer tr').each(function(){
-						$(this).find('td').each(function(){
-							if ($(this).find('input').length) { 	
-							colorsToOffer[i]=$(this).find('input').val();
-							i++;
-							}
-						})
-					})
-					i=0;
-					$('#colorsToGet tr').each(function(){
-						$(this).find('td').each(function(){
-							if ($(this).find('input').length) { 	
-							colorsToGet[i]=$(this).find('input').val();
-							i++;
-							}
-						})
-					})
-					
-					var JcolorsToOffer = JSON.stringify(colorsToOffer); 
-					var JcolorsToGet = JSON.stringify(colorsToGet); 
-					var data = {
-						JcolorsToOffer : JcolorsToOffer,
-						JcolorsToGet : JcolorsToGet,
-						msg : 'hello',
-						recieverId : player,
-						sentFrom : myid
-					};
-					IO.socket.emit('sendMessage', data);
-			});
-            // Change the word for the Host and Player
-            
+        	//alert('game started');
+        	App[App.myRole].GameStarted(data);
         },
+//        GameStarted : function(data) {
+//            // Update the current round
+//        	//alert('GameStarted');
+//            App.currentRound = data.round;
+//            //alert as number of players to see if it passed .
+//            var PList = data.playerList;
+//			App.$gameArea.html(App.$CTtemplateIntroScreen1);
+//            for (var k in PList) {
+//                if (PList.hasOwnProperty(k)&&k!=myid) {
+//					$('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
+//				
+//                //	alert('key is: ' + k + ', value is: ' + PList[k]);
+//                }
+//            }
+//			
+//			$('#sendOffer').click( function(){
+//					var player = $('#playersDropDown').val();
+//					var colorsToOffer = new Array();
+//					var colorsToGet = new Array();
+//					var i=0;
+//					$('#colorsToOffer tr').each(function(){
+//						$(this).find('td').each(function(){
+//							if ($(this).find('input').length) { 	
+//							colorsToOffer[i]=$(this).find('input').val();
+//							i++;
+//							}
+//						})
+//					})
+//					i=0;
+//					$('#colorsToGet tr').each(function(){
+//						$(this).find('td').each(function(){
+//							if ($(this).find('input').length) { 	
+//							colorsToGet[i]=$(this).find('input').val();
+//							i++;
+//							}
+//						})
+//					})
+//					
+//					var JcolorsToOffer = JSON.stringify(colorsToOffer); 
+//					var JcolorsToGet = JSON.stringify(colorsToGet); 
+//					var data = {
+//						JcolorsToOffer : JcolorsToOffer,
+//						JcolorsToGet : JcolorsToGet,
+//						msg : 'hello',
+//						recieverId : player,
+//						sentFrom : myid
+//					};
+//					IO.socket.emit('sendMessage', data);
+//			});
+//            // Change the word for the Host and Player
+//            
+//        },
 
         /**
          * A player answered. If this is the host, check the answer.
@@ -338,6 +347,7 @@ jQuery(function($){
              * @param data{{ gameId: int, mySocketId: * }}
              */
             gameInit: function (data) {
+            	//alert('gameInit');
                 App.gameId = data.gameId;
                 App.mySocketId = data.mySocketId;
                 App.myRole = 'Host';
@@ -368,9 +378,9 @@ jQuery(function($){
              */
             updateWaitingScreen: function(data) {
                 // If this is a restarted game, show the screen.
-                if ( App.Host.isNewGame ) {
-                    App.Host.displayNewGameScreen();
-                }
+//                if ( App.Host.isNewGame ) {
+//                    App.Host.displayNewGameScreen();
+//                }
                 // Update host screen
 //                $('#playersWaiting')
 //                    .append('<p/>')
@@ -393,19 +403,24 @@ jQuery(function($){
 
             updateWaitingScreen1: function(data) {
                             // If this is a restarted game, show the screen.
-                            if ( App.Host.isNewGame ) {
-                                App.Host.displayNewGameScreen();
-                            }
+//                            if ( App.Host.isNewGame ) {
+//                                App.Host.displayNewGameScreen();
+//                            }
                             // Update host screen
 //                            $('#playersWaiting')
 //                                .append('<p/>')
 //                                .text('Player ' + data.playerName + ' joined the game.');
 
                             // Store the new player's data on the Host.
+            	
+            				//alert('HOST.updateWaitingScreen1');
+            	
                             App.Host.players.push(data);
 
                             // Increment the number of players in the room
                             App.Host.numPlayersInRoom += 1;
+                            
+                            //alert('App.Host.numPlayersInRoom = '+ App.Host.numPlayersInRoom);
 
                             // If two players have joined, start the game!
                             if (App.Host.numPlayersInRoom === 2) {
@@ -428,6 +443,7 @@ jQuery(function($){
 //
 //                // Begin the on-screen countdown timer
 //                var $secondsLeft = $('#hostWord');
+            	
             	IO.socket.emit('hostCountdownFinished', App.gameId);
 //                App.countDown( $secondsLeft, 5, function(){
 //                    IO.socket.emit('hostCountdownFinished', App.gameId);
@@ -547,7 +563,13 @@ jQuery(function($){
 
         Player : {
 
-            /**
+        	/**
+             * A reference to the socket ID of the Host
+             */
+          //  myid: 0,
+        	
+        	
+        	/**
              * A reference to the socket ID of the Host
              */
             hostSocketId: '',
@@ -561,25 +583,66 @@ jQuery(function($){
              * Click handler for the 'JOIN' button
              */
             onJoinClick: function () {
-            	//alert('join!@!');
                 // console.log('Clicked "Join A Game"');
 
                 // Display the Join Game HTML on the player's screen.
-
-                var data = {
-                    gameId : '2',
-                    //gameId : +($('#inputGameId').val()),
-                  //  playerName : $('#inputPlayerName').val() || 'anon'
-                };
-
-                // Send the gameId and playerName to the server
-                IO.socket.emit('playerJoinGame', data);
-
-                // Set the appropriate properties for the current player.
-                App.myRole = 'Player';
-       //         App.Player.myName = data.playerName;
             	
-             //   App.$gameArea.html(App.$CTJoinGame);
+                App.$gameArea.html(App.$CTJoinGame);
+            },
+             
+            GameStarted : function(data) {
+                // Update the current round
+            	//alert('GameStarted for real!!!!!');
+                App.currentRound = data.round;
+                //alert as number of players to see if it passed .
+                var PList = data.playerList;
+    			App.$gameArea.html(App.$CTtemplateIntroScreen1);
+    			
+    			//alert('myid: '+myid);
+                for (var k in PList) {
+                    if (PList.hasOwnProperty(k)&&k!=myid) {
+    					$('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
+    				
+                    //	alert('key is: ' + k + ', value is: ' + PList[k]);
+                    }
+                }
+    			
+    			$('#sendOffer').click( function(){
+    					var player = $('#playersDropDown').val();
+    					var colorsToOffer = new Array();
+    					var colorsToGet = new Array();
+    					var i=0;
+    					$('#colorsToOffer tr').each(function(){
+    						$(this).find('td').each(function(){
+    							if ($(this).find('input').length) { 	
+    							colorsToOffer[i]=$(this).find('input').val();
+    							i++;
+    							}
+    						})
+    					})
+    					i=0;
+    					$('#colorsToGet tr').each(function(){
+    						$(this).find('td').each(function(){
+    							if ($(this).find('input').length) { 	
+    							colorsToGet[i]=$(this).find('input').val();
+    							i++;
+    							}
+    						})
+    					})
+    					
+    					var JcolorsToOffer = JSON.stringify(colorsToOffer); 
+    					var JcolorsToGet = JSON.stringify(colorsToGet); 
+    					var data = {
+    						JcolorsToOffer : JcolorsToOffer,
+    						JcolorsToGet : JcolorsToGet,
+    						msg : 'hello',
+    						recieverId : player,
+    						sentFrom : myid
+    					};
+    					IO.socket.emit('sendMessage', data);
+    			});
+                // Change the word for the Host and Player
+                
             },
 
             /**
@@ -649,8 +712,13 @@ jQuery(function($){
              * @param data
              */
             updateWaitingScreen : function(data) {
+            	
             	//alert('updateWaitingScreen');
-                App.Host.updateWaitingScreen1();
+            	 myid = data.playerId;
+                 //alert('myid: '+myid);
+            	
+            //    App.Host.updateWaitingScreen1();
+          //      alert('after   App.Host.updateWaitingScreen1()');
                 if(IO.socket.socket.sessionid === data.mySocketId){
                     App.myRole = 'Player';
                     App.gameId = data.gameId;
@@ -666,7 +734,7 @@ jQuery(function($){
              * @param hostData
              */
             gameCountdown : function(hostData) {
-            	alert('gameCountdown');
+            	//alert('gameCountdown');
                 App.Player.hostSocketId = hostData.mySocketId;
                 $('#gameArea')
                     .html('<div class="gameOver">Get Ready!</div>');

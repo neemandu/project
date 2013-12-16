@@ -13,14 +13,14 @@ var playerCounter = 0;
  */
 exports.initGame = function(sio, socket){
 	console.log('initGame');
-	console.log('socket: '+socket.id+' joined');
-	idSocketPair[playerCounter] = socket;
-	console.log('playerCounter: '+playerCounter);
+//	console.log('socket: '+socket.id+' joined');
+//	idSocketPair[playerCounter] = socket;
+	//console.log('playerCounter: '+playerCounter);
 	
     io = sio;
     gameSocket = socket;
-    gameSocket.emit('connected', { playerCounter: playerCounter });
-	playerCounter++;
+    gameSocket.emit('connected', {});
+//	playerCounter++;
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
     gameSocket.on('hostRoomFull', hostPrepareGame);
@@ -69,16 +69,16 @@ console.log(shouldCreate);
  * Two players have joined. Alert the host!
  * @param gameId The game ID / room ID
  */
-function hostPrepareGame(gameId) {
+function hostPrepareGame(data1) {
 	console.log('hostPrepareGame');
 	
     var sock = this;
     var data = {
         mySocketId : sock.id,
-        gameId : gameId
+        gameId : data1.gameId
     };
     console.log('mySocketId: '+sock.id);
-	console.log('gameId: '+gameId);
+	console.log('gameId: '+data.gameId);
     //console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
 };
@@ -132,32 +132,78 @@ function hostNextRound(data) {
  * @param data Contains data entered via player's input - playerName and gameId.
  */
 function playerJoinGame(data) {
-    console.log('Player ' +playerCounter + 'attempting to join game: ' + data.gameId );
+	console.log('playerJoinGame');
+	
+
+    //console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
 
     // A reference to the player's Socket.IO socket object
     var sock = this;
+    
+    var playerID = getPlayerId(sock);
+    
+    console.log('user Id: '+ playerID);
+    
+    if(playerID < 0){
+    	
+    	idSocketPair[playerCounter] = sock;
+    	
+    	console.log('playerCounter: '+playerCounter);
+    	
+    	console.log('socket: '+sock.id+' joined');
+    	
+    	playerCounter++;
+    	
 
-    // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
+        // Look up the room ID in the Socket.IO manager object.
+        var room = gameSocket.manager.rooms["/" + data.gameId];
 
-    // If the room exists...
-    if( room != undefined ){
-        // attach the socket id to the data object.
-    	//console.log(''+sock.id);
-        data.mySocketId = sock.id;
+        // If the room exists...
+        if( room != undefined ){
+            // attach the socket id to the data object.
+        	//console.log(''+sock.id);
+            data.mySocketId = sock.id;
+            var playerId = getPlayerId(sock);
+            data.playerId = playerId;
 
-        // Join the room
-        sock.join(data.gameId);
+            // Join the room
+            sock.join(data.gameId);
+            
 
-        //console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
+            //console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
 
-        // Emit an event notifying the clients that the player has joined the room.
-        io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+            // Emit an event notifying the clients that the player has joined the room.
+            console.log('room size: '+room.length);
+            sock.emit('playerJoinedRoom', data);
+            if(room.length === 2){
+          //  	io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+            	console.log('room size ====== 2');
+            	hostPrepareGame(data);
+            }
+            
+     
+          // io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
 
-    } else {
-        // Otherwise, send an error message back to the player.
-        this.emit('error',{message: "This room does not exist."} );
+        } else {
+            // Otherwise, send an error message back to the player.
+            this.emit('error',{message: "This room does not exist."} );
+        }
     }
+
+}
+
+function getPlayerId(socket){
+	console.log('getPlayerId####');
+	for(var key in idSocketPair){
+		console.log('key: '+ key);
+		console.log('idSocketPair[key]: '+ idSocketPair[key].id);
+	    if(idSocketPair[key] == socket){
+	    	console.log('####getPlayerId');
+	      return key;
+	    }
+	  }
+	console.log('####getPlayerId');
+	  return -1;
 }
 
 /**
