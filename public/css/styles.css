@@ -3,13 +3,25 @@
 body
 {
 	background-color:#CCCCCC;
+	background-image:url('../Pictures/CT-background.jpg');
 }
 
 h1
 {
-	text-align:center;
+	text-align:center;`
 	color:orange;
 	font-size:40px;
+}
+
+div.titleWrapper
+{
+	background-color:#AAAAAA;
+	border-radius:10px;
+	width:900px;
+	height:400px;
+	margin-left:auto;
+	margin-right:auto;
+	font-size: 40px;
 }
 
 div.topDiv
@@ -55,9 +67,10 @@ div.playersList
 
 table.trails
 {
-	border-style:groove;
+	/*border-style:groove;
 	border-color:#FF7f00;
 	border-width:2px;
+	border-radius:5px; */
 }
 
 tr.trails
@@ -72,6 +85,7 @@ td.trails
 	border-style:groove;
 	border-color:#FF7f00;
 	border-width:2px;
+	border-radius:3px; 
 	padding:23px;
 }
 
@@ -87,6 +101,7 @@ td.trails:hover
 	background-color:#CCCCCC;
 	width:200px;
 	height:200px;
+	border-radius:10px;
 }
 
 .welcomeMainContent
@@ -100,7 +115,8 @@ td.trails:hover
 {
 	background-color:#EEEEEE;
 	width:900px; 
-	height:700px;
+	height:900px;
+	border-radius:10px;
 }
 
 /*
@@ -111,15 +127,19 @@ td.trails:hover
 table.topTable
 {
 	width:730px;
-	height:450px;	
-	border-radius:10px;
+	height:450px;
+	/*border:1px solid black;	
+	border-radius:10px;	*/
 }
 
 td.header
 {
 	font:italic bold 42px times new roman,serif;
 	text-align:center;	
-	border-style:solid;
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
 }
 
 tr.upperTable
@@ -131,14 +151,45 @@ tr.upperTable
 td.gameBoard
 {
 	width:500px;
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+}
+td.sideTable
+{
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
 }
 
 table.downTable
 {
 	width:730px;
 	height:150px;
+	/*border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;*/
 }
 
+td.makeGetOffer
+{
+	height:30px;
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+}
+
+td.offersHistory
+{
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+}
 
 /*
 *	style of the offers' squares  ================================================
