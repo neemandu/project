@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<script type="text/javascript" src="myMethods.js" ></script>
 <head>
     <meta charset="utf-8"/>
 
@@ -11,9 +13,8 @@
 
     <link href="css/styles.css" rel="stylesheet">
 </head>
-
 <body>
-
+	
 
     <div id="gameArea">
         <!-- This is where the templates defined below will be used -->
@@ -119,21 +120,39 @@
     </script>
 	
     <script id="CT-intro-screen-template1" type="text/template">
-
-	<body onload="paintBoard(8,8,5); addPlayers(); showMessages();">
+	
+	<body onload="paintBoard(8,8,6);">
 	<center>
 		<div class="gameMainContent">
 		<br>
-			<div class="topDiv">
-				<div id="board" class="gameBoard"">
-					<!-- Board elements -->
-				</div>
-				<div id="list" class="playersList">
-					<!-- players elements --> 
-				</div>
+			<div>
+				<table border="1" class="topTable">
+					<tr>
+						<td class="header" colspan="2">
+							COLORED TRAILS
+						</td>
+					</tr>
+					<tr class="upperTable" align="center">
+						<td class="gameBoard">
+						my class is gameBoard
+						</td>
+						<td class="sideTable">						
+							<table class="asd" border="1">
+							<tr>
+							<td class="playersList">
+							my class is playersList
+							</td>	
+							</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
 			</div>
-			<div id="CTmessages" class="offersList">
-				<table id="offersTable" style="border:1px solid black;">
+			<div class="downDiv">
+				<table border="1" class="downTable">
+					<tr>
+						<td class="makeGetOffer">
+							<table id="offersTable" style="border:1px solid black;">
 					<tr>
 						<td>
 						makes an offer to:
@@ -149,50 +168,59 @@
 						<td>
 							<table id="colorsToOffer">
 								<tr>
-									<td bgcolor="red" width="8"/>
+									<td class="purpleOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="green" width="8"/>
+									<td class="LGOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="blue" width="8"/>
+									<td class="LYOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
 								</tr>
 								<tr>
-									<td bgcolor="purple" width="8"/>
+									<td class="pinkOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="yellow" width="8"/>
+									<td class="LBOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="orange" width="8"/>
+									<td class="DBOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
 								</tr>
 							</table>
 						</td>
 						<td>
-						in exchange to:
+						in exchange for:
 						</td>
 						<td>
 							<table id="colorsToGet">
 								<tr>
-									<td bgcolor="red" width="8"/>
+									<td class="purpleOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="green" width="8"/>
+									<td class="LGOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="blue" width="8"/>
+									<td class="LYOfferSquare">
 									<td><input type="number" style="width:30px;"></td>
 								</tr>
 								<tr>
-									<td bgcolor="purple" width="8"/>
+									<td class="pinkOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="yellow" width="8"/>
+									<td class="LBOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
-									<td bgcolor="orange" width="8"/>
+									<td class="DBOfferSquare"/>
 									<td><input type="number" style="width:30px;"></td>
 								</tr>
 							</table>
 						</td>
 						<td>
-							<div><button id="sendOffer"> send </button></div>							</td>
+							<div><button id="sendOffer"> send </button></div>							
+						</td>
+					</tr>
+				</table>
+						</td>
+						<tr>
+						<td id="offersHistory">
+						my class id offersHistory
+						</td>
 						</tr>
-					</table>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</center>

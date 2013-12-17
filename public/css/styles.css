@@ -102,3 +102,81 @@ td.trails:hover
 	width:900px; 
 	height:700px;
 }
+
+/*
+* tables styles 	=============================================================
+*/
+
+
+table.topTable
+{
+	width:730px;
+	height:450px;	
+	border-radius:10px;
+}
+
+td.header
+{
+	font:italic bold 42px times new roman,serif;
+	text-align:center;	
+	border-style:solid;
+}
+
+tr.upperTable
+{
+	height:500px;
+	border-style:solid;
+}
+
+td.gameBoard
+{
+	width:500px;
+}
+
+table.downTable
+{
+	width:730px;
+	height:150px;
+}
+
+
+/*
+*	style of the offers' squares  ================================================
+*/
+
+td.purpleOfferSquare
+{
+	background-color:#AA88FF; /*purple*/
+	width:8px;	
+}
+
+td.LGOfferSquare
+{
+	background-color:#9dffb4; /*light green*/
+	width:8px;	
+}
+
+td.LYOfferSquare
+{
+	background-color:#f8ff9d; /*light yellow*/
+	width:8px;	
+}
+
+td.pinkOfferSquare
+{
+	background-color:#ff9f9d; /*pink*/
+	width:8px;	
+}
+
+td.LBOfferSquare
+{
+	background-color:#99ccf5; /*light blue*/
+	width:8px;	
+}
+
+td.DBOfferSquare
+{
+	background-color:#5588b1; /*dark blue*/
+	width:8px;	
+}
+
