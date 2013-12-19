@@ -532,11 +532,16 @@ jQuery(function($){
                    alert('GameStarted for real!! gameId: '+App.gameId);
 
                 App.currentRound = data.round;
-                //alert as number of players to see if it passed .
+                //alert as number of players to see if it passed
+
+                
+               
                 var PList = data.playerList;
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
-                     
+                
                 $(".gameBoard").html(data.board);
+                var params = {};
+                $(".playersList").append(App.Player.buildPlayer(params));
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
                 for (var k in PList) {
@@ -586,6 +591,33 @@ jQuery(function($){
                 
             },
             
+            /**
+             * build player html codegiven his id
+             */
+            
+            buildPlayer: function(data)
+    		{
+    		var playerCode ="";
+    		playerCode += '<table class="player" id="player' + App.Player.myid +'">';
+    		playerCode +=	'<tr> <td class="playerIMG">image </td>'+
+    			'<td class="playerID">' + App.Player.myid + '</td>'+
+    			'<td class="playerChis" align="center">'+
+    			'<table id="playerChips">'+
+    			'<tr>'+
+    			'<td class="purpleOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="LGOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="LYOfferSquare"/><td class="colorAmount">num</td>'+
+    			'</tr>'+
+    			' <tr>'+
+    			'<td class="pinkOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="LBOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="DBOfferSquare"/><td class="colorAmount">num</td>'+
+    			'</tr></table></td></tr></table>';
+    		return playerCode;
+    		},
+            /**
+             * ***********************************
+             */
             
             /**
              *  Click handler for the Player hitting a word in the word list.
