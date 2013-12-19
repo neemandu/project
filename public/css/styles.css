@@ -22,6 +22,8 @@ div.titleWrapper
 	margin-left:auto;
 	margin-right:auto;
 	font-size: 40px;
+	text-align:center;
+	float:center;
 }
 
 div.topDiv
@@ -190,7 +192,26 @@ td.offersHistory
 	border-radius:5px;
 	border-color:#AAAAAA;
 }
+/*
+*	style of joining page: ======================================
+*/
 
+
+table.inputTable
+{
+	text-align:right;
+	float:center;
+}
+
+tr.inputTable
+{
+	height:20px;
+}
+
+td.inputTable
+{
+	width:200px;
+}
 /*
 *	style of the offers' squares  ================================================
 */

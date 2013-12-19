@@ -51,7 +51,7 @@
             </div>
 
             <div class="buttons">
-                <button id="btnCreateGame" class="btn left">CREATE</button>
+                <button id="btnCreateGame" class="BigButton">CREATE</button>
                 <button id="btnJoinGame" class="BigButton">JOIN</button>
                 <div style="clear:both"></div>
             </div>
@@ -230,12 +230,12 @@
 
     <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
     <script id="create-game-template" type="text/template">
-        <div class="createGameWrapper">
-
-            <div class="info">Open this site on your mobile device:</div>
-            <div id="gameURL" class="infoBig">Error!</div>
-
-            <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
+        <div class="titleWrapper">
+			
+            <div class="info"></div>
+            <div id="gameURL" class="infoBig"></div>
+			<br>
+            <div class="info">Click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
             <div id="spanNewGameCode" class="gameId">Error!</div>
 
             <div id="playersWaiting"></div>
@@ -244,19 +244,35 @@
 
     <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
     <script id="join-game-template" type="text/template">
-        <div class="joinGameWrapper">
-            <div class="info">
-                <label for="inputPlayerName">Your Name:</label>
-                <input id="inputPlayerName" type="text" />
+        <div class="titleWrapper">
+            <div class="info" align="center">
+				<table class="inputTable">
+					<tr class="inputTable">
+						<td class="inputTable">
+							<label for="inputPlayerName">Your Name:</label>
+						</td>
+						<td class="inputTable">
+							<input id="inputPlayerName" type="text" />
+						</td>
+					</tr>
+				</table>
             </div>
 
-            <div class="info">
-                <label for="inputGameId">Game ID:</label>
-                <input id="inputGameId" type="text"/>
+            <div class="info" align="center">
+                <table class="inputTable">
+					<tr>
+						<td class="inputTable">
+							<label for="inputGameId">Game ID:</label>
+						</td>
+						<td class="inputTable">
+							<input id="inputGameId" type="text"/>
+						</td>
+					</tr>
+				</table>               
             </div>
-
+			<br>
             <div class="info buttons">
-                <button id="btnStart" class="btn">Start</button>
+                <button id="btnStart" class="BigButton">Start</button>
                 <div id="playerWaitingMessage"></div>
             </div>
         </div>

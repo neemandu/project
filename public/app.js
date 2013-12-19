@@ -639,7 +639,7 @@ jQuery(function($){
             gameCountdown : function(hostData) {
                 App.Player.hostSocketId = hostData.mySocketId;
                 $('#gameArea')
-                    .html('<div class="gameOver">Get Ready!</div>');
+                    .html('<div class="titleWrapper">Get Ready!</div>');
             },
 
             /**
