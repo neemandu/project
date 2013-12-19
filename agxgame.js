@@ -77,10 +77,12 @@ function hostStartGame(gameId) {
     	console.log('playerList['+i+']: '+playerList[i]);
     }
     var params = {height: 8, width: 8, colorsNum: 6};
+    var boardHtml = paintBoard(params);
+  //  console.log('boardHtml:  '+boardHtml);
     var data ={
     		playerList : playerList,
             gameId : gameId,
-            board: paintBoard(params)
+            board: boardHtml
     };
     io.sockets.in(data.gameId).emit('GameStarted', data);
 };
@@ -232,9 +234,7 @@ function playerRestart(data) {
    *                       *
    ************************* */
 
-
-getColor: function(data)
-{
+function getColor(data){
 	switch(data.colorNum) //right now there are 5 colors + a default color.
 	{
 		case 1:
@@ -257,10 +257,9 @@ getColor: function(data)
 		default:
 			return "#AAAAAA";
 	}
-},
+}
 
-paintBoard: function(data)
-{
+function paintBoard(data){
 	var tablesCode = "<table class='trails'>";
 	var Color = 0;
 	for (var i=0; i<data.height; i++)
@@ -269,15 +268,15 @@ paintBoard: function(data)
 		for(var j=0; j<data.width; j++)
 		{
 			Color = Math.floor(Math.random()*data.colorsNum + 1);
-			tablesCode += "<td class='trails' style=background:" + App.getColor({colorNum: Color}) +" ;></td>" 
+			tablesCode += "<td class='trails' style=background:" + getColor({colorNum: Color}) +" ;></td>" 
 		}
 		tablesCode += "</tr>";
 	}
 	tablesCode += "</table>";
 	//var myDiv = document.getElementsByClassName("gameBoard");
 	//myDiv.innerHTML = tablesCode;
-	$(".gameBoard").html(tablesCode);
-},
+	return tablesCode;
+}
 
 
 
