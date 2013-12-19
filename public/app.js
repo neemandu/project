@@ -540,7 +540,7 @@ jQuery(function($){
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
                 
                 $(".gameBoard").html(data.board);
-                var params = {};
+                var params = {};;
                 $(".playersList").append(App.Player.buildPlayer(params));
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
