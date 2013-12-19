@@ -164,6 +164,25 @@ td.sideTable
 	border-width:2px;
 	border-radius:5px;
 	border-color:#AAAAAA;
+	vertical-align:top;
+}
+
+table.playersList
+{
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+	width:100%;
+}
+
+td.playersListHeader
+{
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+	text-align: center;
 }
 
 table.downTable

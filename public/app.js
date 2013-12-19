@@ -114,7 +114,7 @@ jQuery(function($){
         
         recieveMessage : function(data) {
         	
-            alert('recieveMessage: '+ data.msg);
+            /*alert('recieveMessage: '+ data.msg);
                     $('#CTmessages').html(App.$CTOfferToGet);
                     var k =0;
                     $('#colorsToOffer tr').each(function(){
@@ -131,7 +131,24 @@ jQuery(function($){
                                                             k++;
                                             })
                     })
-                    $('#SentBy').text('Player '+data.sentFrom);
+                    $('#SentBy').text('Player '+data.sentFrom);*/
+        	$('.offersHistory').html(App.$CTOfferToGet);
+            var k =0;
+            $('#colorsToOffer tr').each(function(){
+                                    $(this).find('td:odd').each(function(){
+                                                    $(this).text(JSON.parse(data.JcolorsToOffer)[k]);
+                                                    k++;
+                                    })
+            })
+
+            k=0;
+            $('#colorsToGet tr').each(function(){
+                                    $(this).find('td:odd').each(function(){
+                                                    $(this).text(JSON.parse(data.JcolorsToGet)[k]);
+                                                    k++;
+                                    })
+            })
+            $('#SentBy').text('Player '+data.sentFrom);
     
     },
 
@@ -518,9 +535,8 @@ jQuery(function($){
                 //alert as number of players to see if it passed .
                 var PList = data.playerList;
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
-                            
-                var params = {height: 8, width: 8, colorsNum: 6};
-                App.paintBoard(params);
+                     
+                $(".gameBoard").html(data.board);
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
                 for (var k in PList) {
@@ -724,54 +740,8 @@ jQuery(function($){
             }
 
         },
-        /***********************************
-         *       create board              * 
-         ***********************************/
-        getColor: function(data)
-        {
-        	switch(data.colorNum) //right now there are 5 colors + a default color.
-        	{
-        		case 1:
-        			return "#aa88FF"; // purple
-        			break;
-        		case 2:
-        			return "#9dffb4"; // light green
-        			break;
-        		case 3:
-        			return "#f8ff9d"; // light yellow
-        			break;
-        		case 4:
-        			return "#ff9f9d"; // pink
-        			break;
-        		case 5:
-        			return "#99ccf5"; //light blue
-        			break;
-        		case 6:
-        			return "#5588b1"; //
-        		default:
-        			return "#AAAAAA";
-        	}
-        },
+       
         
-        paintBoard: function(data)
-        {
-        	var tablesCode = "<table class='trails'>";
-        	var Color = 0;
-        	for (var i=0; i<data.height; i++)
-        	{
-        		tablesCode += "<tr class='trails'>";
-        		for(var j=0; j<data.width; j++)
-        		{
-        			Color = Math.floor(Math.random()*data.colorsNum + 1);
-        			tablesCode += "<td class='trails' style=background:" + App.getColor({colorNum: Color}) +" ;></td>" 
-        		}
-        		tablesCode += "</tr>";
-        	}
-        	tablesCode += "</table>";
-        	//var myDiv = document.getElementsByClassName("gameBoard");
-        	//myDiv.innerHTML = tablesCode;
-        	$(".gameBoard").html(tablesCode);
-        },
         /**
          * Make the text inside the given element as big as possible
          * See: https://github.com/STRML/textFit
