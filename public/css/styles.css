@@ -238,36 +238,100 @@ td.inputTable
 td.purpleOfferSquare
 {
 	background-color:#AA88FF; /*purple*/
-	width:8px;	
+	width:8px;
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;	
 }
 
 td.LGOfferSquare
 {
 	background-color:#9dffb4; /*light green*/
 	width:8px;	
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;
 }
 
 td.LYOfferSquare
 {
 	background-color:#f8ff9d; /*light yellow*/
 	width:8px;	
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;
 }
 
 td.pinkOfferSquare
 {
 	background-color:#ff9f9d; /*pink*/
 	width:8px;	
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;
 }
 
 td.LBOfferSquare
 {
 	background-color:#99ccf5; /*light blue*/
 	width:8px;	
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;
 }
 
 td.DBOfferSquare
 {
 	background-color:#5588b1; /*dark blue*/
 	width:8px;	
+	border-style:groove;
+	border-width:1px;
+	border-radius:2px;
+	border-color:#FF7f00;
 }
+/*****************************************************
+***************	player design	**********************
+/*****************************************************/
+
+table.player
+{
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+	background-color:#EEEEEE;
+	height:30px;
+	width:230px;
+}
+
+td.playerIMG
+{
+	width:20px;
+	background-color:#99ccf5;
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+}
+td.playerID
+{
+	width:20px;
+	text-align:center;
+	border-style:groove;
+	border-width:2px;
+	border-radius:5px;
+	border-color:#AAAAAA;
+}
+
+td.colorAmount
+{
+	width:8px;
+	background-color:white;
+}
+
 
