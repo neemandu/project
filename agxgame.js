@@ -76,9 +76,11 @@ function hostStartGame(gameId) {
     	playerList[i] = i;
     	console.log('playerList['+i+']: '+playerList[i]);
     }
+    var params = {height: 8, width: 8, colorsNum: 6};
     var data ={
     		playerList : playerList,
-            gameId : gameId	
+            gameId : gameId,
+            board: paintBoard(params)
     };
     io.sockets.in(data.gameId).emit('GameStarted', data);
 };
@@ -230,6 +232,57 @@ function playerRestart(data) {
    *                       *
    ************************* */
 
+
+getColor: function(data)
+{
+	switch(data.colorNum) //right now there are 5 colors + a default color.
+	{
+		case 1:
+			return "#aa88FF"; // purple
+			break;
+		case 2:
+			return "#9dffb4"; // light green
+			break;
+		case 3:
+			return "#f8ff9d"; // light yellow
+			break;
+		case 4:
+			return "#ff9f9d"; // pink
+			break;
+		case 5:
+			return "#99ccf5"; //light blue
+			break;
+		case 6:
+			return "#5588b1"; //
+		default:
+			return "#AAAAAA";
+	}
+},
+
+paintBoard: function(data)
+{
+	var tablesCode = "<table class='trails'>";
+	var Color = 0;
+	for (var i=0; i<data.height; i++)
+	{
+		tablesCode += "<tr class='trails'>";
+		for(var j=0; j<data.width; j++)
+		{
+			Color = Math.floor(Math.random()*data.colorsNum + 1);
+			tablesCode += "<td class='trails' style=background:" + App.getColor({colorNum: Color}) +" ;></td>" 
+		}
+		tablesCode += "</tr>";
+	}
+	tablesCode += "</table>";
+	//var myDiv = document.getElementsByClassName("gameBoard");
+	//myDiv.innerHTML = tablesCode;
+	$(".gameBoard").html(tablesCode);
+},
+
+
+
+
+
 /**
  * Get a word for the host, and a list of words for the player.
  *
@@ -357,3 +410,4 @@ var wordPool = [
         "decoys" : [ "snout","tongs","stent","tense","terns","santo","stony","toons","snort","stint" ]
     }
 ]
+
