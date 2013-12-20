@@ -759,7 +759,7 @@ jQuery(function($){
 
             // Decrement the displayed timer value on each 'tick'
             function countItDown(){
-                startTime = 0;//decrement startTime: //-= 1
+                startTime = 0;///decrement startTime: //-= 1
                 $el.text(startTime);
                 App.doTextFit('#hostWord');
 
