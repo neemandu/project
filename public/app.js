@@ -540,7 +540,7 @@ jQuery(function($){
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
                 
                 $(".gameBoard").html(data.board);
-                var params = {};;
+                var params = {id:App.Player.myid };
                 $(".playersList").append(App.Player.buildPlayer(params));
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
@@ -549,6 +549,8 @@ jQuery(function($){
                                             $('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
                                     
                     //        alert('key is: ' + k + ', value is: ' + PList[k]);
+                                            params = {id:k };
+                                            $(".playersList").append(App.Player.buildPlayer(params));
                     }
                 }
                             
@@ -598,9 +600,9 @@ jQuery(function($){
             buildPlayer: function(data)
     		{
     		var playerCode ="";
-    		playerCode += '<table class="player" id="player' + App.Player.myid +'">';
+    		playerCode += '<table class="player" id="player' + data.id +'">';
     		playerCode +=	'<tr> <td class="playerIMG">image </td>'+
-    			'<td class="playerID">' + App.Player.myid + '</td>'+
+    			'<td class="playerID">' + data.id + '</td>'+
     			'<td class="playerChis" align="center">'+
     			'<table id="playerChips">'+
     			'<tr>'+
@@ -757,7 +759,7 @@ jQuery(function($){
 
             // Decrement the displayed timer value on each 'tick'
             function countItDown(){
-                startTime -= 1
+                startTime = 0;//decrement startTime: //-= 1
                 $el.text(startTime);
                 App.doTextFit('#hostWord');
 
