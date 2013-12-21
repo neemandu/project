@@ -70,22 +70,22 @@
 					makes an offer of:
 				</td>	
 				<td>
-					<table id="colorsToOffer" style="border:1px solid black;">
+					<table id="colorsToOffer0">
 						<tr>
-							<td bgcolor="red" width="8"/>
-							<td>1</td>
-							<td bgcolor="green" width="8"/>
-							<td>2</td>
-							<td bgcolor="blue" width="8"/>
-							<td>3</td>
+							<td class="purpleOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LGOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LYOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
 						</tr>
 						<tr>
-							<td bgcolor="purple" width="8"/>
-							<td>1</td>
-							<td bgcolor="yellow" width="8"/>
-							<td>2</td>
-							<td bgcolor="orange" width="8"/>
-							<td>3</td>
+							<td class="pinkOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LBOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="DBOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
 						</tr>
 					</table>
 				</td>
@@ -93,22 +93,22 @@
 					in exchange to:
 				</td>
 				<td>
-					<table id="colorsToGet" style="border:1px solid black;">
+					<table id="colorsToGet0">
 						<tr>
-							<td bgcolor="red" width="8"/>
-							<td>1</td>
-							<td bgcolor="green" width="8"/>
-							<td>2</td>
-							<td bgcolor="blue" width="8"/>
-							<td>3</td>
+							<td class="purpleOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LGOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LYOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
 						</tr>
 						<tr>
-							<td bgcolor="purple" width="8"/>
-							<td>1</td>
-							<td bgcolor="yellow" width="8"/>
-							<td>2</td>
-							<td bgcolor="orange" width="8"/>
-							<td>3</td>
+							<td class="pinkOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="LBOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
+							<td class="DBOfferSquare"/>
+							<td><input type="number" style="width:30px;"></td>
 						</tr>
 					</table>
 				</td>
@@ -150,10 +150,10 @@
 				</table>
 			</div>
 			<div class="downDiv">
-				<table class="downTable">
+				<table id="downTable" class="downTable">
 					<tr>
 						<td class="makeGetOffer">
-							<table id="offersTable">
+							<table id="historyRow0"><!--offersTable-->
 								<tr>
 									<td>
 									make an offer to:
@@ -215,11 +215,6 @@
 								</tr>
 							</table>
 						</td>
-						<tr>
-							<td class="offersHistory">
-								offers history here:
-							</td>
-						</tr>
 					</tr>
 				</table>
 			</div>
@@ -228,6 +223,13 @@
 	</body>
     </script>
 
+	<script id="tableRows" type="text/template">
+		<tr>
+			<td class="makeGetOffer">
+				offers history here:
+			</td>
+		</tr>
+	</script>
     <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
     <script id="create-game-template" type="text/template">
         <div class="titleWrapper">

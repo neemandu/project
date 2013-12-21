@@ -9,7 +9,8 @@ jQuery(function($){
      */
  //   var myid = 0;
     var IO = {
-    		
+    	//colors: ['purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'],
+		//
 
         /**
          * This is called when the page is displayed. It connects the Socket.IO client
@@ -132,24 +133,42 @@ jQuery(function($){
                                             })
                     })
                     $('#SentBy').text('Player '+data.sentFrom);*/
-        	$('.offersHistory').html(App.$CTOfferToGet);
-            var k =0;
-            $('#colorsToOffer tr').each(function(){
-                                    $(this).find('td:odd').each(function(){
-                                                    $(this).text(JSON.parse(data.JcolorsToOffer)[k]);
-                                                    k++;
+     //   	$('.offersHistory').html(App.$CTOfferToGet);
+			
+			$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.historyCount+'"><tr></tr></table></td></tr>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td id="sentBy'+ App.Player.historyCount+'"></td>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td>makes an offer of:</td>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td><table id="colorsToOffer'+ App.Player.historyCount+'"></table></td>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td>in exchange:</td>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td><table id="colorsToGet'+ App.Player.historyCount+'"></table></td>');
+			$('#colorsToOffer'+ App.Player.historyCount).append('<tr></tr><tr></tr>');
+			$('#colorsToGet'+ App.Player.historyCount).append('<tr></tr><tr></tr>');
+			var k =0
+			var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+			//var colors =  {'purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'};
+            
+			$('#colorsToOffer'+ App.Player.historyCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
                                     })
-            })
 
             k=0;
-            $('#colorsToGet tr').each(function(){
-                                    $(this).find('td:odd').each(function(){
-                                                    $(this).text(JSON.parse(data.JcolorsToGet)[k]);
-                                                    k++;
+			$('#colorsToGet'+ App.Player.historyCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
                                     })
-            })
-            $('#SentBy').text('Player '+data.sentFrom);
-    
+			
+            $('#sentBy'+App.Player.historyCount+'').text('Player '+data.sentFrom);
+                App.Player.historyCount++;
+
     },
 
         /**
@@ -481,7 +500,7 @@ jQuery(function($){
            ***************************** */
 
         Player : {
-        	
+        	historyCount: 1,
         	myid: 0,
             /**
              * A reference to the socket ID of the Host
