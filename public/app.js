@@ -134,13 +134,15 @@ jQuery(function($){
                     })
                     $('#SentBy').text('Player '+data.sentFrom);*/
      //   	$('.offersHistory').html(App.$CTOfferToGet);
-			
-			$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.historyCount+'"><tr></tr></table></td></tr>');
+			var cur =  App.Player.historyCount-1;
+		//	alert($('#downTable > tbody > tr:eq('+cur+')').text());
+			$('#downTable > tbody > tr:eq('+cur+')').after('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.historyCount+'"><tr></tr></table></td></tr>');
 			$('#historyRow'+App.Player.historyCount+' tr').append('<td id="sentBy'+ App.Player.historyCount+'"></td>');
 			$('#historyRow'+App.Player.historyCount+' tr').append('<td>makes an offer of:</td>');
 			$('#historyRow'+App.Player.historyCount+' tr').append('<td><table id="colorsToOffer'+ App.Player.historyCount+'"></table></td>');
 			$('#historyRow'+App.Player.historyCount+' tr').append('<td>in exchange:</td>');
 			$('#historyRow'+App.Player.historyCount+' tr').append('<td><table id="colorsToGet'+ App.Player.historyCount+'"></table></td>');
+			$('#historyRow'+App.Player.historyCount+' tr').append('<td><div><button id="acceptOffer"> accept </button></div><div><button id="rejectOffer"> reject </button></div></td>');
 			$('#colorsToOffer'+ App.Player.historyCount).append('<tr></tr><tr></tr>');
 			$('#colorsToGet'+ App.Player.historyCount).append('<tr></tr><tr></tr>');
 			var k =0
@@ -148,21 +150,21 @@ jQuery(function($){
 			//var colors =  {'purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'};
             
 			$('#colorsToOffer'+ App.Player.historyCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
 									k++;
                                     })
 
             k=0;
 			$('#colorsToGet'+ App.Player.historyCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td>'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
 									k++;
                                     })
 			
