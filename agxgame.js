@@ -2,6 +2,9 @@ var io;
 var gameSocket;
 var idRoomPair ={};
 var roomSize = 2;
+//var currentRoomId = -1;
+var newRoomsQueue = require('./Queue');
+newRoomsQueue.Queue();
 //var playerCounter = 0;
 
 /**
@@ -40,6 +43,8 @@ exports.initGame = function(sio, socket){
 function hostCreateNewGame() {
     // Create a unique Socket.IO Room
     var thisGameId = ( Math.random() * 100000 ) | 0;
+   // currentRoomId = thisGameId;
+    newRoomsQueue.enqueue(thisGameId);
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
@@ -61,6 +66,7 @@ function hostPrepareGame(gameId) {
     };
     //console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
+    newRoomsQueue.dequeue();
 }
 
 /*
@@ -152,8 +158,11 @@ function playerJoinGame(data) {
     var sock = this;
 
     // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
-    
+   // var room = gameSocket.manager.rooms["/" + data.gameId];
+    var currRoom = newRoomsQueue.peek();
+    data.gameId = currRoom;
+    console.log('currentRoomId: '+currRoom);
+    var room = gameSocket.manager.rooms["/" + currRoom];
     console.log('rooom id: '+room);
 
     // If the room exists...
@@ -167,8 +176,9 @@ function playerJoinGame(data) {
 	        data.mySocketId = sock.id;
 	
 	        // Join the room
-	        sock.join(data.gameId);
-	        
+	 //       sock.join(data.gameId);
+	        //join the current open room.
+	        sock.join(currRoom);
 	        data.playerId = room.length - 2;//minus the host. this player is the last in the room.
 	
 	        console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
