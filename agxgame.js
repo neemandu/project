@@ -2,6 +2,10 @@ var io;
 var gameSocket;
 var idRoomPair ={};
 var roomSize = 2;
+var numOfColors = 6;
+var numOfChips = 15;
+var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1","#AAAAAA");
+
 //var currentRoomId = -1;
 var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
@@ -30,6 +34,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('playerAnswer', playerAnswer);
     gameSocket.on('playerRestart', playerRestart);
     gameSocket.on('sendMessage', sendMessage);
+    gameSocket.on('updateChips', updateChips);
 }
 
 /* *******************************
@@ -179,6 +184,8 @@ function playerJoinGame(data) {
 	 //       sock.join(data.gameId);
 	        //join the current open room.
 	        sock.join(currRoom);
+	        var chips = createChips();
+	        data.chips = chips;
 	        data.playerId = room.length - 2;//minus the host. this player is the last in the room.
 	
 	        console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
@@ -196,6 +203,28 @@ function playerJoinGame(data) {
         this.emit('error',{message: "This room does not exist."} );
     }
 }
+
+function createChips(){
+	var ints = new Array(0,1,2,3,4,5,6);
+	var chips = [];
+	console.log('max num of chips: '+color+' amount: '+numOfChips);
+    for(var i=0; i<numOfColors;i++){
+    	 var colorNumber = Math.floor(Math.random()*(ints.length - i));
+    	 console.log('colorNumber: '+colorNumber);
+    	 //swap
+    	 var tmp = ints[colorNumber]; 
+    	 ints[colorNumber] = ints[ints.length-i-1];
+    	 ints[ints.length-i-1] = tmp;
+    	 
+    	 var numchips = Math.floor(Math.random()*numOfChips);
+    	 var color = getColor({colorNum: colorNumber});
+    	 console.log('color: '+color+' amount: '+numchips);
+    	 chips[color] = numOfChips;
+    }
+    return chips;
+
+}
+
 
 function getPlayerId(room,socket){
 	var i=0;
@@ -289,8 +318,14 @@ function paintBoard(data){
 }
 
 
-
-
+/**
+ * this function update the rest of the players with the current transaction
+ * @param player1 the first player
+ * @param player2 the second player
+ */
+function updateChips(gameId,player1,player2){
+	io.sockets.in(data.gameId).emit('updateChips', {gameId: gameId, player1 : player1,player2 : player2});
+}
 
 /**
  * Get a word for the host, and a list of words for the player.
