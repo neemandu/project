@@ -171,8 +171,26 @@ jQuery(function($){
             $('#sentBy'+App.Player.historyCount+'').text('Player '+data.sentFrom);
                 App.Player.historyCount++;
 
-    },
-
+	    },
+	
+	    /**
+		 *  add the chips amount to the player's chip set respectively 
+		 *  data = { id:num, colorsToAdd: ["num", "num", ...,"num"] }
+		 *  											^^
+		 *  											||
+		 *  										an array of numbers
+		 */
+		addChips: function(data)
+		{
+			
+			var colors = data.colorsToAdd;
+	        var myPlayerTable = '#player' + data.id + ' tr';
+			 $(myPlayerTable).each(function(){
+				 $(this).find('#Chips td:odd').each(function(i){
+					 $(this).html($(this).val()+ colors[i]);
+				 })
+			 })
+		},
         /**
          * An error has occurred.
          * @param data
@@ -521,7 +539,18 @@ jQuery(function($){
                 // console.log('Clicked "Join A Game"');
 
                 // Display the Join Game HTML on the player's screen.
-                App.$gameArea.html(App.$templateJoinGame);
+                var data = {
+                        gameId : +($('#inputGameId').val()),
+                        playerName : $('#inputPlayerName').val() || 'anon'
+                    };
+                
+                // Send the gameId and playerName to the server
+                IO.socket.emit('playerJoinGame', data);
+
+                // Set the appropriate properties for the current player.
+                App.myRole = 'Player';
+                App.Player.myName = data.playerName;
+                //App.$gameArea.html(App.$templateJoinGame);
             },
 
             /**
