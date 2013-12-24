@@ -4,7 +4,7 @@ var idRoomPair ={};
 var roomSize = 2;
 var numOfColors = 6;
 var numOfChips = 15;
-var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1","#AAAAAA");
+var colorArray = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default");
 
 //var currentRoomId = -1;
 var newRoomsQueue = require('./Queue');
