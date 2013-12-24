@@ -35,6 +35,7 @@ jQuery(function($){
             IO.socket.on('recieveMessage', IO.recieveMessage );
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('GameStarted', IO.GameStarted );
+            IO.socket.on('updateChips', IO.updateChips)
             IO.socket.on('error', IO.error );
         },
 
@@ -147,8 +148,27 @@ jQuery(function($){
 			$('#colorsToGet'+ App.Player.historyCount).append('<tr></tr><tr></tr>');
 			var k =0
 			var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
-			//var colors =  {'purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'};
-            
+			
+			/*
+			 * on click accept : move chips between players 
+			 */
+			$('#historyRow'+App.Player.historyCount+' tr').find('#acceptOffer').click(function()
+					{
+					//alert(data.sentFrom);
+						var params;
+						
+						//alert(data.JcolorsToGet);
+						var JcolorsToGet = JSON.parse(data.JcolorsToGet);
+						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet};
+						
+						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
+						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
+						IO.socket.emit('updateChips',App.gameId,player1,player2);
+					})
+					/*
+					 * until here.
+					 */
+					
 			$('#colorsToOffer'+ App.Player.historyCount+' tr').each(function(){
                                     $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
 									k++;
@@ -172,25 +192,28 @@ jQuery(function($){
                 App.Player.historyCount++;
 
 	    },
-	
+	    
 	    /**
-		 *  add the chips amount to the player's chip set respectively 
-		 *  data = { id:num, colorsToAdd: ["num", "num", ...,"num"] }
-		 *  											^^
-		 *  											||
-		 *  										an array of numbers
-		 */
-		addChips: function(data)
-		{
-			
-			var colors = data.colorsToAdd;
-	        var myPlayerTable = '#player' + data.id + ' tr';
-			 $(myPlayerTable).each(function(){
-				 $(this).find('#Chips td:odd').each(function(i){
-					 $(this).html($(this).val()+ colors[i]);
-				 })
-			 })
-		},
+	     *  the server calls this function to update the state of chips within players
+	     */
+	    updateChips: function(data)
+	    {
+	    	//alert(data.player1.id +', '+ data.player1.colorsToAdd);
+	    	var toAdd1 = new Array();
+	    	var toAdd2 = new Array();
+	    	for(var i=0; i<data.player1.colorsToAdd.length; i++)
+	    		{
+	    			toAdd1[i] = data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i];
+	    			toAdd2[i] = -(data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i]);
+	    		}
+	    	var toSend1 = {id: data.player1.id, colorsToAdd: toAdd1};
+	    	var toSend2 = {id: data.player2.id, colorsToAdd: toAdd2};
+	    	
+	    	App.Player.addChips(toSend1);
+	    	App.Player.addChips(toSend2);
+	    },
+	
+	    
         /**
          * An error has occurred.
          * @param data
@@ -579,7 +602,7 @@ jQuery(function($){
 
             GameStarted : function(data) {
                 // Update the current round
-                   alert('GameStarted for real!! gameId: '+App.gameId);
+//                   alert('GameStarted for real!! gameId: '+App.gameId);
 
                 App.currentRound = data.round;
                 //alert as number of players to see if it passed
@@ -654,23 +677,38 @@ jQuery(function($){
     		playerCode +=	'<tr> <td class="playerIMG">image </td>'+
     			'<td class="playerID">' + data.id + '</td>'+
     			'<td class="playerChis" align="center">'+
-    			'<table id="playerChips">'+
+    			'<table id="Chips">'+
     			'<tr>'+
-    			'<td class="purpleOfferSquare"/><td class="colorAmount">num</td>'+
-    			'<td class="LGOfferSquare"/><td class="colorAmount">num</td>'+
-    			'<td class="LYOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="purpleOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="LGOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="LYOfferSquare"/><td class="colorAmount">0</td>'+
     			'</tr>'+
     			' <tr>'+
-    			'<td class="pinkOfferSquare"/><td class="colorAmount">num</td>'+
-    			'<td class="LBOfferSquare"/><td class="colorAmount">num</td>'+
-    			'<td class="DBOfferSquare"/><td class="colorAmount">num</td>'+
+    			'<td class="pinkOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="LBOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="DBOfferSquare"/><td class="colorAmount">0</td>'+
     			'</tr></table></td></tr></table>';
     		return playerCode;
     		},
-            /**
-             * ***********************************
-             */
-            
+    		
+    		
+    		/**
+    		 *  add the chips amount to the player's chip set respectively 
+    		 *  data = { id:num, colorsToAdd: ["num", "num", ...,"num"] }
+    		 *  											^^
+    		 *  											||
+    		 *  										an array of numbers
+    		 */
+    		addChips: function(data)
+    		{
+    			var colors = data.colorsToAdd;
+    	        var myPlayerTable = '#player' + data.id + ' tr';
+    			 $(myPlayerTable).each(function(){
+    				 $(this).find('#Chips td:odd').each(function(i){
+    					 $(this).html($(this).val()+ colors[i]);
+    				 })
+    			 })
+    		},
             /**
              *  Click handler for the Player hitting a word in the word list.
              */
