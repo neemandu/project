@@ -223,7 +223,7 @@ function setLocation(){
 			y : ''
 	}
 	
-	return return location;
+	return location;
 
 }
 
