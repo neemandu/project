@@ -701,13 +701,15 @@ jQuery(function($){
     		 */
     		addChips: function(data)
     		{
+    			//alert(data.id +', '+ data.colorsToAdd);
     			var colors = data.colorsToAdd;
     	        var myPlayerTable = '#player' + data.id + ' tr';
-    			 $(myPlayerTable).each(function(){
-    				 $(this).find('#Chips td:odd').each(function(i){
-    					 $(this).html($(this).val()+ colors[i]);
-    				 })
-    			 })
+				 $(myPlayerTable).each(function(){
+					 $(this).find('#Chips td:odd').each(function(i){
+						 var currChips = parseInt($(this).html()) + parseInt(colors[i]);
+						 $(this).html(currChips);
+					 })
+				 })
     		},
             /**
              *  Click handler for the Player hitting a word in the word list.
