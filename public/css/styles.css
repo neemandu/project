@@ -206,6 +206,11 @@ td.makeGetOffer
 	border-color:#AAAAAA;
 }
 
+table.historyRow
+{
+	width:700px;
+}
+
 td.offersHistory
 {
 	border-style:groove;
@@ -336,7 +341,8 @@ td.playerID
 
 td.colorAmount
 {
-	width:8px;
+	width:15px;
+	text-align:center;
 	background-color:white;
 }
 
