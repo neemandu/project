@@ -35,6 +35,7 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendMessage', sendMessage);
 	gameSocket.on('updateChips', updateChips);
+	gameSocket.on('movePlayer', movePlayer);
 }
 
 /* *******************************
@@ -216,6 +217,18 @@ function playerJoinGame(data) {
 		// Otherwise, send an error message back to the player.
 		this.emit('error',{message: "This room does not exist."} );
 	}
+}
+/**
+ * this function emits anyone in the room the new player's location.
+ * @param data {gameId: int, playerId: int, x: int, y: int}
+ */
+function movePlayer(data1){	
+	var data = {
+			playerId: data1.playerId,
+			x: data1.x,
+			y: data1.y
+	}
+	io.sockets.in(data.gameId).emit('movePlayer', data);	
 }
 
 function createChips(){
