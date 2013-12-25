@@ -229,7 +229,7 @@ jQuery(function($){
     	 * keeps the names of colors for every possible color on the board
     	 */	
     	colorArray : ["purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default"] ,
-
+    	playerColors: ["green.png", "orange.png", "black.png", "blue.png" ],
         /**
          * Keep track of the gameId, which is identical to the ID
          * of the Socket.IO Room used for the players and host to communicate
@@ -549,6 +549,11 @@ jQuery(function($){
         Player : {
         	historyCount: 1,
         	myid: 0,
+        	
+        	/**
+        	 *  an array of chips - represents the chip set of player. 
+        	 */
+        	myChips: [0,0,0,0,0,0],
             /**
              * A reference to the socket ID of the Host
              */
@@ -558,8 +563,6 @@ jQuery(function($){
              * The player's name entered on the 'Join' screen.
              */
             myName: '',
-            
-            myChips: [],
 
             /**
              * Click handler for the 'JOIN' button
@@ -684,8 +687,14 @@ jQuery(function($){
             	if(data.id == App.Player.myid)
             		{
             			$('#player' + data.id).css("border-color", "#FF7f00");
+            			for(var i=0; i<data.chips.length; i++)
+            				{
+            					App.Player.myChips[i] = data.chips[i];
+            				} 
             		}
-            	
+            	var url = "Pictures/" +App.playerColors[data.id] ;
+            	//alert(url);
+    			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
 
             	//TODO !!! something with the location
             },
@@ -702,16 +711,14 @@ jQuery(function($){
     			'<td class="playerID">' + data.id + '</td>'+
     			'<td class="playerChis" align="center">'+
     			'<table id="Chips">'+
-    			'<tr>'+
-    			'<td class="purpleOfferSquare"/><td class="colorAmount">' +data.chips[0]+ '</td>'+
-    			'<td class="LGOfferSquare"/><td class="colorAmount">' +data.chips[1]+ '</td>'+
-    			'<td class="LYOfferSquare"/><td class="colorAmount">' +data.chips[2]+ '</td>'+
-    			'</tr>'+
-    			' <tr>'+
-    			'<td class="pinkOfferSquare"/><td class="colorAmount">' +data.chips[3]+ '</td>'+
-    			'<td class="LBOfferSquare"/><td class="colorAmount">' +data.chips[4]+ '</td>'+
-    			'<td class="DBOfferSquare"/><td class="colorAmount">' +data.chips[5]+ '</td>'+
-    			'</tr></table></td></tr></table>';
+    			'<tr>';
+    			for(var i=0; i<data.chips.length; i++)
+				{
+    				if(i==3)
+    					playerCode += '</tr><tr>';
+    				playerCode += '<td class='+ App.colorArray[i] +'/><td class="colorAmount">' +data.chips[i]+ '</td>';	
+				}
+    			playerCode += '</tr></table></td></tr></table>';
     		return playerCode;
     		},
     		
