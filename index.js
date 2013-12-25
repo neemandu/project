@@ -1,6 +1,26 @@
 // Import the Express module
 var express = require('express');
 
+//Import the logger module
+var log4js = require('log4js');
+log4js.configure({
+  appenders: [
+    { type: 'console' },
+    { type: 'file', filename: 'logs/actions.log', category: 'actions' },
+    { type: 'file', filename: 'logs/winners.log', category: 'winners' }
+  ]
+});
+var logger = log4js.getLogger('cheese');
+logger.setLevel('DEBUG');
+
+logger.trace('Entering cheese testing');
+logger.debug('Got cheese.');
+logger.info('Cheese is Gouda.');
+logger.warn('Cheese is quite smelly.');
+logger.error('Cheese is too ripe!');
+logger.fatal('Cheese was breeding ground for listeria.');
+
+
 // Import the 'path' module (packaged with Node.js)
 var path = require('path');
 
