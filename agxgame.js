@@ -89,6 +89,7 @@ function hostStartGame(gameId) {
 	}
 	var params = {height: 8, width: 8, colorsNum: 6};
 	var boardHtml = paintBoard(params);
+	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
 			playerList : playerList,
@@ -96,6 +97,16 @@ function hostStartGame(gameId) {
 			board: boardHtml
 	};
 	io.sockets.in(data.gameId).emit('GameStarted', data);
+	/**
+	 * create players data:
+	 */
+	for (var i=0;i<room.length-1;i++)
+	{ 
+		player = {id:i, chips: createChips(), location: setLocation()};
+		io.sockets.in(data.gameId).emit('addPlayer', player);
+	}
+	/*****************************************/
+	
 };
 
 /**
@@ -185,9 +196,9 @@ function playerJoinGame(data) {
 			//join the current open room.
 			sock.join(currRoom);
 	
-			data.chips = createChips();
+			//data.chips = createChips();
 			
-			data.location = setLocation();
+			//data.location = setLocation();
 			
 			data.playerId = room.length - 2;//minus the host. this player is the last in the room.
 
@@ -208,11 +219,11 @@ function playerJoinGame(data) {
 }
 
 function createChips(){
-	var chips = [];	
+	var chips = new Array();	
 	for(var i=0; i<numOfColors;i++){	 
 		var numchips = Math.floor(Math.random()*numOfChips);
 		console.log('chips color: '+colorArray[i]+' amount: '+numchips);
-		chips[colorArray[i]] = numchips;
+		chips[i] = numchips;
 	}
 	return chips;
 }

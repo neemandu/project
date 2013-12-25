@@ -9,7 +9,7 @@ jQuery(function($){
      */
  //   var myid = 0;
     var IO = {
-    	//colors: ['purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'],
+//    	colors: ['purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'],
 		//
 
         /**
@@ -35,6 +35,7 @@ jQuery(function($){
             IO.socket.on('recieveMessage', IO.recieveMessage );
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('GameStarted', IO.GameStarted );
+            IO.socket.on('addPlayer', App.Player.addPlayer);
             IO.socket.on('updateChips', IO.updateChips)
             IO.socket.on('error', IO.error );
         },
@@ -72,7 +73,6 @@ jQuery(function($){
             //
             // So on the 'host' browser window, the App.Host.updateWiatingScreen function is called.
             // And on the player's browser, App.Player.updateWaitingScreen is called.
-        	
             App[App.myRole].updateWaitingScreen(data);
         },
 
@@ -225,6 +225,10 @@ jQuery(function($){
     };
 
     var App = {
+    	/**
+    	 * keeps the names of colors for every possible color on the board
+    	 */	
+    	colorArray : ["purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default"] ,
 
         /**
          * Keep track of the gameId, which is identical to the ID
@@ -554,6 +558,8 @@ jQuery(function($){
              * The player's name entered on the 'Join' screen.
              */
             myName: '',
+            
+            myChips: [],
 
             /**
              * Click handler for the 'JOIN' button
@@ -614,7 +620,7 @@ jQuery(function($){
                 
                 $(".gameBoard").html(data.board);
                 var params = {id:App.Player.myid };
-                $(".playersList").append(App.Player.buildPlayer(params));
+//                $(".playersList").append(App.Player.buildPlayer(params));
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
                 for (var k in PList) {
@@ -622,8 +628,8 @@ jQuery(function($){
                                             $('#playersDropDown').append('<option value="'+k+'">'+PList[k]+'</option>');
                                     
                     //        alert('key is: ' + k + ', value is: ' + PList[k]);
-                                            params = {id:k };
-                                            $(".playersList").append(App.Player.buildPlayer(params));
+//                                            params = {id:k };
+//                                            $(".playersList").append(App.Player.buildPlayer(params));
                     }
                 }
                             
@@ -667,7 +673,25 @@ jQuery(function($){
             },
             
             /**
-             * build player html codegiven his id
+             * adds a player inside playersList
+             * data= {id:num, chips: ["num", "num".."num], location: "some location"};
+             */
+            addPlayer: function(data)
+            {
+            	var htmlPlayer = App.Player.buildPlayer(data);
+            	
+            	$(".playersList").append(htmlPlayer);
+            	if(data.id == App.Player.myid)
+            		{
+            			$('#player' + data.id).css("border-color", "#FF7f00");
+            		}
+            	
+
+            	//TODO !!! something with the location
+            },
+            
+            /**
+             * build player html code given his id
              */
             
             buildPlayer: function(data)
@@ -679,14 +703,14 @@ jQuery(function($){
     			'<td class="playerChis" align="center">'+
     			'<table id="Chips">'+
     			'<tr>'+
-    			'<td class="purpleOfferSquare"/><td class="colorAmount">0</td>'+
-    			'<td class="LGOfferSquare"/><td class="colorAmount">0</td>'+
-    			'<td class="LYOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="purpleOfferSquare"/><td class="colorAmount">' +data.chips[0]+ '</td>'+
+    			'<td class="LGOfferSquare"/><td class="colorAmount">' +data.chips[1]+ '</td>'+
+    			'<td class="LYOfferSquare"/><td class="colorAmount">' +data.chips[2]+ '</td>'+
     			'</tr>'+
     			' <tr>'+
-    			'<td class="pinkOfferSquare"/><td class="colorAmount">0</td>'+
-    			'<td class="LBOfferSquare"/><td class="colorAmount">0</td>'+
-    			'<td class="DBOfferSquare"/><td class="colorAmount">0</td>'+
+    			'<td class="pinkOfferSquare"/><td class="colorAmount">' +data.chips[3]+ '</td>'+
+    			'<td class="LBOfferSquare"/><td class="colorAmount">' +data.chips[4]+ '</td>'+
+    			'<td class="DBOfferSquare"/><td class="colorAmount">' +data.chips[5]+ '</td>'+
     			'</tr></table></td></tr></table>';
     		return playerCode;
     		},
@@ -864,7 +888,6 @@ jQuery(function($){
             }
 
         },
-       
         
         /**
          * Make the text inside the given element as big as possible
