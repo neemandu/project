@@ -6,20 +6,33 @@ var log4js = require('log4js');
 log4js.configure({
   appenders: [
     { type: 'console' },
-    { type: 'file', filename: 'logs/actions.log', category: 'actions' },
-    { type: 'file', filename: 'logs/winners.log', category: 'winners' }
+    { type: 'file', filename: 'logs/gameLogger.log', category: 'gameLogger' },
+    { type: 'file', filename: 'logs/winnersLogger.log', category: 'winnersLogger' },
+    { type: 'file', filename: 'logs/offersLogger.log', category: 'offersLogger' },
+    { type: 'file', filename: 'logs/transactionLogger.log', category: 'transactionLogger' },
+    { type: 'file', filename: 'logs/connectionLogger.log', category: 'connectionLogger' }
   ]
 });
-var logger = log4js.getLogger('cheese');
-logger.setLevel('DEBUG');
+var gameLogger = log4js.getLogger('gameLogger');
+var winnersLogger = log4js.getLogger('winnersLogger');
+var offersLogger = log4js.getLogger('offersLogger');
+var transactionLogger = log4js.getLogger('transactionLogger');
+var connectionLogger = log4js.getLogger('connectionLogger');
 
-logger.trace('Entering cheese testing');
-logger.debug('Got cheese.');
-logger.info('Cheese is Gouda.');
-logger.warn('Cheese is quite smelly.');
-logger.error('Cheese is too ripe!');
-logger.fatal('Cheese was breeding ground for listeria.');
-
+gameLogger.setLevel('TRACE');
+winnersLogger.setLevel('TRACE');
+offersLogger.setLevel('TRACE');
+transactionLogger.setLevel('TRACE');
+connectionLogger.setLevel('TRACE');
+//logger.trace('Entering cheese testing');
+//logger.debug('Got cheese.');
+//actionsLogger.trace('Entering cheese testing');
+//actionsLogger.debug('Got cheese.');
+exports.gameLogger = gameLogger;
+exports.winnersLogger = winnersLogger;
+exports.offersLogger = offersLogger;
+exports.transactionLogger = transactionLogger;
+exports.connectionLogger = connectionLogger;
 
 // Import the 'path' module (packaged with Node.js)
 var path = require('path');

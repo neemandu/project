@@ -11,6 +11,20 @@ var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
 //var playerCounter = 0;
 
+
+//nimrod -----------------------------------------
+var conf;
+
+fs = require('fs');
+fs.readFile('\conf.json', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  conf = JSON.parse(data);
+
+});
+//nimrod -----------------------------------------
+
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -88,8 +102,8 @@ function hostStartGame(gameId) {
 		playerList[i] = i;
 		console.log('playerList['+i+']: '+playerList[i]);
 	}
-	var params = {height: 8, width: 8, colorsNum: 6};
-	var boardHtml = paintBoard(params);
+	//var params = {height: 8, width: 8, colorsNum: 6};
+	var boardHtml = paintBoard(conf);
 	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
@@ -300,26 +314,32 @@ function playerRestart(data) {
  *                       *
  ************************* */
 
-function getColor(data){
-	switch(data.colorNum) //right now there are 5 colors + a default color.
+function getColor(data,i,j){
+	var loc = data.Blocks[j];
+	//console.dir(loc[1]);
+	switch(data.Board.Colors[loc[i]]) 
 	{
-	case 1:
+	case "purple":
 		return "#aa88FF"; // purple
 		break;
-	case 2:
+	case "green":
 		return "#9dffb4"; // light green
 		break;
-	case 3:
+	case "yellow":
 		return "#f8ff9d"; // light yellow
 		break;
-	case 4:
+	case "pink":
 		return "#ff9f9d"; // pink
 		break;
-	case 5:
+	case "blue":
 		return "#99ccf5"; //light blue
 		break;
-	case 6:
-		return "#5588b1"; //
+	case "black":
+		return "#2f2e19"; //
+	case "white":
+		return "#fcf7f7"; //
+	case "red":
+		return "#d90f0f"; //		
 	default:
 		return "#AAAAAA";
 	}
@@ -328,13 +348,12 @@ function getColor(data){
 function paintBoard(data){
 	var tablesCode = "<table class='trails'>";
 	var Color = 0;
-	for (var i=0; i<data.height; i++)
+	for (var i=0; i<data.Board.Size.Lines; i++)
 	{
 		tablesCode += "<tr class='trails'>";
-		for(var j=0; j<data.width; j++)
+		for(var j=0; j< data.Board.Size.Rows; j++)
 		{
-			Color = Math.floor(Math.random()*data.colorsNum + 1);
-			tablesCode += "<td class='trails' style=background:" + getColor({colorNum: Color}) +" ;></td>" 
+			tablesCode += "<td class='trails' style=background:" + getColor(data,i,j) +" ;></td>" 
 		}
 		tablesCode += "</tr>";
 	}
@@ -427,64 +446,5 @@ function shuffle(array) {
 	return array;
 }
 
-/**
- * Each element in the array provides data for a single round in the game.
- *
- * In each round, two random "words" are chosen as the host word and the correct answer.
- * Five random "decoys" are chosen to make up the list displayed to the player.
- * The correct answer is randomly inserted into the list of chosen decoys.
- *
- * @type {Array}
- */
-var wordPool = [
-                {
-                	"words"  : [ "sale","seal","ales","leas" ],
-                	"decoys" : [ "lead","lamp","seed","eels","lean","cels","lyse","sloe","tels","self" ]
-                },
 
-                {
-                	"words"  : [ "item","time","mite","emit" ],
-                	"decoys" : [ "neat","team","omit","tame","mate","idem","mile","lime","tire","exit" ]
-                },
-
-                {
-                	"words"  : [ "spat","past","pats","taps" ],
-                	"decoys" : [ "pots","laps","step","lets","pint","atop","tapa","rapt","swap","yaps" ]
-                },
-
-                {
-                	"words"  : [ "nest","sent","nets","tens" ],
-                	"decoys" : [ "tend","went","lent","teen","neat","ante","tone","newt","vent","elan" ]
-                },
-
-                {
-                	"words"  : [ "pale","leap","plea","peal" ],
-                	"decoys" : [ "sale","pail","play","lips","slip","pile","pleb","pled","help","lope" ]
-                },
-
-                {
-                	"words"  : [ "races","cares","scare","acres" ],
-                	"decoys" : [ "crass","scary","seeds","score","screw","cager","clear","recap","trace","cadre" ]
-                },
-
-                {
-                	"words"  : [ "bowel","elbow","below","beowl" ],
-                	"decoys" : [ "bowed","bower","robed","probe","roble","bowls","blows","brawl","bylaw","ebola" ]
-                },
-
-                {
-                	"words"  : [ "dates","stead","sated","adset" ],
-                	"decoys" : [ "seats","diety","seeds","today","sited","dotes","tides","duets","deist","diets" ]
-                },
-
-                {
-                	"words"  : [ "spear","parse","reaps","pares" ],
-                	"decoys" : [ "ramps","tarps","strep","spore","repos","peris","strap","perms","ropes","super" ]
-                },
-
-                {
-                	"words"  : [ "stone","tones","steno","onset" ],
-                	"decoys" : [ "snout","tongs","stent","tense","terns","santo","stony","toons","snort","stint" ]
-                }
-                ]
 
