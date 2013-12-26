@@ -1,6 +1,6 @@
 {
-    "name" : "Anagrammatix",
-    "description" : "Anagram Multiplayer Game",
+    "name" : "ColoredTrails",
+    "description" : "Multiplayer Game",
     "version" : "0.1.0",
     "private" : true,
     "dependencies": {
