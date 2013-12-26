@@ -128,7 +128,7 @@ function hostStartGame(gameId) {
 	 */
 	for (var i=0;i<room.length-1;i++)
 	{ 
-		player = {id:i, chips: createChips(), location: setLocation()};
+		player = {id:i, chips: createChips(), location: setLocation(i)};
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
 	/*****************************************/
@@ -266,10 +266,10 @@ function createChips(){
 	return chips;
 }
 
-function setLocation(){
+function setLocation(id){
 	var location = {
-			x : '',
-			y : ''
+			x : 0,
+			y : id
 	}
 	
 	return location;
@@ -324,6 +324,25 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
+function beginFazes(data){
+	var tablesCode = "<table class='trails'>";
+	var Color = 0;
+	for (var i=0; i<data.Board.Size.Lines; i++)
+	{
+		tablesCode += "<tr class='trails'>";
+		for(var j=0; j< data.Board.Size.Rows; j++)
+		{
+			tablesCode += "<td class='trails' style=background:" + getColor(data,i,j) +" ;></td>" 
+		}
+		tablesCode += "</tr>";
+	}
+	tablesCode += "</table>";
+	//var myDiv = document.getElementsByClassName("gameBoard");
+	//myDiv.innerHTML = tablesCode;
+	return tablesCode;
+}
+
+
 
 function getColor(data,i,j){
 	var loc = data.Blocks[j];
