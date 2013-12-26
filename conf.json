@@ -10,4 +10,19 @@
 					[2,5,3,4,4,4],
 					[2,2,3,4,5,4],
 					[3,3,3,4,4,4]]		
+    },
+    "Fazes" : {
+    	"Faze1" : {
+    		"operation" : "offers",
+    		"time" : 30
+    	},
+    	"Faze2" : {
+    		"operation" : "transfers",
+    		"time" : 30
+    	},
+    	"Faze3" : {
+    		"operation" : "moves",
+    		"time" : 30
+    	}
     }
+   

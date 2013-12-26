@@ -1,3 +1,12 @@
+//importing loggers
+var log = require('./index');
+var connectionLogger = log.connectionLogger;
+var gameLogger = log.gameLogger;
+var winnersLogger = log.winnerLogger;
+var offersLogger = log.offersLogger;
+var transactionLogger = log.transactionLogger;
+
+
 var io;
 var gameSocket;
 var idRoomPair ={};
@@ -65,6 +74,8 @@ function hostCreateNewGame() {
 	var thisGameId = ( Math.random() * 100000 ) | 0;
 	// currentRoomId = thisGameId;
 	newRoomsQueue.enqueue(thisGameId);
+	
+	gameLogger.trace('Game #'+thisGameId+' was created by HOST:'+this.id);
 
 	// Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
 	this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
