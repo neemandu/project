@@ -131,6 +131,8 @@ function hostStartGame(gameId) {
 		player = {id:i, chips: createChips(), location: setLocation(i)};
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
+	beginFazes();
+	
 	/*****************************************/
 	
 };
@@ -324,23 +326,29 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
-function beginFazes(data){
-	var tablesCode = "<table class='trails'>";
-	var Color = 0;
-	for (var i=0; i<data.Board.Size.Lines; i++)
-	{
-		tablesCode += "<tr class='trails'>";
-		for(var j=0; j< data.Board.Size.Rows; j++)
-		{
-			tablesCode += "<td class='trails' style=background:" + getColor(data,i,j) +" ;></td>" 
+function beginFazes(){
+	console.log('beginFazes');
+	var numOfFazes = conf.Fazes.length;
+	for(var i=0; i<numOfFazes;i++){
+		var data = {
+			'operation' : conf.Fazes[i].operation,
+			'time' : conf.Fazes[i].time,
 		}
-		tablesCode += "</tr>";
+		console.log('ssdsd'+ conf.Fazes[i].operation);
+		if(i === 0){
+			setTimeout((function() {
+				io.sockets.in(data.gameId).emit('beginFaze', data);
+				}), 0);
+		}
+		else{
+			setTimeout((function() {
+				io.sockets.in(data.gameId).emit('beginFaze', data);
+				}), conf.Fazes[i].time);
+		}
+		gameLogger.trace('began faze #'+i+', Operation: '+data.operation+', period of time: '+data.time);
 	}
-	tablesCode += "</table>";
-	//var myDiv = document.getElementsByClassName("gameBoard");
-	//myDiv.innerHTML = tablesCode;
-	return tablesCode;
 }
+
 
 
 
