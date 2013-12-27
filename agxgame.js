@@ -131,7 +131,7 @@ function hostStartGame(gameId) {
 		player = {id:i, chips: createChips(), location: setLocation(i)};
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
-	beginFazes();
+	beginphases();
 	
 	/*****************************************/
 	
@@ -326,29 +326,30 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
-function beginFazes(){
-	console.log('beginFazes');
-	var numOfFazes = conf.Fazes.length;
-	for(var i=0; i<numOfFazes;i++){
-		var data = {
-			'operation' : conf.Fazes[i].operation,
-			'time' : conf.Fazes[i].time,
-		}
-		console.log('ssdsd'+ conf.Fazes[i].operation);
-		if(i === 0){
-			setTimeout((function() {
-				io.sockets.in(data.gameId).emit('beginFaze', data);
-				}), 0);
-		}
-		else{
-			setTimeout((function() {
-				io.sockets.in(data.gameId).emit('beginFaze', data);
-				}), conf.Fazes[i].time);
-		}
-		gameLogger.trace('began faze #'+i+', Operation: '+data.operation+', period of time: '+data.time);
-	}
+function beginphases(){
+	console.log('beginphases');
+	var i=0;
+	var keys = Object.keys(conf.phases);
+	console.log('keys: '+keys.length);
+	phasesHalper(keys,i);
 }
-
+function phasesHalper(keys, i){
+	var data = {
+			name : conf.phases[keys[i]].name,
+			operation : conf.phases[keys[i]].operation,
+			time : conf.phases[keys[i]].time,
+		}
+	console.log('key: '+ conf.phases[keys[i]].name);
+	console.log('operation: '+ conf.phases[keys[i]].operation);
+	console.log('time: '+ conf.phases[keys[i]].time);
+	console.log('i: '+ i);
+	io.sockets.in(data.gameId).emit('beginFaze', data);
+	var f = i;
+	f++;
+	f %= keys.length;
+	console.log('f: '+ f);
+	setTimeout(function(){ return phasesHalper(keys, f);}, conf.phases[keys[i]].time);
+}
 
 
 
