@@ -58,6 +58,7 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendMessage', sendMessage);
 	gameSocket.on('updateChips', updateChips);
+	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
 }
 
@@ -416,6 +417,11 @@ function updateChips(gameId,player1,player2){
 			player2:player2
 	};
 	io.sockets.in(data.gameId).emit('updateChips', data );
+}
+
+function rejectOffer(player1){
+	var socket = io.sockets.sockets[player1.id];
+	socket.emit('rejectOffer');
 }
 
 /**

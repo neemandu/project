@@ -37,6 +37,7 @@ jQuery(function($){
             IO.socket.on('GameStarted', IO.GameStarted );
             IO.socket.on('addPlayer', App.Player.addPlayer);
             IO.socket.on('updateChips', IO.updateChips)
+			IO.socket.on('rejectOffer', IO.rejectOffer)
             IO.socket.on('error', IO.error );
         },
 
@@ -143,7 +144,7 @@ jQuery(function($){
 			$('#historyRow'+App.Player.currentCount+' tr').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
 			$('#historyRow'+App.Player.currentCount+' tr').append('<td>in exchange:</td>');
 			$('#historyRow'+App.Player.currentCount+' tr').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td><div><button id="acceptOffer"> accept </button></div><div><button id="rejectOffer"> reject </button></div></td>');
+			$('#historyRow'+App.Player.currentCount+' tr').append('<td><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td>');
 			$('#colorsToOffer'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			$('#colorsToGet'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			var k =0
@@ -152,8 +153,10 @@ jQuery(function($){
 			/*
 			 * on click accept : move chips between players 
 			 */
-			$('#historyRow'+App.Player.currentCount+' tr').find('#acceptOffer').click(function()
+			 
+			$('#acceptOffer'+App.Player.currentCount).click(function()
 					{
+						var id = this.id[this.id.length-1];
 						var params;
 						//alert(data.JcolorsToGet);
 						var JcolorsToGet = JSON.parse(data.JcolorsToGet);
@@ -162,6 +165,21 @@ jQuery(function($){
 						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
 						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
 						IO.socket.emit('updateChips',App.gameId,player1,player2);
+						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
+						$('#histTable').prepend($('#historyRow'+id).parent().parent().html());
+						$('#historyRow'+id).parent().parent().remove();
+					})
+					
+			$('#rejectOffer'+App.Player.currentCount).click(function()
+					{
+						var id = this.id[this.id.length-1];
+						var player1 = {id: data.sentFrom};		
+						IO.socket.emit('rejectOffer',player1);
+						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
+						$('#histTable').prepend($('#historyRow'+id).parent().parent().html());
+						$('#historyRow'+id).parent().parent().remove();
 					})
 					/*
 					 * until here.
@@ -190,7 +208,11 @@ jQuery(function($){
                 App.Player.currentCount++;
 
 	    },
-	    
+		
+		rejectOffer : function() {
+		alert('aaaaaaaaaaaaaaaaaaaa');
+			$('#sendOffer'+data.player1.rowid).parent().html('<font color="red">rejected</font>');
+		},
 	    /**
 	     *  the server calls this function to update the state of chips within players
 	     */
