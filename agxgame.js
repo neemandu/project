@@ -419,9 +419,14 @@ function updateChips(gameId,player1,player2){
 	io.sockets.in(data.gameId).emit('updateChips', data );
 }
 
-function rejectOffer(player1){
-	var socket = io.sockets.sockets[player1.id];
-	socket.emit('rejectOffer');
+function rejectOffer(data){
+	var room = gameSocket.manager.rooms["/" + data.gameId];	
+	var socketId = room[''+data.id];
+	var socket = io.sockets.sockets[socketId];
+	var send ={
+	rowid : data.rowid
+	}
+	socket.emit('rejectOffer',send);
 }
 
 /**

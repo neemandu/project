@@ -61,66 +61,6 @@
 
     </script>
 	
-	<script id="CT-OfferToGet" type="text/template">
-		<table style="border:1px solid black;">
-			<tr>
-				<td id="SentBy">
-					Player: 
-				</td>
-				<td>
-					makes an offer of:
-				</td>	
-				<td>
-					<table id="colorsToOffer0">
-						<tr>
-							<td class="purpleOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LGOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LYOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-						</tr>
-						<tr>
-							<td class="pinkOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LBOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="DBOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					in exchange to:
-				</td>
-				<td>
-					<table id="colorsToGet0">
-						<tr>
-							<td class="purpleOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LGOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LYOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-						</tr>
-						<tr>
-							<td class="pinkOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="LBOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-							<td class="DBOfferSquare"/>
-							<td><input type="number" style="width:30px;"></td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<div><button id="acceptOffer"> accept </button></div>
-					<div><button id="rejectOffer"> reject </button></div>
-				</td>
-			</tr>
-		</table>
-    </script>
-	
     <script id="CT-intro-screen-template1" type="text/template">
 	
 	<body>
@@ -130,7 +70,7 @@
 			<div>
 				<table class="topTable">
 					<tr>
-						<td class="header" colspan="2">
+						<td id="hostWord" class="header" colspan="2">
 							COLORED TRAILS
 						</td>
 					</tr>
@@ -150,78 +90,20 @@
 					</tr>
 				</table>
 			</div>
+			<div>
+			<div id="addTransaction" class="operations">
+				
+			</div>
 			<div class="downDiv">
 				<table id="downTable" class="downTable">
-					<tr>
-						<td class="makeGetOffer">
-							<table id="historyRow0" class="historyRow"><!--offersTable-->
-								<tr>
-									<td>
-									make an offer to:
-									</td>	
-									<td>
-									<select id="playersDropDown0">
-										<option value="empty"></option>
-									</select>
-									</td>
-									<td>
-									of:
-									</td>
-									<td>
-										<table id="colorsToOffer0">
-											<tr>
-												<td class="purpleOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LGOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LYOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-											</tr>
-											<tr>
-												<td class="pinkOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LBOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="DBOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-											</tr>
-										</table>
-									</td>
-									<td>
-									in exchange for:
-									</td>
-									<td>
-										<table id="colorsToGet0">
-											<tr>
-												<td class="purpleOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LGOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LYOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-											</tr>
-											<tr>
-												<td class="pinkOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="LBOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-												<td class="DBOfferSquare"/>
-												<td><input type="number" style="width:30px;"></td>
-											</tr>
-										</table>
-									</td>
-									<td>
-										<div><button id="sendOffer0"> send </button></div>							
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+					
 				</table>
+			</div>
 			</div>
 			<div class="downDiv">
 				<table id="histTable" class="downTable">
-				
+	
+				</table>
 				</table>
 			</div>
 		</div>
@@ -318,6 +200,8 @@
 
     <!-- JavaScript Libraries -->
 
+
+	
     <!-- jQuery! -->
     <script src="libs/jquery-2.0.2.min.js"></script>
 

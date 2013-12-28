@@ -39,6 +39,7 @@ jQuery(function($){
             IO.socket.on('updateChips', IO.updateChips)
 			IO.socket.on('rejectOffer', IO.rejectOffer)
             IO.socket.on('error', IO.error );
+			IO.socket.on('beginFaze',IO.beginFaze);
         },
 
         /**
@@ -116,35 +117,14 @@ jQuery(function($){
         },
         
         recieveMessage : function(data) {
-        	
-            /*alert('recieveMessage: '+ data.msg);
-                    $('#CTmessages').html(App.$CTOfferToGet);
-                    var k =0;
-                    $('#colorsToOffer tr').each(function(){
-                                            $(this).find('td:odd').each(function(){
-                                                            $(this).text(JSON.parse(data.JcolorsToOffer)[k]);
-                                                            k++;
-                                            })
-                    })
-
-                    k=0;
-                    $('#colorsToGet tr').each(function(){
-                                            $(this).find('td:odd').each(function(){
-                                                            $(this).text(JSON.parse(data.JcolorsToGet)[k]);
-                                                            k++;
-                                            })
-                    })
-                    $('#SentBy').text('Player '+data.sentFrom);*/
-     //   	$('.offersHistory').html(App.$CTOfferToGet);
-			var cur =  App.Player.currentCount-1;
-		//	alert($('#downTable > tbody > tr:eq('+cur+')').text());
-			$('#downTable > tbody > tr:eq('+cur+')').after('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.currentCount+'"><tr></tr></table></td></tr>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td id="sentBy'+ App.Player.currentCount+'"></td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td>makes an offer of:</td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td>in exchange:</td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
-			$('#historyRow'+App.Player.currentCount+' tr').append('<td><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td>');
+			var cur =  App.Player.currentCount;
+			$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.currentCount+'"><tr></tr></table></td></tr>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td id="sentBy'+ App.Player.currentCount+'"></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>makes an offer of:</td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>in exchange:</td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td>');
 			$('#colorsToOffer'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			$('#colorsToGet'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			var k =0
@@ -167,18 +147,20 @@ jQuery(function($){
 						IO.socket.emit('updateChips',App.gameId,player1,player2);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
-						$('#histTable').prepend($('#historyRow'+id).parent().parent().html());
+						$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 						$('#historyRow'+id).parent().parent().remove();
 					})
 					
 			$('#rejectOffer'+App.Player.currentCount).click(function()
 					{
 						var id = this.id[this.id.length-1];
-						var player1 = {id: data.sentFrom};		
+						var player1 = {id : data.sentFrom, gameId : App.gameId, rowid : id};	
 						IO.socket.emit('rejectOffer',player1);
+					//	App.Player.sendFromIo(player1);
+					//	IO.socket.emit('rejectOffer',player1);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
-						$('#histTable').prepend($('#historyRow'+id).parent().parent().html());
+						$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 						$('#historyRow'+id).parent().parent().remove();
 					})
 					/*
@@ -206,12 +188,32 @@ jQuery(function($){
 			
             $('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
                 App.Player.currentCount++;
-
+	
 	    },
 		
-		rejectOffer : function() {
-		alert('aaaaaaaaaaaaaaaaaaaa');
-			$('#sendOffer'+data.player1.rowid).parent().html('<font color="red">rejected</font>');
+		beginFaze : function(data){
+		function timer()
+		{
+		  count=count-1;
+		  if (count <= 0)
+		  {
+			 clearInterval(counter);
+			 //counter ended, do something here
+			 return;
+		  }
+
+		  //Do code for showing the number of seconds here
+		}
+		var count=data.time;
+		var counter=setInterval(timer, 1000); //1000 will  run it every 1 second
+		
+		$('#phases').html('<span id="timer"></span>');
+		$('#timer').html(count + " secs");
+		
+		},
+		
+		rejectOffer : function(data) {
+			$('#sendOffer'+data.rowid).parent().html('<font color="red">rejected</font>');
 		},
 	    /**
 	     *  the server calls this function to update the state of chips within players
@@ -310,7 +312,7 @@ jQuery(function($){
             App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
 			App.$CTtemplateIntroScreen1 = $('#CT-intro-screen-template1').html();
             App.$CTJoinGame = $('#join-game-CT').html();
-			App.$CTOfferToGet = $('#CT-OfferToGet').html();
+			App.$CTEmptyOffer = $('#CT-emptyOffer');
         },
 
         /**
@@ -318,8 +320,9 @@ jQuery(function($){
          */
         bindEvents: function () {
             // Host
-            App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
-
+            App.$doc.on('click', '#addTransaction', App.Player.onAddTransClick);
+			App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
+			
             // Player
             App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
             App.$doc.on('click', '#btnStart',App.Player.onPlayerStartClick);
@@ -571,10 +574,10 @@ jQuery(function($){
            ***************************** */
 
         Player : {
-        	currentCount: 1,
+        	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
-        	
+        	otherPlayers: 0,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
@@ -588,7 +591,108 @@ jQuery(function($){
              * The player's name entered on the 'Join' screen.
              */
             myName: '',
+			
+			onAddTransClick : function(){
+				$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');
+				
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>make an offer to</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><select id="playersDropDown'+App.Player.currentCount+'"><option value="empty"></option></select></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>for</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>in exchange for:</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
+			
+				var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+				
+				var k=0;
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+									k++;
+                                    })
 
+				k=0;
+				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										k++;
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										k++;
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										k++;
+										})
+				
+				for (var k in App.Player.otherPlayers) {
+                    if (App.Player.otherPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
+						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.otherPlayers[k]+'</option>');     
+                    }
+                }
+				for(var j=0;j<=App.Player.currentCount;j++){            
+				$('#sendOffer'+j).click( function(){
+								var id = this.id[this.id.length-1];
+								var player = $('#playersDropDown'+id).val();
+								var colorsToOffer = new Array();
+								var colorsToGet = new Array();
+								var i=0;
+								$('#colorsToOffer'+id+' tr').each(function(){
+										$(this).find('td').each(function(){
+												if ($(this).find('input').length) {        
+												colorsToOffer[i]=$(this).find('input').val();
+												i++;
+												}
+										})
+								})
+								i=0;
+								$('#colorsToGet'+id+' tr').each(function(){
+										$(this).find('td').each(function(){
+												if ($(this).find('input').length) {         
+												colorsToGet[i]=$(this).find('input').val();
+												i++;
+												}
+										})
+								})
+								
+								var JcolorsToOffer = JSON.stringify(colorsToOffer); 
+								var JcolorsToGet = JSON.stringify(colorsToGet); 
+								
+								//changing to history row style
+								$('#colorsToGet'+id).find('input:not([inputname])').each(function(){
+										$(this).parent().attr('class','chipsNum');
+										$(this).parent().html($(this).val());
+								})
+								$('#colorsToOffer'+id).find('input:not([inputname])').each(function(){
+										$(this).parent().attr('class','chipsNum');
+										$(this).parent().html($(this).val());
+								})
+								$('#historyRow'+id+' tr:first td:first').html('made an offer to:');
+								$('#playersDropDown'+id).parent().html($('#playersDropDown'+id).val());
+								$('#sendOffer'+id).parent().attr('id','sendOffer'+id).html('<font color="red">waiting for respond</font>');
+								
+								$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+								$('#historyRow'+id).parent().parent().remove();
+								var data = {
+										JcolorsToOffer : JcolorsToOffer,
+										JcolorsToGet : JcolorsToGet,
+										msg : 'hello',
+										recieverId : player,
+										sentFrom : App.Player.myid,
+										gameId : App.gameId,
+										rowid : id,
+								};
+								//historyCount++;
+								IO.socket.emit('sendMessage', data);
+
+				});
+                // Change the word for the Host and Player
+                }
+				App.Player.currentCount++;
+			},
+			sendFromIo : function(data){
+					IO.socket.emit('rejectOffer',data);
+			},
             /**
              * Click handler for the 'JOIN' button
              */
@@ -643,7 +747,7 @@ jQuery(function($){
 
                 
                
-                var PList = data.playerList;
+            
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
                 
                 $(".gameBoard").html(data.board);
@@ -651,73 +755,10 @@ jQuery(function($){
 //                $(".playersList").append(App.Player.buildPlayer(params));
               //  console.log('players: '+App.Host.players);
               //  console.log('players.length: '+App.Host.players.length);
-                for (var k in PList) {
-                    if (PList.hasOwnProperty(k)&&k!=App.Player.myid) {
-									for(var i=0;i<App.Player.currentCount;i++){
-                                            $('#playersDropDown'+i).append('<option value="'+k+'">'+PList[k]+'</option>');
-                                    }
-                    //        alert('key is: ' + k + ', value is: ' + PList[k]);
-//                                            params = {id:k };
-//                                            $(".playersList").append(App.Player.buildPlayer(params));
-                    }
-                }
-                for(var j=0;j<App.Player.currentCount;j++){            
-				$('#sendOffer'+j).click( function(){
-								var id = this.id[this.id.length-1];
-								var player = $('#playersDropDown'+id).val();
-								var colorsToOffer = new Array();
-								var colorsToGet = new Array();
-								var i=0;
-								$('#colorsToOffer'+id+' tr').each(function(){
-										$(this).find('td').each(function(){
-												if ($(this).find('input').length) {        
-												colorsToOffer[i]=$(this).find('input').val();
-												i++;
-												}
-										})
-								})
-								i=0;
-								$('#colorsToGet'+id+' tr').each(function(){
-										$(this).find('td').each(function(){
-												if ($(this).find('input').length) {         
-												colorsToGet[i]=$(this).find('input').val();
-												i++;
-												}
-										})
-								})
-								
-								var JcolorsToOffer = JSON.stringify(colorsToOffer); 
-								var JcolorsToGet = JSON.stringify(colorsToGet); 
-								
-								//changing to history row style
-								$('#colorsToGet'+id).find('input:not([inputname])').each(function(){
-										$(this).parent().attr('class','chipsNum');
-										$(this).parent().html($(this).val());
-								})
-								$('#colorsToOffer'+id).find('input:not([inputname])').each(function(){
-										$(this).parent().attr('class','chipsNum');
-										$(this).parent().html($(this).val());
-								})
-								$('#historyRow'+id+' tr:first td:first').html('made an offer to:');
-								$('#playersDropDown'+id).parent().html($('#playersDropDown'+id).val());
-								$('#sendOffer'+id).parent().attr('id','sendOffer'+id).html('<font color="red">waiting for respond</font>');
-								$('#histTable').prepend($('#historyRow'+id).parent().parent().html());
-								$('#historyRow'+id).parent().parent().remove();
-								var data = {
-										JcolorsToOffer : JcolorsToOffer,
-										JcolorsToGet : JcolorsToGet,
-										msg : 'hello',
-										recieverId : player,
-										sentFrom : App.Player.myid,
-										gameId : App.gameId,
-										rowid : id,
-								};
-								//historyCount++;
-								IO.socket.emit('sendMessage', data);
+			    var PList = data.playerList;
+				App.Player.otherPlayers=data.playerList;
 
-				});
-                // Change the word for the Host and Player
-                }
+                
             },
             
             /**

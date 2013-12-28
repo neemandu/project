@@ -346,4 +346,12 @@ td.colorAmount
 	background-color:white;
 }
 
-
+.operations
+{		cursor: pointer;
+		cursor: hand;
+		width: 25px;
+		height: 25px;
+		text-align:left;
+		background-image:url('../Pictures/plus_add_green.png');
+		background-size:100% 100%;
+}
