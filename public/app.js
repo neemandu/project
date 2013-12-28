@@ -192,24 +192,18 @@ jQuery(function($){
 	    },
 		
 		beginFaze : function(data){
-		function timer()
-		{
-		  count=count-1;
-		  if (count <= 0)
-		  {
-			 clearInterval(counter);
-			 //counter ended, do something here
-			 return;
-		  }
-
-		  //Do code for showing the number of seconds here
-		}
-		var count=data.time;
-		var counter=setInterval(timer, 1000); //1000 will  run it every 1 second
-		
-		$('#phases').html('<span id="timer"></span>');
-		$('#timer').html(count + " secs");
-		
+		$('#phases').html(data.operation+' phase');
+			if(data.name === 'phase1'){
+				if($('#addTransaction').find('#addTrans').length === 0){
+					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
+				}
+			}
+			else if(data.name === 'phase2'){
+				$('#addTrans').remove();
+			}
+			else if(data.name === 'phase3'){
+				$('#addTrans').remove();
+			}
 		},
 		
 		rejectOffer : function(data) {
