@@ -40,6 +40,8 @@ jQuery(function($){
 			IO.socket.on('rejectOffer', IO.rejectOffer)
             IO.socket.on('error', IO.error );
 			IO.socket.on('beginFaze',IO.beginFaze);
+			IO.socket.on('movePlayer',IO.movePlayer);
+			
         },
 
         /**
@@ -236,6 +238,12 @@ jQuery(function($){
 	    	App.Player.addChips(toSend2);
 	    },
 	
+		movePlayer : function(data){
+			$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');
+			App.Player.locatePlayers(data);
+			App.Player.locations[data.playerId][0] = data.x;
+			App.Player.locations[data.playerId][1] = data.y;
+		},
 	    
         /**
          * An error has occurred.
@@ -576,14 +584,12 @@ jQuery(function($){
         	myid: 0,
         	otherPlayers: 0,
 			canMove: 0,
-			locationY : -1,
-			locationX : -1,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
-        //	myChips: [0,0,0,0,0,0],
 			Chips: [],
-        	colors : ['rgb(170,136,255)','rgb(157,255,180)','rgb(248,255,157)','rgb(255,159,157)','rgb(153,204,245)','rgb(85,136,177)'],
+			locations: [],
+        	colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
             /**
              * A reference to the socket ID of the Host
              */
@@ -767,44 +773,37 @@ jQuery(function($){
 								row : $(this).parent().parent().children().index($(this).parent())
 							}
 							
-							var op1 = (Math.abs(App.Player.locationY-data.row) === 0) && (Math.abs(App.Player.locationX-data.col) === 1);
-							var op2 = (Math.abs(App.Player.locationY-data.row) === 1) && (Math.abs(App.Player.locationX-data.col) === 0);
+							var op1 = (Math.abs(App.Player.locations[App.Player.myid][1]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][0]-data.col) === 1);
+							var op2 = (Math.abs(App.Player.locations[App.Player.myid][1]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][0]-data.col) === 0);
 							
 							if(op1 || op2){
 								
 							var tdColor =  $(this).css('background-color');
 							var index = App.Player.colors.indexOf(tdColor);
-							alert(index);
-							//background-color
-	/*						var amount  = $('#player'+App.Player.myid).find('#Chips tr').each(function(){
-								$(this).find('td').each(function(){
-									if($(this).css('background-color') == tdColor){
-										var col = $(this).parent().children().index($(this));
-										var row = $(this).parent().parent().children().index($(this).parent());
-										col++;
-										var chips = $('#player'+App.Player.myid).find('#Chips tr:eq('+row+') td:eq('+col+')').html();
-										if(chips > 0){
-											alert(chips);
-											//	IO.socket.emit('move', data);
-										}
-									
+							var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+							var hasOtherPlayer = false;
+							
+							for(var i=0;i<App.Player.locations.length;i++){
+								if(i!=App.Player.myid){
+									if(App.Player.locations[i][0]==data.col && App.Player.locations[i][1]==data.row){
+										hasOtherPlayer = true;
+										break;
 									}
-									
-								})
-							})
-							*/
+								
+								}
+							}
+							if(chipsOfColor>0 && hasOtherPlayer == false){
+								
+								IO.socket.emit('movePlayer',{playerId : App.Player.myid, x: data.row , y : data.col});
+							}
 							}							 
-						//	}
 						 })
 					 })
 				 })
 				 
             },
             
-			move : function(data){
 			
-			
-			},
             /**
              * adds a player inside playersList
              * data= {id:num, chips: ["num", "num".."num], location: "some location"};
@@ -813,25 +812,23 @@ jQuery(function($){
             {
             	var htmlPlayer = App.Player.buildPlayer(data);
             	$(".playersList").append(htmlPlayer);
-            	if(data.id == App.Player.myid)
-            		{
-            			$('#player' + data.id).css("border-color", "#FF7f00");
-            			App.Player.locationY = data.location.y;
-        				App.Player.locationX = data.location.x;
-            		}
-            	
             	var pChips = new Array();
             	for(var i=0; i<data.chips.length; i++)
 				{
             		pChips[i] = data.chips[i];
 				}
             	App.Player.Chips[data.id] = pChips;
+				
+				var pLoc = new Array();
+				pLoc[0]=data.location.x;
+				pLoc[1]=data.location.y;
+				App.Player.locations[data.id] = pLoc;
             	var url = "Pictures/" +App.playerColors[data.id] ;
             	//alert(url);
     			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
 				
             	//manage location of players:
-				var location = {id: data.id, x:data.location.x, y:data.location.y};
+				var location = {playerId: data.id, x:data.location.x, y:data.location.y};
 				App.Player.locatePlayers(location);
             },
             
@@ -839,9 +836,8 @@ jQuery(function($){
              *  locates players on screen
              */
 			locatePlayers : function(data){
-				var url = "Pictures/" +App.playerColors[data.id] ;
+				var url = "Pictures/" +App.playerColors[data.playerId] ;
 				$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html("<img src=" +url+ " alt=image>");
-				
 			},
             /**
              * build player html code given his id
