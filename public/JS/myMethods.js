@@ -46,7 +46,7 @@ function paintBoard(height,width,num_of_colors)
 		for(var j=0; j<width; j++)
 		{
 			Color = Math.floor(Math.random()*num_of_colors + 1);
-			tablesCode += "<td class='trails' style=background:" + getColor(Color) +" ;></td>" 
+			tablesCode += "<td class='trails' style=background-color:" + getColor(Color) +" ;></td>" 
 		}
 		tablesCode += "</tr>";
 	}

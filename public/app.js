@@ -194,15 +194,20 @@ jQuery(function($){
 		beginFaze : function(data){
 		$('#phases').html(data.operation+' phase');
 			if(data.name === 'phase1'){
+				App.Player.canMove = 0;
 				if($('#addTransaction').find('#addTrans').length === 0){
 					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 				}
 			}
 			else if(data.name === 'phase2'){
+				$('#downTable').html('');
 				$('#addTrans').remove();
+				App.Player.canMove = 0;
 			}
 			else if(data.name === 'phase3'){
+				$('#downTable').html('');
 				$('#addTrans').remove();
+				App.Player.canMove = 1;
 			}
 		},
 		
@@ -572,6 +577,9 @@ jQuery(function($){
 			historyCount: 0,
         	myid: 0,
         	otherPlayers: 0,
+			canMove: 0,
+			locationY : -1,
+			locationX : -1,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
@@ -751,10 +759,52 @@ jQuery(function($){
               //  console.log('players.length: '+App.Host.players.length);
 			    var PList = data.playerList;
 				App.Player.otherPlayers=data.playerList;
-
-                
+				
+				$('#board table tr').each(function(){
+					 $(this).find('td').each(function(){
+						 $(this).click(function(){
+						 //if(App.Player.canMove === 1){
+							var data = {
+								id : App.Player.myid,
+								col : $(this).parent().children().index($(this)),
+								row : $(this).parent().parent().children().index($(this).parent())
+							}
+							
+							var op1 = (Math.abs(App.Player.locationY-data.row) === 0) && (Math.abs(App.Player.locationX-data.col) === 1);
+							var op2 = (Math.abs(App.Player.locationY-data.row) === 1) && (Math.abs(App.Player.locationX-data.col) === 0);
+							
+							if(op1 || op2){
+							var tdColor =  $(this).css('background-color');
+							//background-color
+							var amount  = $('#player'+App.Player.myid).find('#Chips tr').each(function(){
+								$(this).find('td').each(function(){
+									if($(this).css('background-color') == tdColor){
+										var col = $(this).parent().children().index($(this));
+										var row = $(this).parent().parent().children().index($(this).parent());
+										col++;
+										var chips = $('#player'+App.Player.myid).find('#Chips tr:eq('+row+') td:eq('+col+')').html();
+										if(chips > 0){
+											alert(chips);
+											//	IO.socket.emit('move', data);
+										}
+									
+									}
+									
+								})
+							})
+							
+							}							 
+						//	}
+						 })
+					 })
+				 })
+				 
             },
             
+			move : function(data){
+			
+			
+			},
             /**
              * adds a player inside playersList
              * data= {id:num, chips: ["num", "num".."num], location: "some location"};
@@ -775,10 +825,28 @@ jQuery(function($){
             	var url = "Pictures/" +App.playerColors[data.id] ;
             	//alert(url);
     			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
-
+				
+				
+				App.Player.locatePlayers();
             	//TODO !!! something with the location
             },
             
+			/**
+             *  locates players on screen
+             */
+			locatePlayers : function(data){
+			//TEMPORARY LOCATION OF PLAYERS
+			$('#board table tr:first td:eq('+App.Player.myid+')').html('P'+App.Player.myid);
+			
+				App.Player.locationY = 0;
+				App.Player.locationX = App.Player.myid;
+				
+			for (var k in App.Player.otherPlayers) {
+                $('#board table tr:eq(0) td:eq('+k+')').html('P'+App.Player.otherPlayers[k]);    
+
+                }
+				
+			},
             /**
              * build player html code given his id
              */
