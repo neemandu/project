@@ -239,10 +239,10 @@ jQuery(function($){
 	    },
 	
 		movePlayer : function(data){
-			$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');
-			App.Player.locatePlayers(data);
+			$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');			
 			App.Player.locations[data.playerId][0] = data.x;
 			App.Player.locations[data.playerId][1] = data.y;
+			App.Player.locatePlayers(data);
 		},
 	    
         /**
@@ -785,7 +785,7 @@ jQuery(function($){
 							
 							for(var i=0;i<App.Player.locations.length;i++){
 								if(i!=App.Player.myid){
-									if(App.Player.locations[i][0]==data.col && App.Player.locations[i][1]==data.row){
+									if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
 										hasOtherPlayer = true;
 										break;
 									}
