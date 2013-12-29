@@ -156,8 +156,6 @@ jQuery(function($){
 						var id = this.id[this.id.length-1];
 						var player1 = {id : data.sentFrom, gameId : App.gameId, rowid : id};	
 						IO.socket.emit('rejectOffer',player1);
-					//	App.Player.sendFromIo(player1);
-					//	IO.socket.emit('rejectOffer',player1);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
 						$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
@@ -583,7 +581,9 @@ jQuery(function($){
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
-        	myChips: [0,0,0,0,0,0],
+        //	myChips: [0,0,0,0,0,0],
+			Chips: [],
+        	colors : ['rgb(170,136,255)','rgb(157,255,180)','rgb(248,255,157)','rgb(255,159,157)','rgb(153,204,245)','rgb(85,136,177)'],
             /**
              * A reference to the socket ID of the Host
              */
@@ -692,9 +692,6 @@ jQuery(function($){
                 }
 				App.Player.currentCount++;
 			},
-			sendFromIo : function(data){
-					IO.socket.emit('rejectOffer',data);
-			},
             /**
              * Click handler for the 'JOIN' button
              */
@@ -774,9 +771,12 @@ jQuery(function($){
 							var op2 = (Math.abs(App.Player.locationY-data.row) === 1) && (Math.abs(App.Player.locationX-data.col) === 0);
 							
 							if(op1 || op2){
+								
 							var tdColor =  $(this).css('background-color');
+							var index = App.Player.colors.indexOf(tdColor);
+							alert(index);
 							//background-color
-							var amount  = $('#player'+App.Player.myid).find('#Chips tr').each(function(){
+	/*						var amount  = $('#player'+App.Player.myid).find('#Chips tr').each(function(){
 								$(this).find('td').each(function(){
 									if($(this).css('background-color') == tdColor){
 										var col = $(this).parent().children().index($(this));
@@ -792,7 +792,7 @@ jQuery(function($){
 									
 								})
 							})
-							
+							*/
 							}							 
 						//	}
 						 })
@@ -812,39 +812,35 @@ jQuery(function($){
             addPlayer: function(data)
             {
             	var htmlPlayer = App.Player.buildPlayer(data);
-            	
             	$(".playersList").append(htmlPlayer);
             	if(data.id == App.Player.myid)
             		{
             			$('#player' + data.id).css("border-color", "#FF7f00");
-            			for(var i=0; i<data.chips.length; i++)
-            				{
-            					App.Player.myChips[i] = data.chips[i];
-            				} 
+            			App.Player.locationY = data.location.y;
+        				App.Player.locationX = data.location.x;
             		}
+            	
+            	var pChips = new Array();
+            	for(var i=0; i<data.chips.length; i++)
+				{
+            		pChips[i] = data.chips[i];
+				}
+            	App.Player.Chips[data.id] = pChips;
             	var url = "Pictures/" +App.playerColors[data.id] ;
             	//alert(url);
     			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
 				
-				
-				App.Player.locatePlayers();
-            	//TODO !!! something with the location
+            	//manage location of players:
+				var location = {id: data.id, x:data.location.x, y:data.location.y};
+				App.Player.locatePlayers(location);
             },
             
 			/**
              *  locates players on screen
              */
 			locatePlayers : function(data){
-			//TEMPORARY LOCATION OF PLAYERS
-			$('#board table tr:first td:eq('+App.Player.myid+')').html('P'+App.Player.myid);
-			
-				App.Player.locationY = 0;
-				App.Player.locationX = App.Player.myid;
-				
-			for (var k in App.Player.otherPlayers) {
-                $('#board table tr:eq(0) td:eq('+k+')').html('P'+App.Player.otherPlayers[k]);    
-
-                }
+				var url = "Pictures/" +App.playerColors[data.id] ;
+				$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html("<img src=" +url+ " alt=image>");
 				
 			},
             /**
