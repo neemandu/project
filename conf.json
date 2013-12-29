@@ -1,6 +1,6 @@
 {
     "Board": {
-    	"Colors" : ["black","white","red","blue","green","yellow"],
+    	"Colors" : ["black","white","darkblue","blue","green","yellow"],
 		"Size" : {
 			"Lines" :6,
 			"Rows" : 4

@@ -793,9 +793,20 @@ jQuery(function($){
 								}
 							}
 							if(chipsOfColor>0 && hasOtherPlayer == false){
-								
+								App.Player.Chips[App.Player.myid][index]--;
+								var r;
+								var c;
+								if(index<3){
+									r=0;
+									c= index*2+1;
+								}
+								else{
+									r=1;
+									c = (index-3)*2+1;
+								}
+								$('#player'+App.Player.myid).find('#Chips tr:eq('+r+') td:eq('+c+')').html(App.Player.Chips[App.Player.myid][index]);
 								IO.socket.emit('movePlayer',{playerId : App.Player.myid, x: data.row , y : data.col});
-							}
+								}
 							}							 
 						 })
 					 })

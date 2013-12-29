@@ -374,6 +374,9 @@ function getColor(data,i,j){
 	case "blue":
 		return "#99ccf5"; //light blue
 		break;
+	case "darkblue":
+		return "#5588b1";
+		break
 	case "black":
 		return "#2f2e19"; //
 	case "white":
