@@ -773,8 +773,8 @@ jQuery(function($){
 								row : $(this).parent().parent().children().index($(this).parent())
 							}
 							
-							var op1 = (Math.abs(App.Player.locations[App.Player.myid][1]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][0]-data.col) === 1);
-							var op2 = (Math.abs(App.Player.locations[App.Player.myid][1]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][0]-data.col) === 0);
+							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
+							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
 							
 							if(op1 || op2){
 								
