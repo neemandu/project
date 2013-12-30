@@ -56,7 +56,7 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('playerJoinGame', playerJoinGame);
 	gameSocket.on('playerAnswer', playerAnswer);
 	gameSocket.on('playerRestart', playerRestart);
-	gameSocket.on('sendMessage', sendMessage);
+	gameSocket.on('sendOffer', sendOffer);
 	gameSocket.on('updateChips', updateChips);
 	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
@@ -109,19 +109,23 @@ function hostStartGame(gameId) {
 	console.log('Game Started.');
 	var room = gameSocket.manager.rooms["/" + gameId];
 	var playerList = {};
+	room.playerList = {};
 	for (var i=0;i<room.length-1;i++)
 	{ 
 		playerList[i] = i;
 		console.log('playerList['+i+']: '+playerList[i]);
 	}
 	//var params = {height: 8, width: 8, colorsNum: 6};
-	var boardHtml = paintBoard(conf);
+	var boardHtml = paintBoard();
+	
+	room.board = createServerBoard();
 	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
 			playerList : playerList,
 			gameId : gameId,
-			board: boardHtml
+			board: boardHtml,
+			goal: conf.Goal
 	};
 	io.sockets.in(data.gameId).emit('GameStarted', data);
 	/**
@@ -130,9 +134,16 @@ function hostStartGame(gameId) {
 	for (var i=0;i<room.length-1;i++)
 	{ 
 		player = {id:i, chips: createChips(), location: setLocation(i)};
+		room.board[player.location.x][player.location.y] = 1;
+		room.playerList[i] = player;
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
-	beginphases();
+	for(var i=0;i<room.board.length;i++){
+		for(var j=0;j<room.board[i].length;j++){
+			console.log(room.board[i][j]);
+		}
+	}
+	beginphases(data.gameId);
 	
 	/*****************************************/
 	
@@ -157,35 +168,58 @@ function hostNextRound(data) {
  *                           *
  ***************************** */
 /**
- * 
+ * JcolorsToOffer : int,JcolorsToGet : int,msg : string,recieverId : int,sentFrom : int,gameId : int,rowid : int,
  * @param data msg and other recieverId and gameId.
  */
-function sendMessage(data) {
-	console.log('sendMessage');
+function sendOffer(data) {
+	console.log('sendOffer');
 	console.log('game id: '+data.gameId);
 	//which room am i
-	var room = gameSocket.manager.rooms["/" + data.gameId];	
-
-	console.log('in the room:'+ room);
-
-	var clientNumber = data.recieverId;
-	clientNumber++;
-	console.log(clientNumber);
-	//what is the receiver socket id
-	var socketId = room[''+clientNumber];//the host is the first in the room
-
-	console.log('socket id to send to: '+socketId);
-	//get the socket
-	var socket = io.sockets.sockets[socketId];
-
-	if(socket == null){
-		console.log('trying to send message but the #id: '+data.recieverId+' doesnt exist')
+	var room = gameSocket.manager.rooms["/" + data.gameId];
+	//validating chips
+	data.answer = 'yes';
+	console.log('sender Id: '+data.sentFrom);
+	for(var i=0;i<6;i++){
+		var sum1 = JSON.parse(data.JcolorsToOffer)[i];
+		var sum2 = JSON.parse(data.JcolorsToGet)[i];
+		console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
+		if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
+			data.answer = 'no';
+			console.log('NO');
+			break;
+		}
+	}
+	console.log('reciever Id: '+data.recieverId);
+	if(data.answer === 'no'){
+		console.log('NO');
+		this.emit('recieveMessage',data);
 	}
 	else{
-		console.log('msg: '+data.msg+'to: '+socketId+'from: '+this.id);
-		data.playerId = this.id;
-		socket.emit('recieveMessage', data)
+		this.emit('addRowToHistory',data);
+		
+		console.log('YES');
+		console.log('in the room:'+ room);
+
+		var clientNumber = data.recieverId;
+		clientNumber++;
+		console.log(clientNumber);
+		//what is the receiver socket id
+		var socketId = room[''+clientNumber];//the host is the first in the room
+
+		console.log('socket id to send to: '+socketId);
+		//get the socket
+		var socket = io.sockets.sockets[socketId];
+
+		if(socket == null){
+			console.log('trying to send message but the #id: '+data.recieverId+' doesnt exist')
+		}
+		else{
+			console.log('msg: '+data.msg+'to: '+socketId+'from: '+this.id);
+			data.playerId = this.id;
+			socket.emit('recieveMessage', data)
+		}
 	}
+	
 
 //	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 }
@@ -247,16 +281,38 @@ function playerJoinGame(data) {
 	}
 }
 /**
+ * 
  * this function emits anyone in the room the new player's location.
- * @param data {gameId: int, playerId: int, x: int, y: int}
+ * @param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
  */
-function movePlayer(data1){	
-	var data = {
-			playerId: data1.playerId,
-			x: data1.x,
-			y: data1.y
+function movePlayer(data1){
+	console.log('x: '+data1.x);
+	console.log('currX: '+data1.currX);
+	console.log('y: '+data1.y);
+	console.log('currY: '+data1.currY);
+	var room = gameSocket.manager.rooms["/" + data1.gameId];
+	if(room.board[data1.x][data1.y] === 0){
+		var data = {
+				playerId: data1.playerId,
+				x: data1.x,
+				y: data1.y,
+				chip: data1.chip
+		}
+		room.board[data1.x][data1.y] = 1;
+		room.board[data1.currX][data1.currY] = 0;
+		updateLocation(room, data1.playerId, data1.x, data1.y);
+		io.sockets.in(data.gameId).emit('movePlayer', data);
 	}
-	io.sockets.in(data.gameId).emit('movePlayer', data);	
+}
+
+function updateLocation(room, playerId, x, y){
+	var chips = new Array();	
+	for(var i=0; i<numOfColors;i++){	 
+		var numchips = Math.floor(Math.random()*numOfChips);
+		console.log('chips color: '+colorArray[i]+' amount: '+numchips);
+		chips[i] = numchips;
+	}
+	return chips;
 }
 
 function createChips(){
@@ -327,14 +383,14 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
-function beginphases(){
+function beginphases(gameId){
 	console.log('beginphases');
 	var i=0;
 	var keys = Object.keys(conf.phases);
 	console.log('keys: '+keys.length);
-	phasesHalper(keys,i);
+	phasesHalper(gameId,keys,i);
 }
-function phasesHalper(keys, i){
+function phasesHalper(gameId,keys, i){
 	var data = {
 			name : conf.phases[keys[i]].name,
 			operation : conf.phases[keys[i]].operation,
@@ -344,20 +400,20 @@ function phasesHalper(keys, i){
 	console.log('operation: '+ conf.phases[keys[i]].operation);
 	console.log('time: '+ conf.phases[keys[i]].time);
 	console.log('i: '+ i);
-	io.sockets.in(data.gameId).emit('beginFaze', data);
+	io.sockets.in(gameId).emit('beginFaze', data);
 	var f = i;
 	f++;
 	f %= keys.length;
 	console.log('f: '+ f);
-	setTimeout(function(){ return phasesHalper(keys, f);}, conf.phases[keys[i]].time);
+	setTimeout(function(){ return phasesHalper(gameId,keys, f);}, conf.phases[keys[i]].time);
 }
 
 
 
-function getColor(data,i,j){
-	var loc = data.Blocks[j];
+function getColor(i,j){
+	var loc = conf.Blocks[j];
 	//console.dir(loc[1]);
-	switch(data.Board.Colors[loc[i]]) 
+	switch(conf.Board.Colors[loc[i]]) 
 	{
 	case "purple":
 		return "#aa88FF"; // purple
@@ -388,15 +444,15 @@ function getColor(data,i,j){
 	}
 }
 
-function paintBoard(data){
+function paintBoard(){
 	var tablesCode = "<table class='trails'>";
 	var Color = 0;
-	for (var i=0; i<data.Board.Size.Lines; i++)
+	for (var i=0; i<conf.Board.Size.Lines; i++)
 	{
 		tablesCode += "<tr class='trails'>";
-		for(var j=0; j< data.Board.Size.Rows; j++)
+		for(var j=0; j< conf.Board.Size.Rows; j++)
 		{
-			tablesCode += "<td class='trails' style=background:" + getColor(data,i,j) +" ;></td>" 
+			tablesCode += "<td class='trails' style=background:" + getColor(i,j) +" ;></td>" 
 		}
 		tablesCode += "</tr>";
 	}
@@ -404,6 +460,23 @@ function paintBoard(data){
 	//var myDiv = document.getElementsByClassName("gameBoard");
 	//myDiv.innerHTML = tablesCode;
 	return tablesCode;
+}
+
+function createServerBoard(){
+	var board = [];
+	for (var i=0;i<conf.Board.Size.Lines;i++) {
+		board[i] = [];
+	}
+
+	var tablesCode = "<table class='trails'>";
+	var Color = 0;
+	for (var i=0; i<conf.Board.Size.Lines; i++){
+		for(var j=0; j< conf.Board.Size.Rows; j++){
+			board[i][j] = 0;
+			console.log(board[i][j]);
+		}
+	}	
+	return board;
 }
 
 

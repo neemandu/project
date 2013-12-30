@@ -19,13 +19,18 @@
     	"phase2" : {
     		"name" : "phase2",
     		"operation" : "transfers",
-    		"time" : 30000
+    		"time" : 15000
     	},
     	"phase3" : {
     		"name" : "phase3",
     		"operation" : "moves",
     		"time" : 30000
     	}
-    }	
+    },
+    "Goal": {
+    	"x" : 5,
+		"y" : 4
+    }
+    	
  }
     

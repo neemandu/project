@@ -41,7 +41,7 @@ jQuery(function($){
             IO.socket.on('error', IO.error );
 			IO.socket.on('beginFaze',IO.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
-			
+			IO.socket.on('addRowToHistory',IO.addRowToHistory);
         },
 
         /**
@@ -119,8 +119,14 @@ jQuery(function($){
         },
         
         recieveMessage : function(data) {
+       // 	alert(App.Player.currentCount);
+        	if(data.answer === 'no'){
+        		alert('illegal offer');
+        	}
+        	else{
+      //  	App.Player.addRowToHistory(data.rowid);
 			var cur =  App.Player.currentCount;
-			$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.currentCount+'"><tr></tr></table></td></tr>');
+			$('#downTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.currentCount+'"><tr></tr></table></td></tr>');
 			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td id="sentBy'+ App.Player.currentCount+'"></td>');
 			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>makes an offer of:</td>');
 			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
@@ -149,19 +155,33 @@ jQuery(function($){
 						IO.socket.emit('updateChips',App.gameId,player1,player2);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
-						$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
-						$('#historyRow'+id).parent().parent().remove();
+					
+						//$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+						//$('#historyRow'+id).parent().parent().remove();
+						
+						var h = $('#historyRow'+id).html();
+						$('#historyRow'+id).parent().parent().remove();						
+						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
 					})
 					
 			$('#rejectOffer'+App.Player.currentCount).click(function()
 					{
 						var id = this.id[this.id.length-1];
-						var player1 = {id : data.sentFrom, gameId : App.gameId, rowid : id};	
+						//alert(data.sentFrom+' '+App.Player.myid);
+						var p = data.sentFrom;
+						p++;
+						var player1 = {id :p, gameId : App.gameId, rowid : id};	
 						IO.socket.emit('rejectOffer',player1);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
-						$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+					
+					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+					//	$('#historyRow'+id).parent().parent().remove();
+						
+						var h = $('#historyRow'+id).html();
 						$('#historyRow'+id).parent().parent().remove();
+						
+						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
 					})
 					/*
 					 * until here.
@@ -188,11 +208,33 @@ jQuery(function($){
 			
             $('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
                 App.Player.currentCount++;
-	
+        	}
 	    },
 		
+	    addRowToHistory : function (data){
+			var row = $('#sendOffer'+data.rowid);
+			//changing to history row style
+			$('#colorsToGet'+data.rowid).find('input:not([inputname])').each(function(){
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+			})
+			$('#colorsToOffer'+data.rowid).find('input:not([inputname])').each(function(){
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+			})
+			$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
+			$('#playersDropDown'+data.rowid).parent().html($('#playersDropDown'+data.rowid).val());
+			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="red">waiting for respond</font>');
+
+			var h = $('#historyRow'+data.rowid).html();
+			$('#historyRow'+data.rowid).parent().parent().remove();
+			
+			$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
+					
+		},
+		
 		beginFaze : function(data){
-		$('#phases').html(data.operation+' phase');
+			$('#phases').html(data.operation+' phase');
 			if(data.name === 'phase1'){
 				App.Player.canMove = 0;
 				if($('#addTransaction').find('#addTrans').length === 0){
@@ -209,6 +251,14 @@ jQuery(function($){
 				$('#addTrans').remove();
 				App.Player.canMove = 1;
 			}
+			var func = function(time, j)
+			{
+				$('#phases').html(data.operation+' phase: ' +(j)+' seconds');
+				if(j>0)
+					setTimeout(function(){func(time, j-1);}, 1000);
+			}
+			var time = data.time/1000;
+			func(time, time);
 		},
 		
 		rejectOffer : function(data) {
@@ -239,6 +289,18 @@ jQuery(function($){
 	    },
 	
 		movePlayer : function(data){
+			App.Player.Chips[data.playerId][data.chip]--;
+			var r;
+			var c;
+			if(data.chip<3){
+				r=0;
+				c= data.chip*2+1;
+			}
+			else{
+				r=1;
+				c = (data.chip-3)*2+1;
+			}
+			$('#player'+data.playerId).find('#Chips tr:eq('+r+') td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
 			$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');			
 			App.Player.locations[data.playerId][0] = data.x;
 			App.Player.locations[data.playerId][1] = data.y;
@@ -601,6 +663,7 @@ jQuery(function($){
             myName: '',
 			
 			onAddTransClick : function(){
+	//			alert(App.Player.currentCount);
 				$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');
 				
 				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>make an offer to</td>');
@@ -615,21 +678,21 @@ jQuery(function($){
 				
 				var k=0;
 				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+                                    $(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 									k++;
                                     })
 
 				k=0;
 				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 										k++;
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 										k++;
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" style="width:30px;"></td>');
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
 										k++;
 										})
 				
@@ -638,8 +701,8 @@ jQuery(function($){
 						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.otherPlayers[k]+'</option>');     
                     }
                 }
-				for(var j=0;j<=App.Player.currentCount;j++){            
-				$('#sendOffer'+j).click( function(){
+		//		for(var j=0;j<=App.Player.currentCount;j++){            
+				$('#sendOffer'+App.Player.currentCount).click( function(){
 								var id = this.id[this.id.length-1];
 								var player = $('#playersDropDown'+id).val();
 								var colorsToOffer = new Array();
@@ -666,21 +729,12 @@ jQuery(function($){
 								var JcolorsToOffer = JSON.stringify(colorsToOffer); 
 								var JcolorsToGet = JSON.stringify(colorsToGet); 
 								
-								//changing to history row style
-								$('#colorsToGet'+id).find('input:not([inputname])').each(function(){
-										$(this).parent().attr('class','chipsNum');
-										$(this).parent().html($(this).val());
-								})
-								$('#colorsToOffer'+id).find('input:not([inputname])').each(function(){
-										$(this).parent().attr('class','chipsNum');
-										$(this).parent().html($(this).val());
-								})
-								$('#historyRow'+id+' tr:first td:first').html('made an offer to:');
-								$('#playersDropDown'+id).parent().html($('#playersDropDown'+id).val());
-								$('#sendOffer'+id).parent().attr('id','sendOffer'+id).html('<font color="red">waiting for respond</font>');
-								
-								$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
-								$('#historyRow'+id).parent().parent().remove();
+						 		
+								/**
+								 * verify transfer values:
+								 */
+									//should be in server ?!
+								/***************************/
 								var data = {
 										JcolorsToOffer : JcolorsToOffer,
 										JcolorsToGet : JcolorsToGet,
@@ -691,13 +745,15 @@ jQuery(function($){
 										rowid : id,
 								};
 								//historyCount++;
-								IO.socket.emit('sendMessage', data);
+								IO.socket.emit('sendOffer', data);
 
 				});
                 // Change the word for the Host and Player
-                }
+         //       }
 				App.Player.currentCount++;
 			},
+			
+			
             /**
              * Click handler for the 'JOIN' button
              */
@@ -766,7 +822,7 @@ jQuery(function($){
 				$('#board table tr').each(function(){
 					 $(this).find('td').each(function(){
 						 $(this).click(function(){
-						 //if(App.Player.canMove === 1){
+						 if(App.Player.canMove === 1){
 							var data = {
 								id : App.Player.myid,
 								col : $(this).parent().children().index($(this)),
@@ -776,38 +832,27 @@ jQuery(function($){
 							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
 							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
 							
-							if(op1 || op2){
+							if(op1 || op2)
+							{								
+								var tdColor =  $(this).css('background-color');
+								var index = App.Player.colors.indexOf(tdColor);
+								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+							//	var hasOtherPlayer = false;
 								
-							var tdColor =  $(this).css('background-color');
-							var index = App.Player.colors.indexOf(tdColor);
-							var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
-							var hasOtherPlayer = false;
-							
-							for(var i=0;i<App.Player.locations.length;i++){
-								if(i!=App.Player.myid){
-									if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
-										hasOtherPlayer = true;
-										break;
+								/*for(var i=0;i<App.Player.locations.length;i++){
+									if(i!=App.Player.myid){
+										if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
+											hasOtherPlayer = true;
+											break;
+										}
+									
 									}
-								
-								}
-							}
-							if(chipsOfColor>0 && hasOtherPlayer == false){
-								App.Player.Chips[App.Player.myid][index]--;
-								var r;
-								var c;
-								if(index<3){
-									r=0;
-									c= index*2+1;
-								}
-								else{
-									r=1;
-									c = (index-3)*2+1;
-								}
-								$('#player'+App.Player.myid).find('#Chips tr:eq('+r+') td:eq('+c+')').html(App.Player.Chips[App.Player.myid][index]);
-								IO.socket.emit('movePlayer',{playerId : App.Player.myid, x: data.row , y : data.col});
-								}
-							}							 
+								}*/
+								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
+									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
+									}
+								}	
+						 	}
 						 })
 					 })
 				 })
