@@ -88,7 +88,9 @@ td.trails
 	border-color:#FF7f00;
 	border-width:2px;
 	border-radius:3px; 
-	padding:23px;
+	width:45px;
+	height:45px;
+	text-align: center;
 }
 
 td.trails:hover
