@@ -42,6 +42,7 @@ jQuery(function($){
 			IO.socket.on('beginFaze',IO.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
+			IO.socket.on('Winner', App.Player.thereIsAWinner);
         },
 
         /**
@@ -856,7 +857,9 @@ jQuery(function($){
 						 })
 					 })
 				 })
-				 
+				 var url = "Pictures/goal.png";
+				$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
+				
             },
             
 			
@@ -868,6 +871,11 @@ jQuery(function($){
             {
             	var htmlPlayer = App.Player.buildPlayer(data);
             	$(".playersList").append(htmlPlayer);
+            	if(data.id == App.Player.myid)
+            		{
+            			
+            			$('#player'+App.Player.myid).css("border-color", "#FF0000");
+            		}
             	var pChips = new Array();
             	for(var i=0; i<data.chips.length; i++)
 				{
@@ -937,6 +945,14 @@ jQuery(function($){
 						 $(this).html(currChips);
 					 })
 				 })
+    		},
+    		/**
+    		 * there is a player standing in the goal trail.
+    		 */
+    		thereIsAWinner: function(data)
+    		{
+    			alert('GAME IS OVER ! \n WINNER IS PLAYER: '+ data.playerId);
+    			App.$gameArea.html(App.$CTtemplateIntroScreen);
     		},
             /**
              *  Click handler for the Player hitting a word in the word list.
