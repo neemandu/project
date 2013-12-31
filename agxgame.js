@@ -120,6 +120,8 @@ function hostStartGame(gameId) {
 	
 	room.board = createServerBoard();
 	
+	room.Goal = conf.Goal;
+	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
 			playerList : playerList,
@@ -191,13 +193,11 @@ function sendOffer(data) {
 	}
 	console.log('reciever Id: '+data.recieverId);
 	if(data.answer === 'no'){
-		console.log('NO');
+
 		this.emit('recieveMessage',data);
 	}
 	else{
 		this.emit('addRowToHistory',data);
-		
-		console.log('YES');
 		console.log('in the room:'+ room);
 
 		var clientNumber = data.recieverId;
@@ -302,17 +302,15 @@ function movePlayer(data1){
 		room.board[data1.currX][data1.currY] = 0;
 		updateLocation(room, data1.playerId, data1.x, data1.y);
 		io.sockets.in(data.gameId).emit('movePlayer', data);
+		if((data1.x === room.Goal.x) && (data1.y === room.Goal.y)){
+			io.sockets.in(data.gameId).emit('Winner', data);
+			console.log('we have a winner!, player #'+data1.playerId)
+		}
 	}
 }
 
 function updateLocation(room, playerId, x, y){
-	var chips = new Array();	
-	for(var i=0; i<numOfColors;i++){	 
-		var numchips = Math.floor(Math.random()*numOfChips);
-		console.log('chips color: '+colorArray[i]+' amount: '+numchips);
-		chips[i] = numchips;
-	}
-	return chips;
+	//TODO
 }
 
 function createChips(){
