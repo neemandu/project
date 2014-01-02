@@ -123,6 +123,8 @@ function hostStartGame(gameId) {
 	
 	room.gameOver = false;
 	
+	room.gameId = gameId;
+	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
 			playerList : playerList,
@@ -146,7 +148,7 @@ function hostStartGame(gameId) {
 			console.log(room.board[i][j]);
 		}
 	}
-	beginphases(data.gameId);
+	beginphases(room);
 	
 	/*****************************************/
 	
@@ -383,15 +385,15 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
-function beginphases(gameId){
+function beginphases(room){
 	room.gameOver = false;
 	console.log('beginphases');
 	var i=0;
 	var keys = Object.keys(conf.phases);
 	console.log('keys: '+keys.length);
-	phasesHalper(gameId,keys,i);
+	phasesHalper(room,keys,i);
 }
-function phasesHalper(gameId,keys, i){
+function phasesHalper(room,keys, i){
 	var data = {
 			name : conf.phases[keys[i]].name,
 			operation : conf.phases[keys[i]].operation,
@@ -401,13 +403,13 @@ function phasesHalper(gameId,keys, i){
 	console.log('operation: '+ conf.phases[keys[i]].operation);
 	console.log('time: '+ conf.phases[keys[i]].time);
 	console.log('i: '+ i);
-	io.sockets.in(gameId).emit('beginFaze', data);
+	io.sockets.in(room.gameId).emit('beginFaze', data);
 	var f = i;
 	f++;
 	f %= keys.length;
-	console.log('f: '+ f);
+	console.log('room.gameOver: '+ room.gameOver);
 	if(!room.gameOver){
-		setTimeout(function(){ return phasesHalper(gameId,keys, f);}, conf.phases[keys[i]].time);
+		setTimeout(function(){ return phasesHalper(room,keys, f);}, conf.phases[keys[i]].time);
 	}
 }
 
