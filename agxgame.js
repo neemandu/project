@@ -14,7 +14,6 @@ var roomSize = 2;
 var numOfColors = 6;
 var numOfChips = 15;
 var colorArray = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default");
-var gameOver = false;
 //var currentRoomId = -1;
 var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
@@ -121,6 +120,8 @@ function hostStartGame(gameId) {
 	room.board = createServerBoard();
 	
 	room.Goal = conf.Goal;
+	
+	room.gameOver = false;
 	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
@@ -303,7 +304,7 @@ function movePlayer(data1){
 		updateLocation(room, data1.playerId, data1.x, data1.y);
 		io.sockets.in(data.gameId).emit('movePlayer', data);
 		if((data1.x === room.Goal.x) && (data1.y === room.Goal.y)){
-			gameOver = true;
+			room.gameOver = true;
 			io.sockets.in(data.gameId).emit('Winner', data);
 			console.log('we have a winner!, player #'+data1.playerId)
 		}
@@ -383,7 +384,7 @@ function playerRestart(data) {
  *                       *
  ************************* */
 function beginphases(gameId){
-	gameOver = false;
+	room.gameOver = false;
 	console.log('beginphases');
 	var i=0;
 	var keys = Object.keys(conf.phases);
@@ -405,7 +406,7 @@ function phasesHalper(gameId,keys, i){
 	f++;
 	f %= keys.length;
 	console.log('f: '+ f);
-	if(!gameOver){
+	if(!room.gameOver){
 		setTimeout(function(){ return phasesHalper(gameId,keys, f);}, conf.phases[keys[i]].time);
 	}
 }
