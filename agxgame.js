@@ -6,6 +6,7 @@ var winnersLogger = log.winnerLogger;
 var offersLogger = log.offersLogger;
 var transactionLogger = log.transactionLogger;
 
+//var req = log.req;
 
 var io;
 var gameSocket;
@@ -40,6 +41,9 @@ fs.readFile('\conf.json', 'utf8', function (err,data) {
  * @param socket The socket object for the connected client.
  */
 exports.initGame = function(sio, socket){
+	
+	//var pathname = req.parse(req.href);
+	//console.log('url: '+req.pathname);
 	//console.log('init!');
 	io = sio;
 	gameSocket = socket;
@@ -49,11 +53,9 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('hostCreateNewGame', hostCreateNewGame);
 	gameSocket.on('hostRoomFull', hostPrepareGame);
 	gameSocket.on('hostCountdownFinished', hostStartGame);
-	gameSocket.on('hostNextRound', hostNextRound);
 
 	// Player Events
 	gameSocket.on('playerJoinGame', playerJoinGame);
-	gameSocket.on('playerAnswer', playerAnswer);
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendOffer', sendOffer);
 	gameSocket.on('updateChips', updateChips);
@@ -132,6 +134,7 @@ function hostStartGame(gameId) {
 			board: boardHtml,
 			goal: conf.Goal
 	};
+	console.log("in the room: "+room);
 	io.sockets.in(data.gameId).emit('GameStarted', data);
 	/**
 	 * create players data:
@@ -154,19 +157,7 @@ function hostStartGame(gameId) {
 	
 };
 
-/**
- * A player answered correctly. Time for the next word.
- * @param data Sent from the client. Contains the current round and gameId (room)
- */
-function hostNextRound(data) {
-	if(data.round < wordPool.length ){
-		// Send a new set of words back to the host and players.
-		sendWord(data.round, data.gameId);
-	} else {
-		// If the current round exceeds the number of words, send the 'gameOver' event.
-		io.sockets.in(data.gameId).emit('gameOver',data);
-	}
-}
+
 /* *****************************
  *                           *
  *     PLAYER FUNCTIONS      *
@@ -178,23 +169,29 @@ function hostNextRound(data) {
  */
 function sendOffer(data) {
 	console.log('sendOffer');
+	
 	console.log('game id: '+data.gameId);
 	//which room am i
 	var room = gameSocket.manager.rooms["/" + data.gameId];
-	//validating chips
-	data.answer = 'yes';
-	console.log('sender Id: '+data.sentFrom);
-	for(var i=0;i<6;i++){
-		var sum1 = JSON.parse(data.JcolorsToOffer)[i];
-		var sum2 = JSON.parse(data.JcolorsToGet)[i];
-		console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
-		if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
-			data.answer = 'no';
-			console.log('NO');
-			break;
+	if(room.playerList[data.recieverId] != undefined){	
+		//validating chips
+		data.answer = 'yes';
+		console.log('sender Id: '+data.sentFrom);
+		for(var i=0;i<6;i++){
+			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
+			var sum2 = JSON.parse(data.JcolorsToGet)[i];
+			console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
+			if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
+				data.answer = 'no';
+				console.log('NO');
+				break;
+			}
 		}
+		console.log('reciever Id: '+data.recieverId);
 	}
-	console.log('reciever Id: '+data.recieverId);
+	else{
+		data.answer = 'no';
+	}
 	if(data.answer === 'no'){
 
 		this.emit('recieveMessage',data);
@@ -257,21 +254,14 @@ function playerJoinGame(data) {
 			// attach the socket id to the data object.
 			data.mySocketId = sock.id;
 
-			// Join the room
-			//       sock.join(data.gameId);
 			//join the current open room.
 			sock.join(currRoom);
-	
-			//data.chips = createChips();
-			
-			//data.location = setLocation();
 			
 			data.playerId = room.length - 2;//minus the host. this player is the last in the room.
 
 			console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
 
 			// Emit an event notifying the clients that the player has joined the room.
-			//io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
 			sock.emit('playerJoinedRoom', data);
 			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
 				console.log('Room is full. Almost ready!');
@@ -314,7 +304,12 @@ function movePlayer(data1){
 }
 
 function updateLocation(room, playerId, x, y){
-	//TODO
+	console.log('player id: '+playerId);
+	room.playerList[playerId].location.x = x;
+	room.playerList[playerId].location.y = y;
+	console.log('new x: '+ room.playerList[playerId].location.x + '       new y: '+ room.playerList[playerId].location.y);
+	console.log('player id: '+room.playerList[playerId].id);
+	
 }
 
 function createChips(){
@@ -354,18 +349,6 @@ function getPlayerId(room,socket){
 	}
 	console.log('####getPlayerId');
 	return -1;
-}
-
-/**
- * A player has tapped a word in the word list.
- * @param data gameId
- */
-function playerAnswer(data) {
-	// console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
-
-	// The player's answer is attached to the data object.  \
-	// Emit an event with the answer so it can be checked by the 'Host'
-	io.sockets.in(data.gameId).emit('hostCheckAnswer', data);
 }
 
 /**
@@ -505,76 +488,9 @@ function rejectOffer(data){
 	var socketId = room[''+data.id];
 	var socket = io.sockets.sockets[socketId];
 	var send ={
-	rowid : data.rowid
+			rowid : data.rowid
 	}
 	socket.emit('rejectOffer',send);
-}
-
-/**
- * Get a word for the host, and a list of words for the player.
- *
- * @param wordPoolIndex
- * @param gameId The room identifier
- */
-function sendWord(wordPoolIndex, gameId) {
-	var data = getWordData(wordPoolIndex);
-	io.sockets.in(data.gameId).emit('newWordData', data);
-}
-
-/**
- * This function does all the work of getting a new words from the pile
- * and organizing the data to be sent back to the clients.
- *
- * @param i The index of the wordPool.
- * @returns {{round: *, word: *, answer: *, list: Array}}
- */
-function getWordData(i){
-	// Randomize the order of the available words.
-	// The first element in the randomized array will be displayed on the host screen.
-	// The second element will be hidden in a list of decoys as the correct answer
-	var words = shuffle(wordPool[i].words);
-
-	// Randomize the order of the decoy words and choose the first 5
-	var decoys = shuffle(wordPool[i].decoys).slice(0,5);
-
-	// Pick a random spot in the decoy list to put the correct answer
-	var rnd = Math.floor(Math.random() * 5);
-	decoys.splice(rnd, 0, words[1]);
-
-	// Package the words into a single object.
-	var wordData = {
-			round: i,
-			word : words[0],   // Displayed Word
-			answer : words[1], // Correct Answer
-			list : decoys      // Word list for player (decoys and answer)
-	};
-
-	return wordData;
-}
-
-/*
- * Javascript implementation of Fisher-Yates shuffle algorithm
- * http://stackoverflow.com/questions/2450954/how-to-randomize-a-javascript-array
- */
-function shuffle(array) {
-	var currentIndex = array.length;
-	var temporaryValue;
-	var randomIndex;
-
-	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
-
-		// Pick a remaining element...
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex -= 1;
-
-		// And swap it with the current element.
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
-	}
-
-	return array;
 }
 
 
