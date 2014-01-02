@@ -39,7 +39,7 @@ jQuery(function($){
             IO.socket.on('updateChips', IO.updateChips)
 			IO.socket.on('rejectOffer', IO.rejectOffer)
             IO.socket.on('error', IO.error );
-			IO.socket.on('beginFaze',IO.beginFaze);
+			IO.socket.on('beginFaze',App.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
 			IO.socket.on('Winner', App.Player.thereIsAWinner);
@@ -234,34 +234,6 @@ jQuery(function($){
 					
 		},
 		
-		beginFaze : function(data){
-			$('#phases').html(data.operation+' phase');
-			if(data.name === 'phase1'){
-				App.Player.canMove = 0;
-				if($('#addTransaction').find('#addTrans').length === 0){
-					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
-				}
-			}
-			else if(data.name === 'phase2'){
-				$('#downTable').html('');
-				$('#addTrans').remove();
-				App.Player.canMove = 0;
-			}
-			else if(data.name === 'phase3'){
-				$('#downTable').html('');
-				$('#addTrans').remove();
-				App.Player.canMove = 1;
-			}
-			var func = function(time, j)
-			{
-				$('#phases').html(data.operation+' phase: ' +(j)+' seconds');
-				if(j>0)
-					setTimeout(function(){func(time, j-1);}, 1000);
-			}
-			var time = data.time/1000;
-			func(time, time);
-		},
-		
 		rejectOffer : function(data) {
 			$('#sendOffer'+data.rowid).parent().html('<font color="red">rejected</font>');
 		},
@@ -330,7 +302,10 @@ jQuery(function($){
          *
          */
         gameId: 0,
-
+        /**
+         * a variable who responsible of the timeOut functions to be done;
+         */
+        timeout: 0,
         /**
          * This is used to differentiate between 'Host' and 'Player' browsers.
          */
@@ -397,6 +372,37 @@ jQuery(function($){
             App.$doc.on('click', '.btnAnswer',App.Player.onPlayerAnswerClick);
             App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
         },
+        
+        beginFaze : function(data){
+			//should stop the blinking phases ... : 
+        	clearTimeout(App.timeout);
+			
+			$('#phases').html(data.operation+' phase');
+			if(data.name === 'phase1'){
+				App.Player.canMove = 0;
+				if($('#addTransaction').find('#addTrans').length === 0){
+					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
+				}
+			}
+			else if(data.name === 'phase2'){
+				$('#downTable').html('');
+				$('#addTrans').remove();
+				App.Player.canMove = 0;
+			}
+			else if(data.name === 'phase3'){
+				$('#downTable').html('');
+				$('#addTrans').remove();
+				App.Player.canMove = 1;
+			}
+			var func = function(time, j)
+			{
+				$('#phases').html(data.operation+' phase: ' +(j)+' seconds');
+				if(j>0)
+					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
+			}
+			var time = data.time/1000;
+			func(time, time-1);
+		},
 
         /* *************************************
          *             Game Logic              *
@@ -951,8 +957,8 @@ jQuery(function($){
     		 */
     		thereIsAWinner: function(data)
     		{
-    			alert('GAME IS OVER ! \n WINNER IS PLAYER: '+ data.playerId);
-    			App.$gameArea.html(App.$CTtemplateIntroScreen);
+    				alert('GAME IS OVER ! \n WINNER IS PLAYER: '+ data.playerId);
+    				App.$gameArea.html(App.$CTtemplateIntroScreen);
     		},
             /**
              *  Click handler for the Player hitting a word in the word list.

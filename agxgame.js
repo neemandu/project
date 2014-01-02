@@ -297,7 +297,7 @@ function movePlayer(data1){
 		io.sockets.in(data.gameId).emit('movePlayer', data);
 		if((data1.x === room.Goal.x) && (data1.y === room.Goal.y)){
 			room.gameOver = true;
-			io.sockets.in(data.gameId).emit('Winner', data);
+			io.sockets.in(room.gameId).emit('Winner', data);
 			console.log('we have a winner!, player #'+data1.playerId)
 		}
 	}
