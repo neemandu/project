@@ -733,15 +733,28 @@ jQuery(function($){
 										})
 								})
 								
+								/**
+								 * validate transfer values:
+								 */
+								var CTO = 0;
+								var CTG = 0;
+								for(var colorsNum = 0; colorsNum < colorsToOffer.length; colorsNum++)
+									{
+										CTO = colorsToOffer[colorsNum];
+										CTG = colorsToGet[colorsNum];
+										if( CTO == '' || CTG == '' || (CTO < 0) || (CTG < 0) )
+											{
+												alert('chips value must be a number greater than 0');
+												return;
+											}
+									}
+									
+									//should be in server ?!
+								/***************************/
+								
 								var JcolorsToOffer = JSON.stringify(colorsToOffer); 
 								var JcolorsToGet = JSON.stringify(colorsToGet); 
 								
-						 		
-								/**
-								 * verify transfer values:
-								 */
-									//should be in server ?!
-								/***************************/
 								var data = {
 										JcolorsToOffer : JcolorsToOffer,
 										JcolorsToGet : JcolorsToGet,
