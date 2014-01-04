@@ -144,6 +144,7 @@ function hostStartGame(gameId) {
 		player = {id:i, chips: createChips(), location: setLocation(i)};
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
+		room.playerList[data.sentFrom].offer = [];
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
 	for(var i=0;i<room.board.length;i++){
@@ -171,6 +172,7 @@ function sendOffer(data) {
 	console.log('sendOffer');
 	
 	console.log('game id: '+data.gameId);
+	var tmp =[];
 	//which room am i
 	var room = gameSocket.manager.rooms["/" + data.gameId];
 	if(room.playerList[data.recieverId] != undefined){	
@@ -186,7 +188,9 @@ function sendOffer(data) {
 				console.log('NO');
 				break;
 			}
+			tmp[i] = sum1;
 		}
+		data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
 		console.log('reciever Id: '+data.recieverId);
 	}
 	else{
@@ -223,6 +227,20 @@ function sendOffer(data) {
 
 //	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 }
+
+
+function isSumOfOffersLegal(room, tmp){
+	for(var i=0;i<numOfColors;i++){
+		if(!(room.playerList[data.sentFrom].offer[i] + tmp[i] <= room.playerList[data.sentFrom].chips[i])){
+			return false;
+		}
+	}
+	for(var i=0;i<numOfColors;i++){
+		room.playerList[data.sentFrom].offer[i] += tmp[i]
+	}
+	return true;	
+}
+
 
 /**
  * A player clicked the 'START GAME' button.
@@ -379,13 +397,16 @@ function beginphases(room){
 function phasesHalper(room,keys, i){
 	var data = {
 			name : conf.phases[keys[i]].name,
-			operation : conf.phases[keys[i]].operation,
+			canMove : conf.phases[keys[i]].canMove,
+			canOffer : conf.phases[keys[i]].canOffer,
+			canTransfer : conf.phases[keys[i]].canTransfer,
 			time : conf.phases[keys[i]].time,
 		}
 	console.log('key: '+ conf.phases[keys[i]].name);
-	console.log('operation: '+ conf.phases[keys[i]].operation);
 	console.log('time: '+ conf.phases[keys[i]].time);
-	console.log('i: '+ i);
+	if(conf.phases[keys[i]].canOffer === 1){
+		deleteFormerOffers(room);
+	}
 	io.sockets.in(room.gameId).emit('beginFaze', data);
 	var f = i;
 	f++;
@@ -393,6 +414,12 @@ function phasesHalper(room,keys, i){
 	console.log('room.gameOver: '+ room.gameOver);
 	if(!room.gameOver){
 		setTimeout(function(){ return phasesHalper(room,keys, f);}, conf.phases[keys[i]].time);
+	}
+}
+
+function deleteFormerOffers(room){
+	for(var i=0;i<numOfPlayers;i++){
+		room.playerList[i].offer = [];
 	}
 }
 
@@ -473,12 +500,22 @@ function createServerBoard(){
  * @param player1 the first player
  * @param player2 the second player
  */
-function updateChips(gameId,player1,player2){
+function updateChips(data){
+	var room = gameSocket.manager.rooms["/" + data.gameId];	 
+	for(var i=0;i<numOfColors;i++){
+		var sum1 = data.JcolorsToOffer[i];
+		var sum2 = data.JcolorsToGet[i];
+		room.playerList[data.player1].chips[i] -= sum1;
+		room.playerList[data.player2].chips[i] += sum1;
+		room.playerList[data.player1].chips[i] += sum2;
+		room.playerList[data.player2].chips[i] -= sum2;
+		console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
+	}
 	var data =
 	{
-			gameId:gameId,
-			player1:player1,
-			player2:player2
+			gameId:data.gameId,
+			player1:data.player1,
+			player2:data.player2
 	};
 	io.sockets.in(data.gameId).emit('updateChips', data );
 }
