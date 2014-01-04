@@ -26,6 +26,11 @@ div.titleWrapper
 	float:center;
 }
 
+div.title
+{
+	font-size:105px;
+}
+
 div.topDiv
 {
 	width:750px;
