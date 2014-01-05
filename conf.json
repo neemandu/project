@@ -12,24 +12,40 @@
 					[3,3,3,4,4,4]],
 	"phases" : {
     	"phase1" : {
-    		"name" : "phase1",
-    		"operation" : "offers",
-    		"time" : 30000
+    		"name" : "move",
+    		"time" : 5000,
+    		"canMove" : 1,
+    		"canOffer" : 0,
+    		"canTransfer": 0 
     	},
     	"phase2" : {
-    		"name" : "phase2",
-    		"operation" : "transfers",
-    		"time" : 15000
+    		"name" : "offer",
+    		"time" : 55000,
+    		"canMove" : 0,
+    		"canOffer" : 1,
+    		"canTransfer": 0 
     	},
     	"phase3" : {
-    		"name" : "phase3",
-    		"operation" : "moves",
-    		"time" : 30000
+    		"name" : "transfer",
+    		"time" : 5000,
+    		"canMove" : 0,
+    		"canOffer" : 0,
+    		"canTransfer": 1
     	}
     },
     "Goal": {
     	"x" : 1,
 		"y" : 1
+    },
+    "scoreMethod": {
+    	"purpleOfferSquare" : 1,
+    	"LGOfferSquare": 1,
+    	"LYOfferSquare": 1,
+    	"pinkOfferSquare": 1,
+    	"LBOfferSquare": 1,
+    	"DBOfferSquare": 1,
+    	"default": 1,
+    	"Winner" : 30
     }
     	
  }
