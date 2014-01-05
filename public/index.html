@@ -32,13 +32,60 @@
 
             <div class="buttons">
 
-                <button id="btnCreateGame" class="btn left">CREATE</button>
+                <button id="btnAdmin" class="btn left">Admin</button>
                 <button id="btnJoinGame" class="btn right">JOIN</button>
                 <div style="clear:both"></div>
             </div>
 
         </div>
 
+    </script>
+	
+	<script id="adminLogin" type="text/template">
+        <div class="titleWrapper">
+			<div>
+            User name: <input type="text" name="username"><br>
+			Password: <input type="password" name="lastname"><br>
+			<button id="loginButton">Login</button>
+			</div>
+        </div>
+    </script>
+	
+	<script id="adminPage" type="text/template">
+        <div class="titleWrapperAdmin">
+			<div style="margin-left:50px; padding-top:20px; padding-bottom:20px;">
+				Game: <select id="chooseGame"><option value="ColoredTrails">ColoredTrails</option></select><br>
+				Board size:<br>
+				x: <input type="number" name="boardx"> y: <input type="number" name="boardy"><br>
+				Number Of Players: <input type="number" name="Nplayers"><br>
+				Number Of Chips: <input type="number" name="Ncolors"><br>
+				
+				<button id="generateBtn" class="btn right">Generate</button><br>
+				<div style=" clear:both;">
+					<div style="float:left;">
+						<table id="generatedBoard" class="trails">
+						</table>
+					</div>
+					<div style="float:left; margin-left:20px;">
+						<table id="colorsToPaint" class="trails">
+						</table>
+					</div>
+					<div style="float:left; margin-left:20px;">		
+						<table id="playersToPaint" class="trails">
+						</table>
+					</div>
+				</div>
+				<div style="float:left; clear:both;">
+					<table id="generatedPlayersDiv">
+							
+					</table>
+				</div>
+				<div style="clear:both;">
+                <button id="btnCreateGame" class="btn right">CREATE GAME</button>
+				</div>
+                <div style="clear:both"></div>
+			</div>
+        </div>
     </script>
 
  	<!-- Main Title Screen that appears when the page loads for the first time -->
@@ -51,7 +98,7 @@
             </div>
 
             <div class="buttons">
-                <button id="btnCreateGame" class="BigButton">CREATE</button>
+                <button id="btnAdmin" class="BigButton">ADMIN</button>
                 <button id="btnJoinGame" class="BigButton">JOIN</button>
 				<div id="playerWaitingMessage"></div>
                 <div style="clear:both"></div>
