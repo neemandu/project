@@ -6,7 +6,7 @@ var winnersLogger = log.winnerLogger;
 var offersLogger = log.offersLogger;
 var transactionLogger = log.transactionLogger;
 
-//var req = log.req;
+var url = log.url;
 
 var io;
 var gameSocket;
@@ -19,6 +19,7 @@ var colorArray = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","
 var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
 //var playerCounter = 0;
+var admin = false;
 
 
 //nimrod -----------------------------------------
@@ -41,6 +42,9 @@ fs.readFile('\conf.json', 'utf8', function (err,data) {
  * @param socket The socket object for the connected client.
  */
 exports.initGame = function(sio, socket){
+//	for(var i in url){
+//		console.log(i+': '+url[i]);
+//	}
 	
 	//var pathname = req.parse(req.href);
 	//console.log('url: '+req.pathname);
@@ -61,6 +65,9 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('updateChips', updateChips);
 	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
+}
+exports.setAdmin = function(ad){
+	admin = ad;
 }
 
 /* *******************************
@@ -144,7 +151,7 @@ function hostStartGame(gameId) {
 		player = {id:i, chips: createChips(), location: setLocation(i)};
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
-		room.playerList[data.sentFrom].offer = [];
+		room.playerList[i].offer = [];
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
 	for(var i=0;i<room.board.length;i++){
@@ -418,7 +425,7 @@ function phasesHalper(room,keys, i){
 }
 
 function deleteFormerOffers(room){
-	for(var i=0;i<numOfPlayers;i++){
+	for(var i=0;i<roomSize;i++){
 		room.playerList[i].offer = [];
 	}
 }
@@ -529,6 +536,5 @@ function rejectOffer(data){
 	}
 	socket.emit('rejectOffer',send);
 }
-
 
 
