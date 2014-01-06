@@ -39,9 +39,12 @@ var path = require('path');
 
 // Create a new instance of Express
 var app = express();
-//url module
-var req = require('url');
-exports.req = req;
+
+app.get('/admin', function(req, res){
+	  res.send('Hello World');
+	});
+
+
 // Import the Anagrammatix game file.
 var agx = require('./agxgame');
 

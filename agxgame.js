@@ -143,7 +143,15 @@ function hostStartGame(gameId) {
 		player.score = setScore(player.chips, room, player.location.x, player.location.y);
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
+		room.playerList[i].offer = [];
 		io.sockets.in(data.gameId).emit('addPlayer', player);
+		console.log('player #'+i+' score is: '+room.playerList[i].score);
+		
+	}
+	for(var j=0;j<roomSize;j++){
+		for(var i=0;i<numOfColors;i++){
+			console.log('#'+j+' has: '+room.playerList[j].chips[i]+'of color: '+i);
+		}
 	}
 	//initialize offers
 	deleteFormerOffers(room);
@@ -172,7 +180,7 @@ function sendOffer(data) {
 	console.log('sendOffer');
 	
 	console.log('game id: '+data.gameId);
-	var tmp =[];
+	var tmp =new Array();
 	//which room am i
 	var room = gameSocket.manager.rooms["/" + data.gameId];
 	if(room.playerList[data.recieverId] != undefined){	
@@ -253,14 +261,18 @@ function isSumOfOffersLegal(id,room, tmp){
 }
 function setScore(chips, room, x, y){
 	var cs = ChipScore(chips);
+	console.log('ChipScore: '+cs);
 	var md = manhattanDistance(room, x, y);
-	cs += md;
-	return cs;
+	console.log('manhattanDistance: '+md);
+	return (+cs + +md);
 }
 function ChipScore(chips){
 	var sum = 0;
 	for(var i=0;i<chips.length;i++){
-		sum += chips[i] * conf.scoreMethod[i];
+		console.log('conf.scoreMethod['+i+']: '+conf.scoreMethod[i]);
+		console.log('chips['+i+']: '+chips[i]);
+		sum =+sum + (+chips[i] * +conf.scoreMethod[i]);
+		console.log('sum: '+sum);
 	}
 	return sum;
 }
@@ -427,9 +439,7 @@ function phasesHalper(room,keys, i){
 		}
 	console.log('key: '+ conf.phases[keys[i]].name);
 	console.log('time: '+ conf.phases[keys[i]].time);
-	if(conf.phases[keys[i]].canOffer === 1){
-		deleteFormerOffers(room);
-	}
+	deleteFormerOffers(room);
 	io.sockets.in(room.gameId).emit('beginFaze', data);
 	var f = i;
 	f++;
@@ -442,7 +452,6 @@ function phasesHalper(room,keys, i){
 
 function deleteFormerOffers(room){
 	for(var i=0;i<roomSize;i++){
-		room.playerList[i].offer = [];
 		for(var j=0;j<numOfColors;j++){
 			room.playerList[i].offer[j] = 0;
 		}
@@ -450,7 +459,7 @@ function deleteFormerOffers(room){
 	}
 }
 function manhattanDistance(room, x, y){
-	return ((Math.abs(room.Goal.x-x))+(Math.abs(room.Goal.y-y)));
+	return ((Math.abs(+room.Goal.x - +x))+(Math.abs(+room.Goal.y - +y)));
 }
 
 
@@ -534,14 +543,22 @@ function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	 
 	console.log('');
 	for(var i=0;i<numOfColors;i++){
+		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
+		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
+	}
+	for(var i=0;i<numOfColors;i++){
 		var sum1 = data.player1.colorsToAdd[i];
 		var sum2 = data.player2.colorsToAdd[i];
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum1;
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum1;
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum2;
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum2;
-		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+'of color: '+i);
-		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+'of color: '+i);
+		console.log('sum1: '+sum1);
+		console.log('sum2: '+sum2);
+		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum1;
+		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum1;
+		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum2;
+		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum2;
+	}
+	for(var i=0;i<numOfColors;i++){
+		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
+		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
 	}
 	var data =
 	{
