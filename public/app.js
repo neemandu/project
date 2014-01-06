@@ -475,7 +475,7 @@ jQuery(function($){
 			
 			onGenerateClick: function () {
 			App.Host.generated = 1;
-			
+			$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 			var boardx = $('[name="boardx"]').val();
 			var boardy = $('[name="boardy"]').val();
 			var Nplayers = $('[name="Nplayers"]').val();
@@ -487,7 +487,8 @@ jQuery(function($){
 					$('#colorsToPaint').empty();
 					$('#playersToPaint').empty();
 					$('#generatedPlayersDiv').empty();
-					
+					$('#generateBottun').empty();
+					$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 			}
 			
 			for(var i=0;i<boardy;i++){
