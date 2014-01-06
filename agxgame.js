@@ -579,4 +579,3 @@ function rejectOffer(data){
 	socket.emit('rejectOffer',send);
 }
 
-
