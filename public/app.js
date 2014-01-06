@@ -889,7 +889,7 @@ jQuery(function($){
         	otherPlayers: 0,
 			canMove: 0,
 			canOffer : 0,
-			canTransfer = 0,
+			canTransfer : 0,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
