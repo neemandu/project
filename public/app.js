@@ -153,7 +153,14 @@ jQuery(function($){
 						
 						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
 						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
-						IO.socket.emit('updateChips',App.gameId,player1,player2);
+						var d={
+							gameId :App.gameId,
+							player1 : player1,
+							player2 : player2,
+							JcolorsToGet : data.JcolorsToGet,
+							JcolorsToOffer : data.JcolorsToOffer
+						}
+						IO.socket.emit('updateChips',d);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
 					
@@ -382,26 +389,26 @@ jQuery(function($){
 			//should stop the blinking phases ... : 
         	clearTimeout(App.timeout);
 			
-			$('#phases').html(data.operation+' phase');
-			if(data.name === 'phase1'){
+			$('#phases').html(data.name+' phase');
+			if(data.name === 'offer'){
 				App.Player.canMove = 0;
 				if($('#addTransaction').find('#addTrans').length === 0){
 					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 				}
 			}
-			else if(data.name === 'phase2'){
+			else if(data.name === 'transfer'){
 				$('#downTable').html('');
 				$('#addTrans').remove();
 				App.Player.canMove = 0;
 			}
-			else if(data.name === 'phase3'){
+			else if(data.name === 'move'){
 				$('#downTable').html('');
 				$('#addTrans').remove();
 				App.Player.canMove = 1;
 			}
 			var func = function(time, j)
 			{
-				$('#phases').html(data.operation+' phase: ' +(j)+' seconds');
+				$('#phases').html(data.name+' phase: ' +(j)+' seconds');
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
@@ -459,8 +466,59 @@ jQuery(function($){
              * Handler for the "Start" button on the Title Screen.
              */
             onCreateClick: function () {
-                // console.log('Clicked "Create A Game"');
-                IO.socket.emit('hostCreateNewGame');
+			
+			var playersChips = new Array();
+			var board =new Array();
+			var playersLocs =new Array();
+			var boardx = $('[name="boardx"]').val();
+			var boardy = $('[name="boardy"]').val();
+			var Nplayers = $('[name="Nplayers"]').val();
+			var Ncolors = $('[name="Ncolors"]').val();
+			
+			var valid = true;
+			$('#generatedBoard tr').each(function(i){
+				var tmp = new Array();
+				$(this).find('td').each(function(j){
+					tmp[j] = $(this).css('background');
+					if($(this).html()!=''){
+						
+						var col = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						var locArr = new Array();
+						if($(this).html()== 'G'){
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[Nplayers]=locArr;
+						}
+						else{
+							var tmpP = $(this).html()[1];
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[tmpP]=locArr;
+						}
+					}
+					if($(this).css('background').indexOf('gba(0, 0, 0, 0)') >= 0){
+						alert('not all board is colored');
+						valid = false;
+						return false;
+					}
+				});
+				if(valid == false){
+					return false;
+				}
+				board[i]=tmp;
+			});
+			alert(playersLocs[Nplayers]);
+			//$('#generatedPlayersDiv');
+			
+			if(valid){
+				var data={
+					board : board,
+					playersLocation : playersLocs,
+				}
+                IO.socket.emit('hostCreateNewGame',data);
+			}
+				
             },
 			
 			onAdminClick: function () {
@@ -475,7 +533,7 @@ jQuery(function($){
 			
 			onGenerateClick: function () {
 			App.Host.generated = 1;
-			
+			$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 			var boardx = $('[name="boardx"]').val();
 			var boardy = $('[name="boardy"]').val();
 			var Nplayers = $('[name="Nplayers"]').val();
@@ -487,7 +545,8 @@ jQuery(function($){
 					$('#colorsToPaint').empty();
 					$('#playersToPaint').empty();
 					$('#generatedPlayersDiv').empty();
-					
+					$('#generateBottun').empty();
+					$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 			}
 			
 			for(var i=0;i<boardy;i++){
@@ -496,28 +555,28 @@ jQuery(function($){
 						$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
 						
 						$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
-						if($(this).html() != ''){
 						
-						$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
-						$('#playersToPaint tr:last td:eq(0)').click(function(){
+
+							if(App.Host.Iscolor === 1){
+								//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+								$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+							}
+							else{
+								if($(this).html() != ''){						
+									$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
+									$('#playersToPaint tr:last td:eq(0)').click(function(){
 										var column = $(this).parent().children().index(this);
 										var row = $(this).parent().parent().children().index(this.parentNode);
 										App.Host.lastRow = row;
 										App.Host.lastCol = column;
 										App.Host.Iscolor = 0;
-										alert(column+" "+ row);
 									});
 
 								$(this).empty();
-							}
-							else if(App.Host.Iscolor === 1){
-								$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-							}
-							else{
-							//	$(this).html(App.Host.selectedItem);
+								}
+							
 								$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+								//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
 								$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
 							}
 						
