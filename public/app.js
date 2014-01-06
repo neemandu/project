@@ -471,6 +471,7 @@ jQuery(function($){
 		
 			var playersChips = new Array();
 			var board =new Array();
+			var scores =new Array();
 			var phases = new Array();
 			var playersLocs =new Array();
 			var Nplayers = $('[name="Nplayers"]').val();
@@ -478,7 +479,7 @@ jQuery(function($){
 			
 			var valid = true;
 
-			if($(offersCheckbox).is(":checked")){
+			if($('#offersCheckbox').is(":checked")){
 				phases[0] = $('#transferTime').val();
 				}
 			else{
@@ -534,11 +535,18 @@ jQuery(function($){
 						k++;
 					}
 				});
-				if(valis==false){
+				if(valid==false){
 					return false;
 				}
 				playersChips[i]=tmpC;
 			});
+			
+			k=0;
+			$('#generatedScoresTable tr:first td:odd').each(function(){
+				scores[k]=$(this).find('input').val();
+				k++;
+			});
+			
 			if(Nplayers>playersLocs.length){
 				valid=false;
 			}
@@ -547,7 +555,8 @@ jQuery(function($){
 					board : board,
 					playersLocation : playersLocs,
 					playersChips : playersChips,
-					phases : phases
+					phases : phases,
+					scores : scores
 				}
                 IO.socket.emit('hostCreateNewGame',data);
 			}
@@ -575,117 +584,134 @@ jQuery(function($){
             },
 			
 			onGenerateClick: function () {
-			var boardx = $('[name="boardx"]').val();
-			var boardy = $('[name="boardy"]').val();
-			var Nplayers = $('[name="Nplayers"]').val();
-			var Ncolors = $('[name="Ncolors"]').val();
-			var valid = true;
-			if(($('#offersCheckbox').is(":checked")&&$('#transferTime').val()<0)||$('#offersPhaseTime').val()<0||$('#movePhaseTime').val()<0){
-					alert('illigat time');
+				var boardx = $('[name="boardx"]').val();
+				var boardy = $('[name="boardy"]').val();
+				var Nplayers = $('[name="Nplayers"]').val();
+				var Ncolors = $('[name="Ncolors"]').val();
+				var valid = true;
+				var k=0;
+				var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1");
+
+				if(($('#offersCheckbox').is(":checked")&&$('#transferTime').val()<0)||$('#offersPhaseTime').val()<0||$('#movePhaseTime').val()<0){
+						alert('illigat time');
+						valid=false;
+				}
+				
+				if(boardx<0||boardy<0){
+					alert('illigat board sizes');
 					valid=false;
-			}
-			if(boardx<0||boardy<0){
-				alert('illigat board sizes');
-				valid=false;
-			}
-			if(Nplayers<0){
-				alert('illigat number of players');
-				valid=false;
-			}
-			if(valid==true){
-			App.Host.generated = 1;
-			$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
-			
-			var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1");
-			
-			if(App.Host.generated===1){
-					$('#generatedBoard').empty();
-					$('#colorsToPaint').empty();
-					$('#playersToPaint').empty();
-					$('#generatedPlayersDiv').empty();
-					$('#generateBottun').empty();
-					$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
-			}
-			
-			for(var i=0;i<boardy;i++){
-				$('#generatedBoard').append('<tr class="trails"></tr>');
-					for(var j=0;j<boardx;j++){
-						$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
-						
-						$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
-						
+				}
+				if(Nplayers<0){
+					alert('illigat number of players');
+					valid=false;
+				}
+				if(Ncolors>6){
+					alert('Number of Colors must be less then six');
+					valid=false;
+				}
+				if(valid==true){
+				$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 
-							if(App.Host.Iscolor === 1){
-								//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-							}
-							else{
-								if($(this).html() != ''){						
-									$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
-									$('#playersToPaint tr:last td:eq(0)').click(function(){
-										var column = $(this).parent().children().index(this);
-										var row = $(this).parent().parent().children().index(this.parentNode);
-										App.Host.lastRow = row;
-										App.Host.lastCol = column;
-										App.Host.Iscolor = 0;
-									});
+				
+				if(App.Host.generated===1){
+						$('#generatedBoard').empty();
+						$('#colorsToPaint').empty();
+						$('#playersToPaint').empty();
+						$('#generatedPlayersDiv').empty();
+						$('#generateBottun').empty();
+						$('#generatedScoresDiv').empty();
+						$('#generatedScoresDiv').append('<table id="generatedScoresTable"></table>');
+						
+						$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
+				}
+				App.Host.generated = 1;
+				$('#generatedScoresDiv').prepend('<br>SCORES');
+				$('#generatedScoresTable').append('<tr><tr>');
+				
+				k=0;
+				for(k;k<Ncolors;k++ ){
+					$('#generatedScoresTable tr:first').append('<td style=" width:20px; background:'+colorArray[k]+';"></td> <td><input style="width:40px;" type="number" name="color"/></td>');
+				}
 
-								$(this).empty();
+				$('#generatedScoresTable tr:first').append('<td>Winner</td><td><input style="width:40px;" type="number" name="color"/></td>');
+				for(var i=0;i<boardy;i++){
+					$('#generatedBoard').append('<tr class="trails"></tr>');
+						for(var j=0;j<boardx;j++){
+							$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
+							
+							$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
+							
+
+								if(App.Host.Iscolor === 1){
+									//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+									$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+								}
+								else{
+									if($(this).html() != ''){						
+										$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
+										$('#playersToPaint tr:last td:eq(0)').click(function(){
+											var column = $(this).parent().children().index(this);
+											var row = $(this).parent().parent().children().index(this.parentNode);
+											App.Host.lastRow = row;
+											App.Host.lastCol = column;
+											App.Host.Iscolor = 0;
+										});
+
+									$(this).empty();
+									}
+								
+									$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+									//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+									$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
 								}
 							
-								$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-								$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
-							}
-						
-						});
-					}
-			}
-			
-			var k=0;
-			for(k;k<Ncolors;k++){
-				$('#colorsToPaint').append('<tr class="trails"><td class="trails" style="background:'+colorArray[k]+'";></td></tr>');
-			}
-			k=0;
-			for(k;k<Nplayers;k++){
-				$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">P'+k+'</td></tr>');
-			}
-			
-			for(var m=0;m<Nplayers;m++){
-				$('#generatedPlayersDiv').append('<tr><td>Player'+m+': </td></tr>');
-				for(var n=0;n<Ncolors;n++){
-					$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input id="colorIn" style="width:40px;" type="number" name="color"/></td>');
+							});
+						}
 				}
-			}
-			
-			$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">G</td></tr>');
-			
-			$('#colorsToPaint tr').each(function(){
-				$(this).find('td').click(function(){
-					var column = $(this).parent().children().index(this);
-					var row = $(this).parent().parent().children().index(this.parentNode);
-					App.Host.lastRow = row;
-					App.Host.lastCol = column;			
-					App.Host.Iscolor = 1;
-					//App.Host.selectedItem = $(this).css('background');
-
-				});	
-			});
-			
-			$('#playersToPaint tr').each(function(){
-				$(this).find('td').click(function(){
-					var column = $(this).parent().children().index(this);
-					var row = $(this).parent().parent().children().index(this.parentNode);
-					App.Host.lastRow = row;
-					App.Host.lastCol = column;
-					App.Host.Iscolor = 0;
-				//	App.Host.selectedItem = $(this).html();
-				});	
-			});
-			
-			}
-			
 				
+				k=0;
+				for(k;k<Ncolors;k++){
+					$('#colorsToPaint').append('<tr class="trails"><td class="trails" style="background:'+colorArray[k]+'";></td></tr>');
+				}
+				k=0;
+				for(k;k<Nplayers;k++){
+					$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">P'+k+'</td></tr>');
+				}
+				
+				for(var m=0;m<Nplayers;m++){
+					$('#generatedPlayersDiv').append('<tr><td>Player'+m+': </td></tr>');
+					for(var n=0;n<Ncolors;n++){
+						$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input id="colorIn" style="width:40px;" type="number" name="color"/></td>');
+					}
+				}
+				
+				$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">G</td></tr>');
+				
+				$('#colorsToPaint tr').each(function(){
+					$(this).find('td').click(function(){
+						var column = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						App.Host.lastRow = row;
+						App.Host.lastCol = column;			
+						App.Host.Iscolor = 1;
+						//App.Host.selectedItem = $(this).css('background');
+
+					});	
+				});
+				
+				$('#playersToPaint tr').each(function(){
+					$(this).find('td').click(function(){
+						var column = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						App.Host.lastRow = row;
+						App.Host.lastCol = column;
+						App.Host.Iscolor = 0;
+					//	App.Host.selectedItem = $(this).html();
+					});	
+				});
+				
+				}
+	
             },
 			
             /**
