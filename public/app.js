@@ -392,6 +392,8 @@ jQuery(function($){
           beginFaze : function(data){
 			//stops the blinking phases: 
         	clearTimeout(App.timeout);
+//        	App.Player.resetOffersSent();
+        	
         	$('#phases').html(data.name+' phase');
         	App.Player.canOffer    = data.canOffer;
         	App.Player.canTransfer = data.canTransfer;
@@ -754,6 +756,23 @@ jQuery(function($){
 				$('#sendOffer'+App.Player.currentCount).click( function(){
 								var id = this.id[this.id.length-1];
 								var player = $('#playersDropDown'+id).val();
+								
+								/**
+								 * check if this player have already got an offer from me this phase:
+								 *
+								//alert('player:' + player );//+ ', sentToPlayersList:' + App.player.sentToPlayersList)
+								if( App.Player.offersCountToPlayers[player] === 1)
+								{
+									alert('No more then one offer to the same player is allowed' +
+												'in the same phase.');
+									return;
+								}
+								else
+								{
+									alert('offersToPlayer' + player +': ' +App.Player.offersCountToPlayers[player]);
+									App.Player.offersCountToPlayers[player]++;
+								}*/
+								
 								var colorsToOffer = new Array();
 								var colorsToGet = new Array();
 								var i=0;
@@ -784,11 +803,20 @@ jQuery(function($){
 									{
 										CTO = colorsToOffer[colorsNum];
 										CTG = colorsToGet[colorsNum];
-										if( CTO == '' || CTG == '' || (CTO < 0) || (CTG < 0) )
+										if( (CTO < 0) || (CTG < 0) )
 											{
 												alert('chips value must be a number greater than 0');
 												return;
 											}
+										if (CTO == '')
+											{
+												colorsToOffer[colorsNum] = 0;
+											}
+										if (CTG == '')
+										{
+											colorsToGet[colorsNum] = 0;
+										}
+										
 									}
 									
 									//should be in server ?!
@@ -866,11 +894,7 @@ jQuery(function($){
 //                   alert('GameStarted for real!! gameId: '+App.gameId);
 
                 App.currentRound = data.round;
-                //alert as number of players to see if it passed
-
-                
-               
-            
+                           
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
                 
                 $(".gameBoard").html(data.board);
@@ -921,6 +945,10 @@ jQuery(function($){
 				 var url = "Pictures/goal.png";
 				$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
 				
+
+                //sets the player's list of offers num to 0;
+//    			App.Player.resetOffersSent();
+				
             },
             
 			
@@ -931,11 +959,10 @@ jQuery(function($){
             addPlayer: function(data)
             {
             	var htmlPlayer = App.Player.buildPlayer(data);
-            	App.Player.score = data.score;    			
+            	App.Player.score = data.score;
             	$(".playersList").append(htmlPlayer);
-
+            	
     			App.Player.updateScore(data);
-    			
             	if(data.id == App.Player.myid)
             		{
             			
@@ -960,6 +987,18 @@ jQuery(function($){
 				var location = {playerId: data.id, x:data.location.x, y:data.location.y};
 				App.Player.locatePlayers(location);
             },
+            
+            /** 
+          	 *	didn't sent offers to nobody!  :
+             *
+            resetOffersSent: function()
+            {
+            	alert(App.Host.players.length);
+	        	for(var i=0; i< App.Host.numPlayersInRoom; i++)
+	    		{
+	        		App.Player.offersCountToPlayers[i] = 0;
+	    		}
+            },*/
             
 			/**
              *  locates players on screen
