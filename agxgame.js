@@ -42,13 +42,6 @@ fs.readFile('\conf.json', 'utf8', function (err,data) {
  * @param socket The socket object for the connected client.
  */
 exports.initGame = function(sio, socket){
-//	for(var i in url){
-//		console.log(i+': '+url[i]);
-//	}
-	
-	//var pathname = req.parse(req.href);
-	//console.log('url: '+req.pathname);
-	//console.log('init!');
 	io = sio;
 	gameSocket = socket;
 	gameSocket.emit('connected', { message: "You are connected!" });
@@ -66,9 +59,7 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
 }
-exports.setAdmin = function(ad){
-	admin = ad;
-}
+
 
 /* *******************************
  *                             *
@@ -149,11 +140,13 @@ function hostStartGame(gameId) {
 	for (var i=0;i<room.length-1;i++)
 	{ 
 		player = {id:i, chips: createChips(), location: setLocation(i)};
+		player.score = setScore(player.chips, room, player.location.x, player.location.y);
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
-		room.playerList[i].offer = [];
 		io.sockets.in(data.gameId).emit('addPlayer', player);
 	}
+	//initialize offers
+	deleteFormerOffers(room);
 	for(var i=0;i<room.board.length;i++){
 		for(var j=0;j<room.board[i].length;j++){
 			console.log(room.board[i][j]);
@@ -186,7 +179,7 @@ function sendOffer(data) {
 		//validating chips
 		data.answer = 'yes';
 		console.log('sender Id: '+data.sentFrom);
-		for(var i=0;i<6;i++){
+		for(var i=0;i<numOfColors;i++){
 			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
 			var sum2 = JSON.parse(data.JcolorsToGet)[i];
 			console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
@@ -236,16 +229,40 @@ function sendOffer(data) {
 }
 
 
-function isSumOfOffersLegal(room, tmp){
+function isSumOfOffersLegal(id,room, tmp){
 	for(var i=0;i<numOfColors;i++){
-		if(!(room.playerList[data.sentFrom].offer[i] + tmp[i] <= room.playerList[data.sentFrom].chips[i])){
-			return false;
+		console.log('tmp['+i+']: '+ tmp[i]);
+	}
+	for(var i=0;i<numOfColors;i++){
+		console.log('offer['+i+']: '+ room.playerList[id].offer[i]);
+		if(!(+room.playerList[id].offer[i] + +tmp[i] <= room.playerList[id].chips[i])){
+			console.log('Sum Of Offers Is NOT Legal@@@');
+			offersLogger.trace('sum of offers is higher than what player #'+id+' has');
+			return 'no';
 		}
 	}
+	console.log('isSumOfOffersLegal Legal!!!');
 	for(var i=0;i<numOfColors;i++){
-		room.playerList[data.sentFrom].offer[i] += tmp[i]
+		room.playerList[id].offer[i] =+room.playerList[id].offer[i] + +tmp[i]
 	}
-	return true;	
+	
+	for(var i=0;i<numOfColors;i++){
+		console.log('offer['+i+']: '+ room.playerList[id].offer[i]);
+	}
+	return 'yes';	
+}
+function setScore(chips, room, x, y){
+	var cs = ChipScore(chips);
+	var md = manhattanDistance(room, x, y);
+	cs += md;
+	return cs;
+}
+function ChipScore(chips){
+	var sum = 0;
+	for(var i=0;i<chips.length;i++){
+		sum += chips[i] * conf.scoreMethod[i];
+	}
+	return sum;
 }
 
 
@@ -334,7 +351,6 @@ function updateLocation(room, playerId, x, y){
 	room.playerList[playerId].location.y = y;
 	console.log('new x: '+ room.playerList[playerId].location.x + '       new y: '+ room.playerList[playerId].location.y);
 	console.log('player id: '+room.playerList[playerId].id);
-	
 }
 
 function createChips(){
@@ -427,7 +443,14 @@ function phasesHalper(room,keys, i){
 function deleteFormerOffers(room){
 	for(var i=0;i<roomSize;i++){
 		room.playerList[i].offer = [];
+		for(var j=0;j<numOfColors;j++){
+			room.playerList[i].offer[j] = 0;
+		}
+		
 	}
+}
+function manhattanDistance(room, x, y){
+	return ((Math.abs(room.Goal.x-x))+(Math.abs(room.Goal.y-y)));
 }
 
 
@@ -504,19 +527,21 @@ function createServerBoard(){
 
 /**
  * this function update the rest of the players with the current transaction
- * @param player1 the first player
- * @param player2 the second player
+ * @param player1 the reciever player
+ * @param player2 the sender player
  */
 function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	 
+	console.log('');
 	for(var i=0;i<numOfColors;i++){
-		var sum1 = data.JcolorsToOffer[i];
-		var sum2 = data.JcolorsToGet[i];
-		room.playerList[data.player1].chips[i] -= sum1;
-		room.playerList[data.player2].chips[i] += sum1;
-		room.playerList[data.player1].chips[i] += sum2;
-		room.playerList[data.player2].chips[i] -= sum2;
-		console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
+		var sum1 = data.player1.colorsToAdd[i];
+		var sum2 = data.player2.colorsToAdd[i];
+		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum1;
+		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum1;
+		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum2;
+		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum2;
+		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+'of color: '+i);
+		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+'of color: '+i);
 	}
 	var data =
 	{
