@@ -363,8 +363,6 @@ jQuery(function($){
 
             // Templates
             App.$gameArea = $('#gameArea');
-			App.$adminLogin = $('#adminLogin');
-			App.$adminPage = $('#adminPage');
             App.$templateIntroScreen = $('#intro-screen-template').html();
             App.$templateNewGame = $('#create-game-template').html();
             App.$templateJoinGame = $('#join-game-template').html();
@@ -382,9 +380,6 @@ jQuery(function($){
             // Host
             App.$doc.on('click', '#addTransaction', App.Player.onAddTransClick);
 			App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
-			App.$doc.on('click', '#btnAdmin', App.Host.onAdminClick);
-			App.$doc.on('click', '#loginButton', App.Host.onAdminLogin);
-			App.$doc.on('click', '#generateBtn', App.Host.onGenerateClick);
 			App.$doc.on('click', '#transferCheckbox', App.Host.onTransferChecked);
 			
             // Player
@@ -461,11 +456,6 @@ jQuery(function($){
              */
             players : [],
 			
-			Iscolor:0,
-			lastRow : 0,
-			lastCol : 0,
-			//selectedItem: 0,
-			generated: 0,
             /**
              * Flag to indicate if a new game is starting.
              * This is used after the first game ends, and players initiate a new game
@@ -487,126 +477,9 @@ jQuery(function($){
              * Handler for the "Start" button on the Title Screen.
              */
             onCreateClick: function () {
-		
-			var playersChips = new Array();
-			var board =new Array();
-			var scores =new Array();
-			var phases = new Array();
-			var playersLocs =new Array();
-			var Nplayers = $('[name="Nplayers"]').val();
-			var Ncolors = $('[name="Ncolors"]').val();
-			
-			var valid = true;
-			var ind = 0;
-			var values = new Array();
-			if($('#transferCheckbox').is(":checked")){			
-				values[0] = 'transfer';
-				values[1] = $('#transferTime').val();
-				values[2] = 0;
-				values[3] = 0;
-				values[4] = 1;
-				phases[ind] = values;
-				ind++;
-				}
-				
-			values[0] = 'offer';
-			values[1] = $('#offersPhaseTime').val();
-			values[2] = 0;
-			values[3] = 1;
-			values[4] = 0;
-			phases[ind] = values;
-			ind++;
-			values[0] = 'move';
-			values[1] = $('#movePhaseTime').val();
-			values[2] = 1;
-			values[3] = 0;
-			values[4] = 0;
-			phases[ind] = values;
-			
-			$('#generatedBoard tr').each(function(i){
-				var tmp = new Array();
-				$(this).find('td').each(function(j){
-					tmp[j] = $(this).css('background');
-					if($(this).html()!=''){
-						
-						var col = $(this).parent().children().index(this);
-						var row = $(this).parent().parent().children().index(this.parentNode);
-						var locArr = new Array();
-						if($(this).html()== 'G'){
-							locArr[0]=col;
-							locArr[1]=row;
-							playersLocs[Nplayers]=locArr;
-						}
-						else{
-							var tmpP = $(this).html()[1];
-							locArr[0]=col;
-							locArr[1]=row;
-							playersLocs[tmpP]=locArr;
-						}
-					}
-					if($(this).css('background').indexOf('gba(0, 0, 0, 0)') >= 0){
-						alert('not all board is colored');
-						valid = false;
-						return false;
-					}
-				});
-				if(valid == false){
-					return false;
-				}
-				board[i]=tmp;
-			});
-			
-			var k=0;
-			$('#generatedPlayersDiv tr').each(function(i){
-			var tmpC = new Array();
-				$(this).find('td:even').each(function(j){
-					if(j>0){	
-						tmpC[k] = $(this).find('input').val();
-						if($(this).find('input').val()<0){
-							valid=false;
-							alert('illigal number');
-							return false;
-						}
-						k++;
-					}
-				});
-				if(valid==false){
-					return false;
-				}
-				playersChips[i]=tmpC;
-			});
-			
-			k=0;
-			$('#generatedScoresTable tr:first td:odd').each(function(){
-				scores[k]=$(this).find('input').val();
-				k++;
-			});
-			
-			if(Nplayers>playersLocs.length){
-				valid=false;
-			}
-			if(valid){
-				var data={
-					board : board,
-					playersLocation : playersLocs,
-					playersChips : playersChips,
-					phases : phases,
-					scores : scores
-				}
-                IO.socket.emit('hostCreateNewGame',data);
-			}
-				
+				IO.socket.emit('hostCreateNewGame');
             },
 			
-			onAdminClick: function () {
-                // console.log('Clicked "Create A Game"');
-                App.$gameArea.html(App.$adminLogin.html());
-            },
-			
-			onAdminLogin: function () {
-                // console.log('Clicked "Create A Game"');
-                App.$gameArea.html(App.$adminPage.html());
-            },
 			
 			onTransferChecked: function () {	
 				if($(transferCheckbox).is(":checked")){
@@ -618,136 +491,6 @@ jQuery(function($){
 				
             },
 			
-			onGenerateClick: function () {
-				var boardx = $('[name="boardx"]').val();
-				var boardy = $('[name="boardy"]').val();
-				var Nplayers = $('[name="Nplayers"]').val();
-				var Ncolors = $('[name="Ncolors"]').val();
-				var valid = true;
-				var k=0;
-				var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1");
-
-				if(($('#offersCheckbox').is(":checked")&&$('#transferTime').val()<0)||$('#offersPhaseTime').val()<0||$('#movePhaseTime').val()<0){
-						alert('illigat time');
-						valid=false;
-				}
-				
-				if(boardx<0||boardy<0){
-					alert('illigat board sizes');
-					valid=false;
-				}
-				if(Nplayers<0){
-					alert('illigat number of players');
-					valid=false;
-				}
-				if(Ncolors>6){
-					alert('Number of Colors must be less then six');
-					valid=false;
-				}
-				if(valid==true){
-				$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
-
-				
-				if(App.Host.generated===1){
-						$('#generatedBoard').empty();
-						$('#colorsToPaint').empty();
-						$('#playersToPaint').empty();
-						$('#generatedPlayersDiv').empty();
-						$('#generateBottun').empty();
-						$('#generatedScoresDiv').empty();
-						$('#generatedScoresDiv').append('<table id="generatedScoresTable"></table>');
-						
-						$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
-				}
-				App.Host.generated = 1;
-				$('#generatedScoresDiv').prepend('<br>SCORES');
-				$('#generatedScoresTable').append('<tr><tr>');
-				
-				k=0;
-				for(k;k<Ncolors;k++ ){
-					$('#generatedScoresTable tr:first').append('<td style=" width:20px; background:'+colorArray[k]+';"></td> <td><input style="width:40px;" type="number" name="color"/></td>');
-				}
-
-				$('#generatedScoresTable tr:first').append('<td>Winner</td><td><input style="width:40px;" type="number" name="color"/></td>');
-				for(var i=0;i<boardy;i++){
-					$('#generatedBoard').append('<tr class="trails"></tr>');
-						for(var j=0;j<boardx;j++){
-							$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
-							
-							$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
-							
-
-								if(App.Host.Iscolor === 1){
-									//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-									$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-								}
-								else{
-									if($(this).html() != ''){						
-										$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
-										$('#playersToPaint tr:last td:eq(0)').click(function(){
-											var column = $(this).parent().children().index(this);
-											var row = $(this).parent().parent().children().index(this.parentNode);
-											App.Host.lastRow = row;
-											App.Host.lastCol = column;
-											App.Host.Iscolor = 0;
-										});
-
-									$(this).empty();
-									}
-								
-									$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-									//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-									$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
-								}
-							
-							});
-						}
-				}
-				
-				k=0;
-				for(k;k<Ncolors;k++){
-					$('#colorsToPaint').append('<tr class="trails"><td class="trails" style="background:'+colorArray[k]+'";></td></tr>');
-				}
-				k=0;
-				for(k;k<Nplayers;k++){
-					$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">P'+k+'</td></tr>');
-				}
-				
-				for(var m=0;m<Nplayers;m++){
-					$('#generatedPlayersDiv').append('<tr><td>Player'+m+': </td></tr>');
-					for(var n=0;n<Ncolors;n++){
-						$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input id="colorIn" style="width:40px;" type="number" name="color"/></td>');
-					}
-				}
-				
-				$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">G</td></tr>');
-				
-				$('#colorsToPaint tr').each(function(){
-					$(this).find('td').click(function(){
-						var column = $(this).parent().children().index(this);
-						var row = $(this).parent().parent().children().index(this.parentNode);
-						App.Host.lastRow = row;
-						App.Host.lastCol = column;			
-						App.Host.Iscolor = 1;
-						//App.Host.selectedItem = $(this).css('background');
-
-					});	
-				});
-				
-				$('#playersToPaint tr').each(function(){
-					$(this).find('td').click(function(){
-						var column = $(this).parent().children().index(this);
-						var row = $(this).parent().parent().children().index(this.parentNode);
-						App.Host.lastRow = row;
-						App.Host.lastCol = column;
-						App.Host.Iscolor = 0;
-					//	App.Host.selectedItem = $(this).html();
-					});	
-				});
-				
-				}
-	
-            },
 			
             /**
              * The Host screen is displayed for the first time.
