@@ -390,25 +390,25 @@ jQuery(function($){
         	clearTimeout(App.timeout);
 			
 			$('#phases').html(data.name+' phase');
-			if(data.name === 'phase1'){
+			if(data.name === 'offer'){
 				App.Player.canMove = 0;
 				if($('#addTransaction').find('#addTrans').length === 0){
 					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 				}
 			}
-			else if(data.name === 'phase2'){
+			else if(data.name === 'transfer'){
 				$('#downTable').html('');
 				$('#addTrans').remove();
 				App.Player.canMove = 0;
 			}
-			else if(data.name === 'phase3'){
+			else if(data.name === 'move'){
 				$('#downTable').html('');
 				$('#addTrans').remove();
 				App.Player.canMove = 1;
 			}
 			var func = function(time, j)
 			{
-				$('#phases').html(data.operation+' phase: ' +(j)+' seconds');
+				$('#phases').html(data.name+' phase: ' +(j)+' seconds');
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
@@ -467,7 +467,7 @@ jQuery(function($){
              */
             onCreateClick: function () {
 			
-			var players = new Array();
+			var playersChips = new Array();
 			var board =new Array();
 			var playersLocs =new Array();
 			var boardx = $('[name="boardx"]').val();
