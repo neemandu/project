@@ -470,8 +470,6 @@ jQuery(function($){
 			var playersChips = new Array();
 			var board =new Array();
 			var playersLocs =new Array();
-			var boardx = $('[name="boardx"]').val();
-			var boardy = $('[name="boardy"]').val();
 			var Nplayers = $('[name="Nplayers"]').val();
 			var Ncolors = $('[name="Ncolors"]').val();
 			
@@ -508,13 +506,24 @@ jQuery(function($){
 				}
 				board[i]=tmp;
 			});
-			alert(playersLocs[Nplayers]);
-			//$('#generatedPlayersDiv');
+			
+			var k=0;
+			$('#generatedPlayersDiv tr').each(function(i){
+			var tmpC = new Array();
+				$(this).find('td:even').each(function(j){
+					if(j>0){	
+						tmpC[k] = $(this).find('input').val();
+						k++;
+					}
+				});
+				playersChips[i]=tmpC;
+			});
 			
 			if(valid){
 				var data={
 					board : board,
 					playersLocation : playersLocs,
+					playersChips : playersChips,
 				}
                 IO.socket.emit('hostCreateNewGame',data);
 			}
@@ -596,7 +605,7 @@ jQuery(function($){
 			for(var m=0;m<Nplayers;m++){
 				$('#generatedPlayersDiv').append('<tr><td>Player'+m+': </td></tr>');
 				for(var n=0;n<Ncolors;n++){
-					$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input style="width:40px;" type="number" name="color'+n+'"/></td>');
+					$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input id="colorIn" style="width:40px;" type="number" name="color"/></td>');
 				}
 			}
 			
