@@ -479,13 +479,30 @@ jQuery(function($){
 			
 			var valid = true;
 			var ind = 0;
-			if($('#offersCheckbox').is(":checked")){
-				phases[ind] = $('#transferTime').val();
+			var values = new Array();
+			if($('#transferCheckbox').is(":checked")){			
+				values[0] = 'transfer';
+				values[1] = $('#transferTime').val();
+				values[2] = 0;
+				values[3] = 0;
+				values[4] = 1;
+				phases[ind] = values;
 				ind++;
 				}
-			phases[ind] = $('#offersPhaseTime').val();
+				
+			values[0] = 'offer';
+			values[1] = $('#offersPhaseTime').val();
+			values[2] = 0;
+			values[3] = 1;
+			values[4] = 0;
+			phases[ind] = values;
 			ind++;
-			phases[ind] = $('#movePhaseTime tr').val();
+			values[0] = 'move';
+			values[1] = $('#movePhaseTime').val();
+			values[2] = 1;
+			values[3] = 0;
+			values[4] = 0;
+			phases[ind] = values;
 			
 			$('#generatedBoard tr').each(function(i){
 				var tmp = new Array();
