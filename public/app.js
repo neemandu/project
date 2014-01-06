@@ -377,6 +377,7 @@ jQuery(function($){
 			App.$doc.on('click', '#btnAdmin', App.Host.onAdminClick);
 			App.$doc.on('click', '#loginButton', App.Host.onAdminLogin);
 			App.$doc.on('click', '#generateBtn', App.Host.onGenerateClick);
+			App.$doc.on('click', '#transferCheckbox', App.Host.onTransferChecked);
 			
             // Player
             App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
@@ -385,26 +386,27 @@ jQuery(function($){
             App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
         },
         
-        beginFaze : function(data){
-			//should stop the blinking phases ... : 
+          beginFaze : function(data){
+			//stops the blinking phases: 
         	clearTimeout(App.timeout);
-			
-			$('#phases').html(data.name+' phase');
-			if(data.name === 'offer'){
-				App.Player.canMove = 0;
-				if($('#addTransaction').find('#addTrans').length === 0){
-					$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
-				}
+        	$('#phases').html(data.name+' phase');
+        	App.Player.canOffer    = data.canOffer;
+        	App.Player.canTransfer = data.canTransfer;
+        	App.Player.canMove     = data.canMove;
+        	
+        	if(App.Player.canOffer && $('#addTransaction').find('#addTrans').length === 0)
+        	{
+				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 			}
-			else if(data.name === 'transfer'){
+        	if(App.Player.canTransfer)
+        	{
 				$('#downTable').html('');
 				$('#addTrans').remove();
-				App.Player.canMove = 0;
 			}
-			else if(data.name === 'move'){
+        	if(App.Player.canMove)
+        	{
 				$('#downTable').html('');
 				$('#addTrans').remove();
-				App.Player.canMove = 1;
 			}
 			var func = function(time, j)
 			{
@@ -466,14 +468,25 @@ jQuery(function($){
              * Handler for the "Start" button on the Title Screen.
              */
             onCreateClick: function () {
-			
+		
 			var playersChips = new Array();
 			var board =new Array();
+			var phases = new Array();
 			var playersLocs =new Array();
 			var Nplayers = $('[name="Nplayers"]').val();
 			var Ncolors = $('[name="Ncolors"]').val();
 			
 			var valid = true;
+
+			if($(offersCheckbox).is(":checked")){
+				phases[0] = $('#transferTime').val();
+				}
+			else{
+				phases[0] = -1;
+			}
+			phases[1] = $('#offersPhaseTime').val();
+			phases[2] = $('#movePhaseTime tr').val();
+			
 			$('#generatedBoard tr').each(function(i){
 				var tmp = new Array();
 				$(this).find('td').each(function(j){
@@ -513,17 +526,28 @@ jQuery(function($){
 				$(this).find('td:even').each(function(j){
 					if(j>0){	
 						tmpC[k] = $(this).find('input').val();
+						if($(this).find('input').val()<0){
+							valid=false;
+							alert('illigal number');
+							return false;
+						}
 						k++;
 					}
 				});
+				if(valis==false){
+					return false;
+				}
 				playersChips[i]=tmpC;
 			});
-			
+			if(Nplayers>playersLocs.length){
+				valid=false;
+			}
 			if(valid){
 				var data={
 					board : board,
 					playersLocation : playersLocs,
 					playersChips : playersChips,
+					phases : phases
 				}
                 IO.socket.emit('hostCreateNewGame',data);
 			}
@@ -540,13 +564,38 @@ jQuery(function($){
                 App.$gameArea.html(App.$adminPage.html());
             },
 			
+			onTransferChecked: function () {	
+				if($(transferCheckbox).is(":checked")){
+					$('#transferTime').attr('readonly', false);
+				}
+				else{
+					$('#transferTime').attr('readonly', true);
+				}
+				
+            },
+			
 			onGenerateClick: function () {
-			App.Host.generated = 1;
-			$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
 			var boardx = $('[name="boardx"]').val();
 			var boardy = $('[name="boardy"]').val();
 			var Nplayers = $('[name="Nplayers"]').val();
 			var Ncolors = $('[name="Ncolors"]').val();
+			var valid = true;
+			if(($('#offersCheckbox').is(":checked")&&$('#transferTime').val()<0)||$('#offersPhaseTime').val()<0||$('#movePhaseTime').val()<0){
+					alert('illigat time');
+					valid=false;
+			}
+			if(boardx<0||boardy<0){
+				alert('illigat board sizes');
+				valid=false;
+			}
+			if(Nplayers<0){
+				alert('illigat number of players');
+				valid=false;
+			}
+			if(valid==true){
+			App.Host.generated = 1;
+			$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
+			
 			var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1");
 			
 			if(App.Host.generated===1){
@@ -634,7 +683,7 @@ jQuery(function($){
 				});	
 			});
 			
-			
+			}
 			
 				
             },
@@ -839,6 +888,8 @@ jQuery(function($){
         	myid: 0,
         	otherPlayers: 0,
 			canMove: 0,
+			canOffer = 0,
+			canTransfer = 0,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */

@@ -59,7 +59,9 @@
 				x: <input type="number" name="boardx"> y: <input type="number" name="boardy"><br>
 				Number Of Players: <input type="number" name="Nplayers"><br>
 				Number Of Chips: <input type="number" name="Ncolors"><br>
-				
+				<input id="transferCheckbox" type="checkbox" name="transferCheckbox"> Transfer phase time: <input id ="transferTime" type="number" name="time" readonly><br>
+				Move phase time: <input id="movePhaseTime" type="number" name="movePhaseTime"><br>
+				Offer phase time: <input id="offersPhaseTime" type="number" name="time"><br>
 				<button id="generateBtn" class="btn right">Generate</button><br>
 				<div style=" clear:both;">
 					<div style="float:left;">
@@ -151,7 +153,6 @@
 			<div class="downDiv">
 				<table id="histTable" class="downTable">
 	
-				</table>
 				</table>
 			</div>
 		</div>
