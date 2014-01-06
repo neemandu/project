@@ -1,582 +1,1465 @@
-//importing loggers
-var log = require('./index');
-var connectionLogger = log.connectionLogger;
-var gameLogger = log.gameLogger;
-var winnersLogger = log.winnerLogger;
-var offersLogger = log.offersLogger;
-var transactionLogger = log.transactionLogger;
+;
+jQuery(function($){    
+    'use strict';
 
-var url = log.url;
+    /**
+     * All the code relevant to Socket.IO is collected in the IO namespace.
+     *
+     * @type {{init: Function, bindEvents: Function, onConnected: Function, onNewGameCreated: Function, playerJoinedRoom: Function, beginNewGame: Function, onNewWordData: Function, hostCheckAnswer: Function, gameOver: Function, error: Function}}
+     */
+ //   var myid = 0;
+    var IO = {
+//    	colors: ['purpleOfferSquare','LGOfferSquare','LYOfferSquare','pinkOfferSquare','LBOfferSquare','DBOfferSquare'],
+		//
 
-var io;
-var gameSocket;
-var idRoomPair ={};
-var roomSize = 2;
-var numOfColors = 6;
-var numOfChips = 15;
-var colorArray = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default");
-//var currentRoomId = -1;
-var newRoomsQueue = require('./Queue');
-newRoomsQueue.Queue();
-//var playerCounter = 0;
-var admin = false;
+        /**
+         * This is called when the page is displayed. It connects the Socket.IO client
+         * to the Socket.IO server
+         */
+        init: function() {
+            IO.socket = io.connect();
+            IO.bindEvents();
+        },
 
+        /**
+         * While connected, Socket.IO will listen to the following events emitted
+         * by the Socket.IO server, then run the appropriate function.
+         */
+        bindEvents : function() {
+            IO.socket.on('connected', IO.onConnected );
+            IO.socket.on('newGameCreated', IO.onNewGameCreated );
+            IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
+            IO.socket.on('beginNewGame', IO.beginNewGame );
+            IO.socket.on('newWordData', IO.onNewWordData);
+            IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
+            IO.socket.on('recieveMessage', IO.recieveMessage );
+            IO.socket.on('gameOver', IO.gameOver);
+            IO.socket.on('GameStarted', IO.GameStarted );
+            IO.socket.on('addPlayer', App.Player.addPlayer);
+            IO.socket.on('updateChips', IO.updateChips)
+			IO.socket.on('rejectOffer', IO.rejectOffer)
+            IO.socket.on('error', IO.error );
+			IO.socket.on('beginFaze',App.beginFaze);
+			IO.socket.on('movePlayer',IO.movePlayer);
+			IO.socket.on('addRowToHistory',IO.addRowToHistory);
+			IO.socket.on('Winner', App.Player.thereIsAWinner);
+        },
 
-//nimrod -----------------------------------------
-var conf;
+        /**
+         * The client is successfully connected!
+         */
+        onConnected : function() {
+            // Cache a copy of the client's socket.IO session ID on the App
+            App.mySocketId = IO.socket.socket.sessionid;
+            // console.log(data.message);
+        },
 
-fs = require('fs');
-fs.readFile('\conf.json', 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  conf = JSON.parse(data);
+        /**
+         * A new game has been created and a random game ID has been generated.
+         * @param data {{ gameId: int, mySocketId: * }}
+         */
+        onNewGameCreated : function(data) {
+            App.Host.gameInit(data);
+        },
+        
+        GameStarted : function(data) {
+            //alert('game started');
+            App[App.myRole].GameStarted(data);
+        },
 
-});
-//nimrod -----------------------------------------
+        /**
+         * A player has successfully joined the game.
+         * @param data {{playerName: string, gameId: int, mySocketId: int, playerId: int}}
+         */
+        playerJoinedRoom : function(data) {
+            // When a player joins a room, do the updateWaitingScreen funciton.
+            // There are two versions of this function: one for the 'host' and
+            // another for the 'player'.
+            //
+            // So on the 'host' browser window, the App.Host.updateWiatingScreen function is called.
+            // And on the player's browser, App.Player.updateWaitingScreen is called.
+            App[App.myRole].updateWaitingScreen(data);
+        },
 
-/**
- * This function is called by index.js to initialize a new game instance.
- *
- * @param sio The Socket.IO library
- * @param socket The socket object for the connected client.
- */
-exports.initGame = function(sio, socket){
-	io = sio;
-	gameSocket = socket;
-	gameSocket.emit('connected', { message: "You are connected!" });
+        /**
+         * Both players have joined the game.
+         * @param data
+         */
+        beginNewGame : function(data) {
+            App[App.myRole].gameCountdown(data);
+        },
 
-	// Host Events
-	gameSocket.on('hostCreateNewGame', hostCreateNewGame);
-	gameSocket.on('hostRoomFull', hostPrepareGame);
-	gameSocket.on('hostCountdownFinished', hostStartGame);
+        /**
+         * A new set of words for the round is returned from the server.
+         * @param data
+         */
+        onNewWordData : function(data) {
+            // Update the current round
+            App.currentRound = data.round;
 
-	// Player Events
-	gameSocket.on('playerJoinGame', playerJoinGame);
-	gameSocket.on('playerRestart', playerRestart);
-	gameSocket.on('sendOffer', sendOffer);
-	gameSocket.on('updateChips', updateChips);
-	gameSocket.on('rejectOffer', rejectOffer);
-	gameSocket.on('movePlayer', movePlayer);
-}
+            // Change the word for the Host and Player
+            App[App.myRole].newWord(data);
+        },
 
+        /**
+         * A player answered. If this is the host, check the answer.
+         * @param data
+         */
+        hostCheckAnswer : function(data) {
+            if(App.myRole === 'Host') {
+                App.Host.checkAnswer(data);
+            }
+        },
 
-/* *******************************
- *                             *
- *       HOST FUNCTIONS        *
- *                             *
- ******************************* */
-/**
- * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
- */
-function hostCreateNewGame() {
-	// Create a unique Socket.IO Room
-	var thisGameId = ( Math.random() * 100000 ) | 0;
-	// currentRoomId = thisGameId;
-	newRoomsQueue.enqueue(thisGameId);
-	
-	gameLogger.trace('Game #'+thisGameId+' was created by HOST:'+this.id);
-
-	// Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-	this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
-
-	// Join the Room and wait for the players
-	this.join(thisGameId.toString());
-
-};
-
-/*
- * Two players have joined. Alert the host!
- * @param gameId The game ID / room ID
- */
-function hostPrepareGame(gameId) {
-	var sock = this;
-	var data = {
-			mySocketId : sock.id,
-			gameId : gameId
-	};
-	//console.log("All Players Present. Preparing game...");
-	io.sockets.in(data.gameId).emit('beginNewGame', data);
-	newRoomsQueue.dequeue();
-}
-
-/*
- * The Countdown has finished, and the game begins!
- * @param gameId The game ID / room ID
- */
-function hostStartGame(gameId) {
-	console.log('Game Started.');
-	var room = gameSocket.manager.rooms["/" + gameId];
-	var playerList = {};
-	room.playerList = {};
-	for (var i=0;i<room.length-1;i++)
-	{ 
-		playerList[i] = i;
-		console.log('playerList['+i+']: '+playerList[i]);
-	}
-	//var params = {height: 8, width: 8, colorsNum: 6};
-	var boardHtml = paintBoard();
-	
-	room.board = createServerBoard();
-	
-	room.Goal = conf.Goal;
-	
-	room.gameOver = false;
-	
-	room.gameId = gameId;
-	
-	//  console.log('boardHtml:  '+boardHtml);
-	var data ={
-			playerList : playerList,
-			gameId : gameId,
-			board: boardHtml,
-			goal: conf.Goal
-	};
-	console.log("in the room: "+room);
-	io.sockets.in(data.gameId).emit('GameStarted', data);
-	/**
-	 * create players data:
-	 */
-	for (var i=0;i<room.length-1;i++)
-	{ 
-		player = {id:i, chips: createChips(), location: setLocation(i)};
-		player.score = setScore(player.chips, room, player.location.x, player.location.y);
-		room.board[player.location.x][player.location.y] = 1;
-		room.playerList[i] = player;
-		room.playerList[i].offer = [];
-		io.sockets.in(data.gameId).emit('addPlayer', player);
-		console.log('player #'+i+' score is: '+room.playerList[i].score);
-		
-	}
-	for(var j=0;j<roomSize;j++){
-		for(var i=0;i<numOfColors;i++){
-			console.log('#'+j+' has: '+room.playerList[j].chips[i]+'of color: '+i);
-		}
-	}
-	//initialize offers
-	deleteFormerOffers(room);
-	for(var i=0;i<room.board.length;i++){
-		for(var j=0;j<room.board[i].length;j++){
-			console.log(room.board[i][j]);
-		}
-	}
-	beginphases(room);
-	
-	/*****************************************/
-	
-};
-
-
-/* *****************************
- *                           *
- *     PLAYER FUNCTIONS      *
- *                           *
- ***************************** */
-/**
- * JcolorsToOffer : int,JcolorsToGet : int,msg : string,recieverId : int,sentFrom : int,gameId : int,rowid : int,
- * @param data msg and other recieverId and gameId.
- */
-function sendOffer(data) {
-	console.log('sendOffer');
-	
-	console.log('game id: '+data.gameId);
-	var tmp =new Array();
-	//which room am i
-	var room = gameSocket.manager.rooms["/" + data.gameId];
-	if(room.playerList[data.recieverId] != undefined){	
-		//validating chips
-		data.answer = 'yes';
-		console.log('sender Id: '+data.sentFrom);
-		for(var i=0;i<numOfColors;i++){
-			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
-			var sum2 = JSON.parse(data.JcolorsToGet)[i];
-			console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
-			if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
-				data.answer = 'no';
-				console.log('NO');
-				break;
-			}
-			tmp[i] = sum1;
-		}
-		data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
-		console.log('reciever Id: '+data.recieverId);
-	}
-	else{
-		data.answer = 'no';
-	}
-	if(data.answer === 'no'){
-
-		this.emit('recieveMessage',data);
-	}
-	else{
-		this.emit('addRowToHistory',data);
-		console.log('in the room:'+ room);
-
-		var clientNumber = data.recieverId;
-		clientNumber++;
-		console.log(clientNumber);
-		//what is the receiver socket id
-		var socketId = room[''+clientNumber];//the host is the first in the room
-
-		console.log('socket id to send to: '+socketId);
-		//get the socket
-		var socket = io.sockets.sockets[socketId];
-
-		if(socket == null){
-			console.log('trying to send message but the #id: '+data.recieverId+' doesnt exist')
-		}
-		else{
-			console.log('msg: '+data.msg+'to: '+socketId+'from: '+this.id);
-			data.playerId = this.id;
-			socket.emit('recieveMessage', data)
-		}
-	}
-	
-
-//	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
-}
-
-
-function isSumOfOffersLegal(id,room, tmp){
-	for(var i=0;i<numOfColors;i++){
-		console.log('tmp['+i+']: '+ tmp[i]);
-	}
-	for(var i=0;i<numOfColors;i++){
-		console.log('offer['+i+']: '+ room.playerList[id].offer[i]);
-		if(!(+room.playerList[id].offer[i] + +tmp[i] <= room.playerList[id].chips[i])){
-			console.log('Sum Of Offers Is NOT Legal@@@');
-			offersLogger.trace('sum of offers is higher than what player #'+id+' has');
-			return 'no';
-		}
-	}
-	console.log('isSumOfOffersLegal Legal!!!');
-	for(var i=0;i<numOfColors;i++){
-		room.playerList[id].offer[i] =+room.playerList[id].offer[i] + +tmp[i]
-	}
-	
-	for(var i=0;i<numOfColors;i++){
-		console.log('offer['+i+']: '+ room.playerList[id].offer[i]);
-	}
-	return 'yes';	
-}
-function setScore(chips, room, x, y){
-	var cs = ChipScore(chips);
-	console.log('ChipScore: '+cs);
-	var md = manhattanDistance(room, x, y);
-	console.log('manhattanDistance: '+md);
-	return (+cs + +md);
-}
-function ChipScore(chips){
-	var sum = 0;
-	for(var i=0;i<chips.length;i++){
-		console.log('conf.scoreMethod['+i+']: '+conf.scoreMethod[i]);
-		console.log('chips['+i+']: '+chips[i]);
-		sum =+sum + (+chips[i] * +conf.scoreMethod[i]);
-		console.log('sum: '+sum);
-	}
-	return sum;
-}
-
-
-/**
- * A player clicked the 'START GAME' button.
- * Attempt to connect them to the room that matches
- * the gameId entered by the player.
- * @param data Contains data entered via player's input - playerName and gameId.
- */
-function playerJoinGame(data) {
-	//console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
-
-	// A reference to the player's Socket.IO socket object
-	var sock = this;
-
-	// Look up the room ID in the Socket.IO manager object.
-	// var room = gameSocket.manager.rooms["/" + data.gameId];
-	var currRoom = newRoomsQueue.peek();
-	data.gameId = currRoom;
-	console.log('currentRoomId: '+currRoom);
-	var room = gameSocket.manager.rooms["/" + currRoom];
-	console.log('rooom id: '+room);
-
-	// If the room exists...
-	if( room != undefined ){
-
-		var playerID = getPlayerId(room,sock);
-		console.log('playerID'+ playerID);
-		if(playerID < 0){
-
-			// attach the socket id to the data object.
-			data.mySocketId = sock.id;
-
-			//join the current open room.
-			sock.join(currRoom);
+        /**
+         * Let everyone know the game has ended.
+         * @param data
+         */
+        gameOver : function(data) {
+            App[App.myRole].endGame(data);
+        },
+        
+        recieveMessage : function(data) {
+       // 	alert(App.Player.currentCount);
+        	if(data.answer === 'no'){
+        		alert('illegal offer');
+        	}
+        	else{
+      //  	App.Player.addRowToHistory(data.rowid);
+			var cur =  App.Player.currentCount;
+			$('#downTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+ App.Player.currentCount+'"><tr></tr></table></td></tr>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td id="sentBy'+ App.Player.currentCount+'"></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>makes an offer of:</td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>in exchange:</td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
+			$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td>');
+			$('#colorsToOffer'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
+			$('#colorsToGet'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
+			var k =0
+			var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
 			
-			data.playerId = room.length - 2;//minus the host. this player is the last in the room.
+			/*
+			 * on click accept : move chips between players 
+			 */
+			 
+			$('#acceptOffer'+App.Player.currentCount).click(function()
+					{
+						var id = this.id[this.id.length-1];
+						var params;
+						//alert(data.JcolorsToGet);
+						var JcolorsToGet = JSON.parse(data.JcolorsToGet);
+						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet,rowid: data.rowid};
+						
+						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
+						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
+						var d={
+							gameId :App.gameId,
+							player1 : player1,
+							player2 : player2,
+							JcolorsToGet : data.JcolorsToGet,
+							JcolorsToOffer : data.JcolorsToOffer
+						}
+						IO.socket.emit('updateChips',d);
+						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
+					
+						//$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+						//$('#historyRow'+id).parent().parent().remove();
+						
+						var h = $('#historyRow'+id).html();
+						$('#historyRow'+id).parent().parent().remove();						
+						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
+					})
+					
+			$('#rejectOffer'+App.Player.currentCount).click(function()
+					{
+						var id = this.id[this.id.length-1];
+						//alert(data.sentFrom+' '+App.Player.myid);
+						var p = data.sentFrom;
+						p++;
+						var player1 = {id :p, gameId : App.gameId, rowid : id};	
+						IO.socket.emit('rejectOffer',player1);
+						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
+					
+					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
+					//	$('#historyRow'+id).parent().parent().remove();
+						
+						var h = $('#historyRow'+id).html();
+						$('#historyRow'+id).parent().parent().remove();
+						
+						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
+					})
+					/*
+					 * until here.
+					 */
+					
+			$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+									k++;
+                                    })
 
-			console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
-
-			// Emit an event notifying the clients that the player has joined the room.
-			sock.emit('playerJoinedRoom', data);
-			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
-				console.log('Room is full. Almost ready!');
-				hostPrepareGame(data.gameId);
-			}
-		}
-	} else {
-		// Otherwise, send an error message back to the player.
-		this.emit('error',{message: "This room does not exist."} );
-	}
-}
-/**
- * 
- * this function emits anyone in the room the new player's location.
- * @param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
- */
-function movePlayer(data1){
-	console.log('x: '+data1.x);
-	console.log('currX: '+data1.currX);
-	console.log('y: '+data1.y);
-	console.log('currY: '+data1.currY);
-	var room = gameSocket.manager.rooms["/" + data1.gameId];
-	if(room.board[data1.x][data1.y] === 0){
-		var data = {
-				playerId: data1.playerId,
-				x: data1.x,
-				y: data1.y,
-				chip: data1.chip
-		}
-		room.board[data1.x][data1.y] = 1;
-		room.board[data1.currX][data1.currY] = 0;
-		updateLocation(room, data1.playerId, data1.x, data1.y);
-		io.sockets.in(data.gameId).emit('movePlayer', data);
-		if((data1.x === room.Goal.x) && (data1.y === room.Goal.y)){
-			room.gameOver = true;
-			io.sockets.in(room.gameId).emit('Winner', data);
-			console.log('we have a winner!, player #'+data1.playerId)
-		}
-	}
-}
-
-function updateLocation(room, playerId, x, y){
-	console.log('player id: '+playerId);
-	room.playerList[playerId].location.x = x;
-	room.playerList[playerId].location.y = y;
-	console.log('new x: '+ room.playerList[playerId].location.x + '       new y: '+ room.playerList[playerId].location.y);
-	console.log('player id: '+room.playerList[playerId].id);
-}
-
-function createChips(){
-	var chips = new Array();	
-	for(var i=0; i<numOfColors;i++){	 
-		var numchips = Math.floor(Math.random()*numOfChips);
-		console.log('chips color: '+colorArray[i]+' amount: '+numchips);
-		chips[i] = numchips;
-	}
-	return chips;
-}
-
-function setLocation(id){
-	var location = {
-			x : 0,
-			y : id
-	}
-	
-	return location;
-
-}
-
-
-
-function getPlayerId(room,socket){
-	var i=0;
-	console.log('socket to  look for: '+socket.id);
-	//	console.log('room #  :'+roomID+' size: '+idRoomPair[roomID].length);
-	for(var key in room){	
-		//console.log('idSocketPair[key]: '+ idRoomPair[roomID][key].id);
-		if(room[key] === socket.id){
-			console.log('founded it!!!!, key = '+key);
-			console.log('####getPlayerId');
-			return i;
-		}
-		i++;
-	}
-	console.log('####getPlayerId');
-	return -1;
-}
-
-/**
- * The game is over, and a player has clicked a button to restart the game.
- * @param data
- */
-function playerRestart(data) {
-	// console.log('Player: ' + data.playerName + ' ready for new game.');
-
-	// Emit the player's data back to the clients in the game room.
-	data.playerId = this.id;
-	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
-}
-
-/* *************************
- *                       *
- *      GAME LOGIC       *
- *                       *
- ************************* */
-function beginphases(room){
-	room.gameOver = false;
-	console.log('beginphases');
-	var i=0;
-	var keys = Object.keys(conf.phases);
-	console.log('keys: '+keys.length);
-	phasesHalper(room,keys,i);
-}
-function phasesHalper(room,keys, i){
-	var data = {
-			name : conf.phases[keys[i]].name,
-			canMove : conf.phases[keys[i]].canMove,
-			canOffer : conf.phases[keys[i]].canOffer,
-			canTransfer : conf.phases[keys[i]].canTransfer,
-			time : conf.phases[keys[i]].time,
-		}
-	console.log('key: '+ conf.phases[keys[i]].name);
-	console.log('time: '+ conf.phases[keys[i]].time);
-	deleteFormerOffers(room);
-	io.sockets.in(room.gameId).emit('beginFaze', data);
-	var f = i;
-	f++;
-	f %= keys.length;
-	console.log('room.gameOver: '+ room.gameOver);
-	if(!room.gameOver){
-		setTimeout(function(){ return phasesHalper(room,keys, f);}, conf.phases[keys[i]].time);
-	}
-}
-
-function deleteFormerOffers(room){
-	for(var i=0;i<roomSize;i++){
-		for(var j=0;j<numOfColors;j++){
-			room.playerList[i].offer[j] = 0;
-		}
+            k=0;
+			$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
+									k++;
+                                    })
+			
+            $('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
+                App.Player.currentCount++;
+        	}
+	    },
 		
-	}
-}
-function manhattanDistance(room, x, y){
-	return ((Math.abs(+room.Goal.x - +x))+(Math.abs(+room.Goal.y - +y)));
-}
+	    addRowToHistory : function (data){
+			var row = $('#sendOffer'+data.rowid);
+			//changing to history row style
+			$('#colorsToGet'+data.rowid).find('input:not([inputname])').each(function(){
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+			})
+			$('#colorsToOffer'+data.rowid).find('input:not([inputname])').each(function(){
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+			})
+			$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
+			$('#playersDropDown'+data.rowid).parent().html($('#playersDropDown'+data.rowid).val());
+			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="red">waiting for respond</font>');
+
+			var h = $('#historyRow'+data.rowid).html();
+			$('#historyRow'+data.rowid).parent().parent().remove();
+			
+			$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
+					
+		},
+		
+		rejectOffer : function(data) {
+			$('#sendOffer'+data.rowid).parent().html('<font color="red">rejected</font>');
+		},
+	    /**
+	     *  the server calls this function to update the state of chips within players
+	     */
+	    updateChips: function(data)
+	    {
+	    	
+			if(data.player1.id === App.Player.myid){
+				$('#sendOffer'+data.player1.rowid).parent().html('<font color="green">accepted</font>');
+			}
+	    	
+			var toAdd1 = new Array();
+	    	var toAdd2 = new Array();
+	    	for(var i=0; i<data.player1.colorsToAdd.length; i++)
+	    		{
+	    			toAdd1[i] = data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i];
+	    			toAdd2[i] = -(data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i]);
+	    		}
+	    	var toSend1 = {id: data.player1.id, colorsToAdd: toAdd1};
+	    	var toSend2 = {id: data.player2.id, colorsToAdd: toAdd2};
+	    	
+	    	App.Player.addChips(toSend1);
+	    	App.Player.addChips(toSend2);
+	    	
+	    	var score1 = {id: data.player1.id, score: data.player1.score};
+	    	var score2 = {id: data.player2.id, score: data.player2.score};
+	    	
+	    	App.Player.score(score1);
+	    	App.Player.updateScore(score2);
+	    },
+	
+		movePlayer : function(data){
+			App.Player.Chips[data.playerId][data.chip]--;
+			var r;
+			var c;
+			if(data.chip<3){
+				r=0;
+				c= data.chip*2+1;
+			}
+			else{
+				r=1;
+				c = (data.chip-3)*2+1;
+			}
+			$('#player'+data.playerId).find('#Chips tr:eq('+r+') td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
+			$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');			
+			App.Player.locations[data.playerId][0] = data.x;
+			App.Player.locations[data.playerId][1] = data.y;
+			App.Player.locatePlayers(data);
+			var params = {id: data.playerId, score: data.score };
+			App.Player.updateScore(params);
+		},
+	    
+        /**
+         * An error has occurred.
+         * @param data
+         */
+        error : function(data) {
+            alert(data.message);
+        }
+
+    };
+
+    var App = {
+    	/**
+    	 * keeps the names of colors for every possible color on the board
+    	 */	
+    	colorArray : ["purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default"] ,
+    	playerColors: ["green.png", "orange.png", "black.png", "blue.png" ],
+        /**
+         * Keep track of the gameId, which is identical to the ID
+         * of the Socket.IO Room used for the players and host to communicate
+         *
+         */
+        gameId: 0,
+        /**
+         * a variable who responsible of the timeOut functions to be done;
+         */
+        timeout: 0,
+        /**
+         * This is used to differentiate between 'Host' and 'Player' browsers.
+         */
+        myRole: '',   // 'Player' or 'Host'
+
+        /**
+         * The Socket.IO socket object identifier. This is unique for
+         * each player and host. It is generated when the browser initially
+         * connects to the server when the page loads for the first time.
+         */
+        mySocketId: '',
+
+        /**
+         * Identifies the current round. Starts at 0 because it corresponds
+         * to the array of word data stored on the server.
+         */
+        currentRound: 0,
+
+        /* *************************************
+         *                Setup                *
+         * *********************************** */
+
+        /**
+         * This runs when the page initially loads.
+         */
+        init: function () {
+            App.cacheElements();
+            App.showInitScreen();
+            App.bindEvents();
+
+            // Initialize the fastclick library
+            FastClick.attach(document.body);
+        },
+
+        /**
+         * Create references to on-screen elements used throughout the game.
+         */
+        cacheElements: function () {
+            App.$doc = $(document);
+
+            // Templates
+            App.$gameArea = $('#gameArea');
+			App.$adminLogin = $('#adminLogin');
+			App.$adminPage = $('#adminPage');
+            App.$templateIntroScreen = $('#intro-screen-template').html();
+            App.$templateNewGame = $('#create-game-template').html();
+            App.$templateJoinGame = $('#join-game-template').html();
+            App.$hostGame = $('#host-game-template').html();
+            App.$CTtemplateIntroScreen = $('#CT-intro-screen-template').html();
+			App.$CTtemplateIntroScreen1 = $('#CT-intro-screen-template1').html();
+            App.$CTJoinGame = $('#join-game-CT').html();
+			App.$CTEmptyOffer = $('#CT-emptyOffer');
+        },
+
+        /**
+         * Create some click handlers for the various buttons that appear on-screen.
+         */
+        bindEvents: function () {
+            // Host
+            App.$doc.on('click', '#addTransaction', App.Player.onAddTransClick);
+			App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
+			App.$doc.on('click', '#btnAdmin', App.Host.onAdminClick);
+			App.$doc.on('click', '#loginButton', App.Host.onAdminLogin);
+			App.$doc.on('click', '#generateBtn', App.Host.onGenerateClick);
+			App.$doc.on('click', '#transferCheckbox', App.Host.onTransferChecked);
+			
+            // Player
+            App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
+            App.$doc.on('click', '#btnStart',App.Player.onPlayerStartClick);
+            App.$doc.on('click', '.btnAnswer',App.Player.onPlayerAnswerClick);
+            App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
+        },
+
+          beginFaze : function(data){
+			//stops the blinking phases: 
+        	clearTimeout(App.timeout);
+        	$('#phases').html(data.name+' phase');
+        	App.Player.canOffer    = data.canOffer;
+        	App.Player.canTransfer = data.canTransfer;
+        	App.Player.canMove     = data.canMove;
+        	
+        	if(App.Player.canOffer && $('#addTransaction').find('#addTrans').length === 0)
+        	{
+				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
+			}
+        	else
+    		{
+        		$('#downTable').html('');
+        		$('#addTransaction').html('');
+				//Remove unresponded offers:
+				$('#histTable tr').each(
+					function()
+					{
+						var tr = $(this).find('td:last').children().children().html();
+						if(tr === 'waiting for respond')
+							$(this).remove();
+					})
+    		}
+        	if(App.Player.canTransfer)
+        	{
+        		// TODO somthing
+			}
+        	if(App.Player.canMove)
+        	{
+        		//TODO something
+        	}
+			var func = function(time, j)
+			{
+				$('#phases').html(data.name+' phase: ' +(j)+' seconds');
+				if(j>0)
+					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
+			}
+			var time = data.time/1000;
+			func(time, time-1);
+		},
+
+        /* *************************************
+         *             Game Logic              *
+         * *********************************** */
+
+        /**
+         * Show the initial Anagrammatix Title Screen
+         * (with Start and Join buttons)
+         */
+        showInitScreen: function() {
+            App.$gameArea.html(App.$CTtemplateIntroScreen);
+            App.doTextFit('.title');
+        },
+        
+
+        /* *******************************
+           *         HOST CODE           *
+           ******************************* */
+        Host : {
+
+            /**
+             * Contains references to player data
+             */
+            players : [],
+			
+			Iscolor:0,
+			lastRow : 0,
+			lastCol : 0,
+			//selectedItem: 0,
+			generated: 0,
+            /**
+             * Flag to indicate if a new game is starting.
+             * This is used after the first game ends, and players initiate a new game
+             * without refreshing the browser windows.
+             */
+            isNewGame : false,
+
+            /**
+             * Keep track of the number of players that have joined the game.
+             */
+            numPlayersInRoom: 0,
+
+            /**
+             * A reference to the correct answer for the current round.
+             */
+            currentCorrectAnswer: '',
+
+            /**
+             * Handler for the "Start" button on the Title Screen.
+             */
+            onCreateClick: function () {
+		
+			var playersChips = new Array();
+			var board =new Array();
+			var scores =new Array();
+			var phases = new Array();
+			var playersLocs =new Array();
+			var Nplayers = $('[name="Nplayers"]').val();
+			var Ncolors = $('[name="Ncolors"]').val();
+			
+			var valid = true;
+			var ind = 0;
+			var values = new Array();
+			if($('#transferCheckbox').is(":checked")){			
+				values[0] = 'transfer';
+				values[1] = $('#transferTime').val();
+				values[2] = 0;
+				values[3] = 0;
+				values[4] = 1;
+				phases[ind] = values;
+				ind++;
+				}
+				
+			values[0] = 'offer';
+			values[1] = $('#offersPhaseTime').val();
+			values[2] = 0;
+			values[3] = 1;
+			values[4] = 0;
+			phases[ind] = values;
+			ind++;
+			values[0] = 'move';
+			values[1] = $('#movePhaseTime').val();
+			values[2] = 1;
+			values[3] = 0;
+			values[4] = 0;
+			phases[ind] = values;
+			
+			$('#generatedBoard tr').each(function(i){
+				var tmp = new Array();
+				$(this).find('td').each(function(j){
+					tmp[j] = $(this).css('background');
+					if($(this).html()!=''){
+						
+						var col = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						var locArr = new Array();
+						if($(this).html()== 'G'){
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[Nplayers]=locArr;
+						}
+						else{
+							var tmpP = $(this).html()[1];
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[tmpP]=locArr;
+						}
+					}
+					if($(this).css('background').indexOf('gba(0, 0, 0, 0)') >= 0){
+						alert('not all board is colored');
+						valid = false;
+						return false;
+					}
+				});
+				if(valid == false){
+					return false;
+				}
+				board[i]=tmp;
+			});
+			
+			var k=0;
+			$('#generatedPlayersDiv tr').each(function(i){
+			var tmpC = new Array();
+				$(this).find('td:even').each(function(j){
+					if(j>0){	
+						tmpC[k] = $(this).find('input').val();
+						if($(this).find('input').val()<0){
+							valid=false;
+							alert('illigal number');
+							return false;
+						}
+						k++;
+					}
+				});
+				if(valid==false){
+					return false;
+				}
+				playersChips[i]=tmpC;
+			});
+			
+			k=0;
+			$('#generatedScoresTable tr:first td:odd').each(function(){
+				scores[k]=$(this).find('input').val();
+				k++;
+			});
+			
+			if(Nplayers>playersLocs.length){
+				valid=false;
+			}
+			if(valid){
+				var data={
+					board : board,
+					playersLocation : playersLocs,
+					playersChips : playersChips,
+					phases : phases,
+					scores : scores
+				}
+                IO.socket.emit('hostCreateNewGame',data);
+			}
+				
+            },
+			
+			onAdminClick: function () {
+                // console.log('Clicked "Create A Game"');
+                App.$gameArea.html(App.$adminLogin.html());
+            },
+			
+			onAdminLogin: function () {
+                // console.log('Clicked "Create A Game"');
+                App.$gameArea.html(App.$adminPage.html());
+            },
+			
+			onTransferChecked: function () {	
+				if($(transferCheckbox).is(":checked")){
+					$('#transferTime').attr('readonly', false);
+				}
+				else{
+					$('#transferTime').attr('readonly', true);
+				}
+				
+            },
+			
+			onGenerateClick: function () {
+				var boardx = $('[name="boardx"]').val();
+				var boardy = $('[name="boardy"]').val();
+				var Nplayers = $('[name="Nplayers"]').val();
+				var Ncolors = $('[name="Ncolors"]').val();
+				var valid = true;
+				var k=0;
+				var colorArray = new Array("#aa88FF","#9dffb4","#f8ff9d","#ff9f9d","#99ccf5","#5588b1");
+
+				if(($('#offersCheckbox').is(":checked")&&$('#transferTime').val()<0)||$('#offersPhaseTime').val()<0||$('#movePhaseTime').val()<0){
+						alert('illigat time');
+						valid=false;
+				}
+				
+				if(boardx<0||boardy<0){
+					alert('illigat board sizes');
+					valid=false;
+				}
+				if(Nplayers<0){
+					alert('illigat number of players');
+					valid=false;
+				}
+				if(Ncolors>6){
+					alert('Number of Colors must be less then six');
+					valid=false;
+				}
+				if(valid==true){
+				$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
+
+				
+				if(App.Host.generated===1){
+						$('#generatedBoard').empty();
+						$('#colorsToPaint').empty();
+						$('#playersToPaint').empty();
+						$('#generatedPlayersDiv').empty();
+						$('#generateBottun').empty();
+						$('#generatedScoresDiv').empty();
+						$('#generatedScoresDiv').append('<table id="generatedScoresTable"></table>');
+						
+						$('#generateBottun').append('<button id="btnCreateGame" class="btn right">CREATE GAME</button>') ;
+				}
+				App.Host.generated = 1;
+				$('#generatedScoresDiv').prepend('<br>SCORES');
+				$('#generatedScoresTable').append('<tr><tr>');
+				
+				k=0;
+				for(k;k<Ncolors;k++ ){
+					$('#generatedScoresTable tr:first').append('<td style=" width:20px; background:'+colorArray[k]+';"></td> <td><input style="width:40px;" type="number" name="color"/></td>');
+				}
+
+				$('#generatedScoresTable tr:first').append('<td>Winner</td><td><input style="width:40px;" type="number" name="color"/></td>');
+				for(var i=0;i<boardy;i++){
+					$('#generatedBoard').append('<tr class="trails"></tr>');
+						for(var j=0;j<boardx;j++){
+							$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
+							
+							$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
+							
+
+								if(App.Host.Iscolor === 1){
+									//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+									$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+								}
+								else{
+									if($(this).html() != ''){						
+										$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
+										$('#playersToPaint tr:last td:eq(0)').click(function(){
+											var column = $(this).parent().children().index(this);
+											var row = $(this).parent().parent().children().index(this.parentNode);
+											App.Host.lastRow = row;
+											App.Host.lastCol = column;
+											App.Host.Iscolor = 0;
+										});
+
+									$(this).empty();
+									}
+								
+									$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+									//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+									$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
+								}
+							
+							});
+						}
+				}
+				
+				k=0;
+				for(k;k<Ncolors;k++){
+					$('#colorsToPaint').append('<tr class="trails"><td class="trails" style="background:'+colorArray[k]+'";></td></tr>');
+				}
+				k=0;
+				for(k;k<Nplayers;k++){
+					$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">P'+k+'</td></tr>');
+				}
+				
+				for(var m=0;m<Nplayers;m++){
+					$('#generatedPlayersDiv').append('<tr><td>Player'+m+': </td></tr>');
+					for(var n=0;n<Ncolors;n++){
+						$('#generatedPlayersDiv tr:eq('+m+')').append('<td style=" width:20px; background:'+colorArray[n]+';"></td> <td><input id="colorIn" style="width:40px;" type="number" name="color"/></td>');
+					}
+				}
+				
+				$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">G</td></tr>');
+				
+				$('#colorsToPaint tr').each(function(){
+					$(this).find('td').click(function(){
+						var column = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						App.Host.lastRow = row;
+						App.Host.lastCol = column;			
+						App.Host.Iscolor = 1;
+						//App.Host.selectedItem = $(this).css('background');
+
+					});	
+				});
+				
+				$('#playersToPaint tr').each(function(){
+					$(this).find('td').click(function(){
+						var column = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						App.Host.lastRow = row;
+						App.Host.lastCol = column;
+						App.Host.Iscolor = 0;
+					//	App.Host.selectedItem = $(this).html();
+					});	
+				});
+				
+				}
+	
+            },
+			
+            /**
+             * The Host screen is displayed for the first time.
+             * @param data{{ gameId: int, mySocketId: * }}
+             */
+            gameInit: function (data) {
+                App.gameId = data.gameId;
+                App.mySocketId = data.mySocketId;
+                App.myRole = 'Host';
+                App.Host.numPlayersInRoom = 0;
+
+                App.Host.displayNewGameScreen();
+                // console.log("Game started with ID: " + App.gameId + ' by host: ' + App.mySocketId);
+            },
+
+            /**
+             * Show the Host screen containing the game URL and unique game ID
+             */
+            displayNewGameScreen : function() {
+                // Fill the game screen with the appropriate HTML
+                App.$gameArea.html(App.$templateNewGame);
+
+                // Display the URL on screen
+                $('#gameURL').text(window.location.href);
+                App.doTextFit('#gameURL');
+
+                // Show the gameId / room id on screen
+                $('#spanNewGameCode').text(App.gameId);
+            },
+            GameStarted : function() {
+                
+            },
+            
+            /**
+             * Update the Host screen when the first player joins
+             * @param data{{playerName: string, playerId: int}}
+             */
+            updateWaitingScreen: function(data) {
+                // If this is a restarted game, show the screen.
+                if ( App.Host.isNewGame ) {
+                    App.Host.displayNewGameScreen();
+                }
+                // Update host screen
+                $('#playersWaiting')
+                    .append('<p/>')
+                    .text('Player ' + data.playerName + ' joined the game.');
+
+                // Store the new player's data on the Host.
+                App.Host.players.push(data);
+
+                // Increment the number of players in the room
+                App.Host.numPlayersInRoom += 1;
+                if(App.Host.players[App.Host.numPlayersInRoom] == undefined){
+                	App.Host.players[App.Host.numPlayersInRoom] = {};
+                }
+                
+                
+               // console.log('players: '+App.Host.players);
+
+                // If two players have joined, start the game!
+//                if (App.Host.numPlayersInRoom === 4) {
+//                    // console.log('Room is full. Almost ready!');
+//
+//                    // Let the server know that two players are present.
+//                    IO.socket.emit('hostRoomFull',App.gameId);
+//                }
+            },
+
+            /**
+             * Show the countdown screen
+             */
+            gameCountdown : function() {
+
+                // Prepare the game screen with new HTML
+                App.$gameArea.html(App.$hostGame);
+                App.doTextFit('#hostWord');
+
+                // Begin the on-screen countdown timer
+                var $secondsLeft = $('#hostWord');
+                App.countDown( $secondsLeft, 5, function(){
+                    IO.socket.emit('hostCountdownFinished', App.gameId);
+                });
+
+//                // Display the players' names on screen
+//                $('#player1Score')
+//                    .find('.playerName')
+//                    .html(App.Host.players[0].playerName);
+//
+//                $('#player2Score')
+//                    .find('.playerName')
+//                    .html(App.Host.players[1].playerName);
+//
+//                // Set the Score section on screen to 0 for each player.
+//                $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
+//                $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
+            },
+
+            /**
+             * Show the word for the current round on screen.
+             * @param data{{round: *, word: *, answer: *, list: Array}}
+             */
+            newWord : function(data) {
+                // Insert the new word into the DOM
+                $('#hostWord').text(data.word);
+                App.doTextFit('#hostWord');
+
+                // Update the data for the current round
+                App.Host.currentCorrectAnswer = data.answer;
+                App.Host.currentRound = data.round;
+            },
+
+            /**
+             * Check the answer clicked by a player.
+             * @param data{{round: *, playerId: *, answer: *, gameId: *}}
+             */
+            checkAnswer : function(data) {
+                // Verify that the answer clicked is from the current round.
+                // This prevents a 'late entry' from a player whos screen has not
+                // yet updated to the current round.
+                if (data.round === App.currentRound){
+
+                    // Get the player's score
+                    var $pScore = $('#' + data.playerId);
+
+                    // Advance player's score if it is correct
+                    if( App.Host.currentCorrectAnswer === data.answer ) {
+                        // Add 5 to the player's score
+                        $pScore.text( +$pScore.text() + 5 );
+
+                        // Advance the round
+                        App.currentRound += 1;
+
+                        // Prepare data to send to the server
+                        var data = {
+                            gameId : App.gameId,
+                            round : App.currentRound
+                        }
+
+                        // Notify the server to start the next round.
+                        IO.socket.emit('hostNextRound',data);
+
+                    } else {
+                        // A wrong answer was submitted, so decrement the player's score.
+                        $pScore.text( +$pScore.text() - 3 );
+                    }
+                }
+            },
 
 
+            /**
+             * All 10 rounds have played out. End the game.
+             * @param data
+             */
+            endGame : function(data) {
+                // Get the data for player 1 from the host screen
+                var $p1 = $('#player1Score');
+                var p1Score = +$p1.find('.score').text();
+                var p1Name = $p1.find('.playerName').text();
 
-function getColor(i,j){
-	var loc = conf.Blocks[j];
-	//console.dir(loc[1]);
-	switch(conf.Board.Colors[loc[i]]) 
-	{
-	case "purple":
-		return "#aa88FF"; // purple
-		break;
-	case "green":
-		return "#9dffb4"; // light green
-		break;
-	case "yellow":
-		return "#f8ff9d"; // light yellow
-		break;
-	case "pink":
-		return "#ff9f9d"; // pink
-		break;
-	case "blue":
-		return "#99ccf5"; //light blue
-		break;
-	case "darkblue":
-		return "#5588b1";
-		break
-	case "black":
-		return "#2f2e19"; //
-	case "white":
-		return "#fcf7f7"; //
-	case "red":
-		return "#d90f0f"; //		
-	default:
-		return "#AAAAAA";
-	}
-}
+                // Get the data for player 2 from the host screen
+                var $p2 = $('#player2Score');
+                var p2Score = +$p2.find('.score').text();
+                var p2Name = $p2.find('.playerName').text();
 
-function paintBoard(){
-	var tablesCode = "<table class='trails'>";
-	var Color = 0;
-	for (var i=0; i<conf.Board.Size.Lines; i++)
-	{
-		tablesCode += "<tr class='trails'>";
-		for(var j=0; j< conf.Board.Size.Rows; j++)
-		{
-			tablesCode += "<td class='trails' style=background:" + getColor(i,j) +" ;></td>" 
-		}
-		tablesCode += "</tr>";
-	}
-	tablesCode += "</table>";
-	//var myDiv = document.getElementsByClassName("gameBoard");
-	//myDiv.innerHTML = tablesCode;
-	return tablesCode;
-}
+                // Find the winner based on the scores
+                var winner = (p1Score < p2Score) ? p2Name : p1Name;
+                var tie = (p1Score === p2Score);
 
-function createServerBoard(){
-	var board = [];
-	for (var i=0;i<conf.Board.Size.Lines;i++) {
-		board[i] = [];
-	}
+                // Display the winner (or tie game message)
+                if(tie){
+                    $('#hostWord').text("It's a Tie!");
+                } else {
+                    $('#hostWord').text( winner + ' Wins!!' );
+                }
+                App.doTextFit('#hostWord');
 
-	var tablesCode = "<table class='trails'>";
-	var Color = 0;
-	for (var i=0; i<conf.Board.Size.Lines; i++){
-		for(var j=0; j< conf.Board.Size.Rows; j++){
-			board[i][j] = 0;
-			console.log(board[i][j]);
-		}
-	}	
-	return board;
-}
+                // Reset game data
+                App.Host.numPlayersInRoom = 0;
+                App.Host.isNewGame = true;
+            },
+
+            /**
+             * A player hit the 'Start Again' button after the end of a game.
+             */
+            restartGame : function() {
+                App.$gameArea.html(App.$templateNewGame);
+                $('#spanNewGameCode').text(App.gameId);
+            }
+        },
 
 
-/**
- * this function update the rest of the players with the current transaction
- * @param player1 the reciever player
- * @param player2 the sender player
- */
-function updateChips(data){
-	var room = gameSocket.manager.rooms["/" + data.gameId];	 
-	console.log('');
-	for(var i=0;i<numOfColors;i++){
-		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
-		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
-	}
-	for(var i=0;i<numOfColors;i++){
-		var sum1 = data.player1.colorsToAdd[i];
-		var sum2 = data.player2.colorsToAdd[i];
-		console.log('sum1: '+sum1);
-		console.log('sum2: '+sum2);
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum1;
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum1;
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum2;
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum2;
-	}
-	for(var i=0;i<numOfColors;i++){
-		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
-		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
-	}
-	var data =
-	{
-			gameId:data.gameId,
-			player1:data.player1,
-			player2:data.player2
-	};
-	io.sockets.in(data.gameId).emit('updateChips', data );
-}
+        /* *****************************
+           *        PLAYER CODE        *
+           ***************************** */
 
-function rejectOffer(data){
-	var room = gameSocket.manager.rooms["/" + data.gameId];	
-	var socketId = room[''+data.id];
-	var socket = io.sockets.sockets[socketId];
-	var send ={
-			rowid : data.rowid
-	}
-	socket.emit('rejectOffer',send);
-}
+        Player : {
+        	currentCount: 0,
+			historyCount: 0,
+        	myid: 0,
+        	otherPlayers: 0,
+			canMove: 0,
+			canOffer: 0,
+			canTransfer: 0,
+			score: 0,
+        	/**
+        	 *  an array of chips - represents the chip set of player. 
+        	 */
+			Chips: [],
+			locations: [],
+        	colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
+            /**
+             * A reference to the socket ID of the Host
+             */
+            hostSocketId: '',
+
+            /**
+             * The player's name entered on the 'Join' screen.
+             */
+            myName: '',
+			
+			onAddTransClick : function(){
+	//			alert(App.Player.currentCount);
+				$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');
+				
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>make an offer to</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><select id="playersDropDown'+App.Player.currentCount+'"><option value="empty"></option></select></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>for</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>in exchange for:</td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
+			
+				var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+				
+				var k=0;
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
+                                    $(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+									k++;
+									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+									k++;
+                                    })
+
+				k=0;
+				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+										k++;
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+										k++;
+										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
+										k++;
+										})
+				
+				for (var k in App.Player.otherPlayers) {
+                    if (App.Player.otherPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
+						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.otherPlayers[k]+'</option>');     
+                    }
+                }
+		//		for(var j=0;j<=App.Player.currentCount;j++){            
+				$('#sendOffer'+App.Player.currentCount).click( function(){
+								var id = this.id[this.id.length-1];
+								var player = $('#playersDropDown'+id).val();
+								var colorsToOffer = new Array();
+								var colorsToGet = new Array();
+								var i=0;
+								$('#colorsToOffer'+id+' tr').each(function(){
+										$(this).find('td').each(function(){
+												if ($(this).find('input').length) {        
+												colorsToOffer[i]=$(this).find('input').val();
+												i++;
+												}
+										})
+								})
+								i=0;
+								$('#colorsToGet'+id+' tr').each(function(){
+										$(this).find('td').each(function(){
+												if ($(this).find('input').length) {         
+												colorsToGet[i]=$(this).find('input').val();
+												i++;
+												}
+										})
+								})
+								
+								/**
+								 * validate transfer values:
+								 */
+								var CTO = 0;
+								var CTG = 0;
+								for(var colorsNum = 0; colorsNum < colorsToOffer.length; colorsNum++)
+									{
+										CTO = colorsToOffer[colorsNum];
+										CTG = colorsToGet[colorsNum];
+										if( CTO == '' || CTG == '' || (CTO < 0) || (CTG < 0) )
+											{
+												alert('chips value must be a number greater than 0');
+												return;
+											}
+									}
+									
+									//should be in server ?!
+								/***************************/
+								
+								var JcolorsToOffer = JSON.stringify(colorsToOffer); 
+								var JcolorsToGet = JSON.stringify(colorsToGet); 
+								
+								var data = {
+										JcolorsToOffer : JcolorsToOffer,
+										JcolorsToGet : JcolorsToGet,
+										msg : 'hello',
+										recieverId : player,
+										sentFrom : App.Player.myid,
+										gameId : App.gameId,
+										rowid : id,
+								};
+								//historyCount++;
+								IO.socket.emit('sendOffer', data);
+
+				});
+                // Change the word for the Host and Player
+         //       }
+				App.Player.currentCount++;
+			},
+			
+			
+            /**
+             * Click handler for the 'JOIN' button
+             */
+            onJoinClick: function () {
+                // console.log('Clicked "Join A Game"');
+
+                // Display the Join Game HTML on the player's screen.
+                var data = {
+                        gameId : +($('#inputGameId').val()),
+                        playerName : $('#inputPlayerName').val() || 'anon'
+                    };
+                
+                // Send the gameId and playerName to the server
+                IO.socket.emit('playerJoinGame', data);
+
+                // Set the appropriate properties for the current player.
+                App.myRole = 'Player';
+                App.Player.myName = data.playerName;
+                //App.$gameArea.html(App.$templateJoinGame);
+            },
+
+            /**
+             * The player entered their name and gameId (hopefully)
+             * and clicked Start.
+             */
+            onPlayerStartClick: function() {
+                // console.log('Player clicked "Start"');
+
+                // collect data to send to the server
+              
+
+                var data = {
+                        gameId : +($('#inputGameId').val()),
+                        playerName : $('#inputPlayerName').val() || 'anon'
+                    };
+                
+                // Send the gameId and playerName to the server
+                IO.socket.emit('playerJoinGame', data);
+
+                // Set the appropriate properties for the current player.
+                App.myRole = 'Player';
+                App.Player.myName = data.playerName;
+            },
+            
+
+            GameStarted : function(data) {
+                // Update the current round
+//                   alert('GameStarted for real!! gameId: '+App.gameId);
+
+                App.currentRound = data.round;
+                //alert as number of players to see if it passed
+
+                
+               
+            
+                App.$gameArea.html(App.$CTtemplateIntroScreen1);
+                
+                $(".gameBoard").html(data.board);
+                var params = {id:App.Player.myid };
+//                $(".playersList").append(App.Player.buildPlayer(params));
+              //  console.log('players: '+App.Host.players);
+              //  console.log('players.length: '+App.Host.players.length);
+			    var PList = data.playerList;
+				App.Player.otherPlayers=data.playerList;
+				
+				$('#board table tr').each(function(){
+					 $(this).find('td').each(function(){
+						 $(this).click(function(){
+						 if(App.Player.canMove === 1){
+							var data = {
+								id : App.Player.myid,
+								col : $(this).parent().children().index($(this)),
+								row : $(this).parent().parent().children().index($(this).parent())
+							}
+							
+							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
+							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
+							
+							if(op1 || op2)
+							{								
+								var tdColor =  $(this).css('background-color');
+								var index = App.Player.colors.indexOf(tdColor);
+								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+							//	var hasOtherPlayer = false;
+								
+								/*for(var i=0;i<App.Player.locations.length;i++){
+									if(i!=App.Player.myid){
+										if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
+											hasOtherPlayer = true;
+											break;
+										}
+									
+									}
+								}*/
+								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
+									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
+									}
+								}	
+						 	}
+						 })
+					 })
+				 })
+				 var url = "Pictures/goal.png";
+				$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
+				
+            },
+            
+			
+            /**
+             * adds a player inside playersList
+             * data= {id:num, chips: ["num", "num".."num], location: "some location"};
+             */
+            addPlayer: function(data)
+            {
+            	var htmlPlayer = App.Player.buildPlayer(data);
+            	App.Player.score = data.score;    			
+            	$(".playersList").append(htmlPlayer);
+
+    			App.Player.updateScore(data);
+    			
+            	if(data.id == App.Player.myid)
+            		{
+            			
+            			$('#player'+App.Player.myid).css("border-color", "#FF0000");
+            		}
+            	var pChips = new Array();
+            	for(var i=0; i<data.chips.length; i++)
+				{
+            		pChips[i] = data.chips[i];
+				}
+            	App.Player.Chips[data.id] = pChips;
+				
+				var pLoc = new Array();
+				pLoc[0]=data.location.x;
+				pLoc[1]=data.location.y;
+				App.Player.locations[data.id] = pLoc;
+            	var url = "Pictures/" +App.playerColors[data.id] ;
+            	//alert(url);
+    			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
+				
+            	//manage location of players:
+				var location = {playerId: data.id, x:data.location.x, y:data.location.y};
+				App.Player.locatePlayers(location);
+            },
+            
+			/**
+             *  locates players on screen
+             */
+			locatePlayers : function(data){
+				var url = "Pictures/" +App.playerColors[data.playerId] ;
+				$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html("<img src=" +url+ " alt=image>");
+			},
+            /**
+             * build player html code given his id
+             */
+            
+            buildPlayer: function(data)
+    		{
+    		var playerCode ="";
+    		playerCode += '<table class="player" id="player' + data.id +'">';
+    		playerCode +=	'<tr> <td class="playerIMG">image </td>'+
+    			'<td class="playerID"> id:<br>' + data.id + '</td>'+
+    			'<td class="playerChis" align="center">'+
+    			'<table id="Chips">'+
+    			'<tr>';
+    			for(var i=0; i<data.chips.length; i++)
+				{
+    				if(i==3)
+    					playerCode += '</tr><tr>';
+    				playerCode += '<td class='+ App.colorArray[i] +'/><td class="colorAmount">' +data.chips[i]+ '</td>';	
+				}
+    			playerCode += '</tr></table></td> <td class="playerScore"> score:<br>'+ 0 +' </td> </tr></table>';
+		
+    		return playerCode;
+    		},
+    		
+    		/**
+    		 * finds player's info and updates his score
+    		 */
+    		updateScore: function(data)
+    		{
+    			$('#player'+data.id+' td:last').html('score:<br> '+ data.score);
+    		},
+    		
+    		/**
+    		 *  add the chips amount to the player's chip set respectively 
+    		 *  data = { id:num, colorsToAdd: ["num", "num", ...,"num"] }
+    		 *  											^^
+    		 *  											||
+    		 *  										an array of numbers
+    		 */
+    		addChips: function(data)
+    		{
+    			//alert(data.id +', '+ data.colorsToAdd);
+    			var colors = data.colorsToAdd;
+    	        var myPlayerTable = '#player' + data.id + ' tr';
+				 $(myPlayerTable).each(function(){
+					 $(this).find('#Chips td:odd').each(function(i){
+						 var currChips = parseInt($(this).html()) + parseInt(colors[i]);
+						 $(this).html(currChips);
+					 })
+				 })
+    		},
+    		/**
+    		 * there is a player standing in the goal trail.
+    		 */
+    		thereIsAWinner: function(data)
+    		{
+    				alert('GAME IS OVER ! \n WINNER IS PLAYER: '+ data.playerId);
+    				App.$gameArea.html(App.$CTtemplateIntroScreen);
+    		},
+            /**
+             *  Click handler for the Player hitting a word in the word list.
+             */
+            onPlayerAnswerClick: function() {
+            	
+//            	  var data1 = {
+//                          gameId : App.gameId,
+//                          recieverId : 1,
+//                          msg : 'hello 1',
+//                        //  playerName : $('#inputPlayerName').val() || 'anon'
+//                      };
+//                      alert('sending msg');
+//                      IO.socket.emit('sendMessage', data1);
+            	
+                // console.log('Clicked Answer Button');
+                var $btn = $(this);      // the tapped button
+                var answer = $btn.val(); // The tapped word
+
+                // Send the player info and tapped word to the server so
+                // the host can check the answer.
+                var data = {
+                    gameId: App.gameId,
+                    playerId: App.mySocketId,
+                    answer: answer,
+                    round: App.currentRound
+                }
+                IO.socket.emit('playerAnswer',data);
+            },
+
+            /**
+             *  Click handler for the "Start Again" button that appears
+             *  when a game is over.
+             */
+            onPlayerRestart : function() {
+                var data = {
+                    gameId : App.gameId,
+                    playerName : App.Player.myName
+                }
+                IO.socket.emit('playerRestart',data);
+                App.currentRound = 0;
+                $('#gameArea').html("<h3>Waiting on host to start new game.</h3>");
+            },
+
+            /**
+             * Display the waiting screen for player 1
+             * @param data 
+             */
+            updateWaitingScreen : function(data) {
+            	App.Player.myid = data.playerId;
+            	//console.log('myid: '+App.Player.myid);
+                if(IO.socket.socket.sessionid === data.mySocketId){
+                	App.Player.myid = data.playerId;
+                    App.myRole = 'Player';
+                    App.gameId = data.gameId;
+
+                    $('#playerWaitingMessage')
+                        .append('<p/>')
+                        .text('Joined Game ' + data.gameId + '. Please wait for game to begin.');
+                }
+            },
+
+            /**
+             * Display 'Get Ready' while the countdown timer ticks down.
+             * @param hostData
+             */
+            gameCountdown : function(hostData) {
+                App.Player.hostSocketId = hostData.mySocketId;
+                $('#gameArea')
+                    .html('<div class="titleWrapper">Get Ready!</div>');
+            },
+
+            /**
+             * Show the list of words for the current round.
+             * @param data{{round: *, word: *, answer: *, list: Array}}
+             */
+            newWord : function(data) {
+                // Create an unordered list element
+                var $list = $('<ul/>').attr('id','ulAnswers');
+
+                // Insert a list item for each word in the word list
+                // received from the server.
+                $.each(data.list, function(){
+                    $list                                //  <ul> </ul>
+                        .append( $('<li/>')              //  <ul> <li> </li> </ul>
+                            .append( $('<button/>')      //  <ul> <li> <button> </button> </li> </ul>
+                                .addClass('btnAnswer')   //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
+                                .addClass('btn')         //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
+                                .val(this)               //  <ul> <li> <button class='btnAnswer' value='word'> </button> </li> </ul>
+                                .html(this)              //  <ul> <li> <button class='btnAnswer' value='word'>word</button> </li> </ul>
+                            )
+                        )
+                });
+
+                // Insert the list onto the screen.
+                $('#gameArea').html($list);
+            },
+
+            /**
+             * Show the "Game Over" screen.
+             */
+            endGame : function() {
+                $('#gameArea')
+                    .html('<div class="gameOver">Game Over!</div>')
+                    .append(
+                        // Create a button to start a new game.
+                        $('<button>Start Again</button>')
+                            .attr('id','btnPlayerRestart')
+                            .addClass('btn')
+                            .addClass('btnGameOver')
+                    );
+            }
+        },
 
 
+        /* **************************
+                  UTILITY CODE
+           ************************** */
+
+        /**
+         * Display the countdown timer on the Host screen
+         *
+         * @param $el The container element for the countdown timer
+         * @param startTime
+         * @param callback The function to call when the timer ends.
+         */
+        countDown : function( $el, startTime, callback) {
+
+            // Display the starting time on the screen.
+            $el.text(startTime);
+            App.doTextFit('#hostWord');
+
+            // console.log('Starting Countdown...');
+
+            // Start a 1 second timer
+            var timer = setInterval(countItDown,1000);
+
+            // Decrement the displayed timer value on each 'tick'
+            function countItDown(){
+                startTime = 0;///decrement startTime: //-= 1
+                $el.text(startTime);
+                App.doTextFit('#hostWord');
+
+                if( startTime <= 0 ){
+                    // console.log('Countdown Finished.');
+
+                    // Stop the timer and do the callback.
+                    clearInterval(timer);
+                    callback();
+                    return;
+                }
+            }
+
+        },
+        
+        /**
+         * Make the text inside the given element as big as possible
+         * See: https://github.com/STRML/textFit
+         *
+         * @param el The parent element of some text
+         */
+        doTextFit : function(el) {
+            textFit(
+                $(el)[0],
+                {
+                    alignHoriz:true,
+                    alignVert:false,
+                    widthOnly:true,
+                    reProcess:true,
+                    maxFontSize:300
+                }
+            );
+        }
+
+    };
+
+    IO.init();
+    App.init();
+
+}($));
