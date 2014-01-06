@@ -478,15 +478,14 @@ jQuery(function($){
 			var Ncolors = $('[name="Ncolors"]').val();
 			
 			var valid = true;
-
+			var ind = 0;
 			if($('#offersCheckbox').is(":checked")){
-				phases[0] = $('#transferTime').val();
+				phases[ind] = $('#transferTime').val();
+				ind++;
 				}
-			else{
-				phases[0] = -1;
-			}
-			phases[1] = $('#offersPhaseTime').val();
-			phases[2] = $('#movePhaseTime tr').val();
+			phases[ind] = $('#offersPhaseTime').val();
+			ind++;
+			phases[ind] = $('#movePhaseTime tr').val();
 			
 			$('#generatedBoard tr').each(function(i){
 				var tmp = new Array();
