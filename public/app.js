@@ -153,7 +153,14 @@ jQuery(function($){
 						
 						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
 						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
-						IO.socket.emit('updateChips',App.gameId,player1,player2);
+						var d={
+							gameId :App.gameId,
+							player1 : player1,
+							player2 : player2,
+							JcolorsToGet : data.JcolorsToGet,
+							JcolorsToOffer : data.JcolorsToOffer
+						}
+						IO.socket.emit('updateChips',d);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
 					
@@ -382,7 +389,7 @@ jQuery(function($){
 			//should stop the blinking phases ... : 
         	clearTimeout(App.timeout);
 			
-			$('#phases').html(data.operation+' phase');
+			$('#phases').html(data.name+' phase');
 			if(data.name === 'phase1'){
 				App.Player.canMove = 0;
 				if($('#addTransaction').find('#addTrans').length === 0){
@@ -459,8 +466,59 @@ jQuery(function($){
              * Handler for the "Start" button on the Title Screen.
              */
             onCreateClick: function () {
-                // console.log('Clicked "Create A Game"');
-                IO.socket.emit('hostCreateNewGame');
+			
+			var players = new Array();
+			var board =new Array();
+			var playersLocs =new Array();
+			var boardx = $('[name="boardx"]').val();
+			var boardy = $('[name="boardy"]').val();
+			var Nplayers = $('[name="Nplayers"]').val();
+			var Ncolors = $('[name="Ncolors"]').val();
+			
+			var valid = true;
+			$('#generatedBoard tr').each(function(i){
+				var tmp = new Array();
+				$(this).find('td').each(function(j){
+					tmp[j] = $(this).css('background');
+					if($(this).html()!=''){
+						
+						var col = $(this).parent().children().index(this);
+						var row = $(this).parent().parent().children().index(this.parentNode);
+						var locArr = new Array();
+						if($(this).html()== 'G'){
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[Nplayers]=locArr;
+						}
+						else{
+							var tmpP = $(this).html()[1];
+							locArr[0]=col;
+							locArr[1]=row;
+							playersLocs[tmpP]=locArr;
+						}
+					}
+					if($(this).css('background').indexOf('gba(0, 0, 0, 0)') >= 0){
+						alert('not all board is colored');
+						valid = false;
+						return false;
+					}
+				});
+				if(valid == false){
+					return false;
+				}
+				board[i]=tmp;
+			});
+			alert(playersLocs[Nplayers]);
+			//$('#generatedPlayersDiv');
+			
+			if(valid){
+				var data={
+					board : board,
+					playersLocation : playersLocs,
+				}
+                IO.socket.emit('hostCreateNewGame',data);
+			}
+				
             },
 			
 			onAdminClick: function () {
