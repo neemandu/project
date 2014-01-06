@@ -40,14 +40,11 @@ var path = require('path');
 // Create a new instance of Express
 var app = express();
 
-app.get('/admin', function(req, res){
-	  res.send('Hello World');
-	});
 
 
 // Import the Anagrammatix game file.
 var agx = require('./agxgame');
-
+var tester = require('./tester');
 // Create a simple Express application
 app.configure(function() {
     // Turn down the logging activity
@@ -59,17 +56,25 @@ app.configure(function() {
 
 // Create a Node.js based http server on port 8080
 var server = require('http').createServer(app).listen(8080);
+var testerServer = require('http').createServer(app).listen(7070);
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
+var testerIO = require('socket.io').listen(testerServer);
 
 // Reduce the logging output of Socket.IO
 io.set('log level',1);
-
+testerIO.set('log level',1);
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', function (socket) {
     //console.log('client connected');
     agx.initGame(io, socket);
+});
+
+//Listen for Socket.IO Connections. Once connected, start the game logic.
+testerIO.sockets.on('connection', function (socket) {
+    //console.log('client connected');
+    tester.initGame(io, socket);
 });
 
 
