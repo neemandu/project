@@ -496,28 +496,28 @@ jQuery(function($){
 						$('#generatedBoard tr:eq('+i+')').append('<td class="trails"></td>');
 						
 						$('#generatedBoard tr:eq('+i+') td:eq('+j+')').click(function(){
-						if($(this).html() != ''){
 						
-						$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
-						$('#playersToPaint tr:last td:eq(0)').click(function(){
+
+							if(App.Host.Iscolor === 1){
+								//$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
+								$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+							}
+							else{
+								if($(this).html() != ''){						
+									$('#playersToPaint').append('<tr class="trails"><td class="trails" style="background:#AAAAAA;">'+$(this).html()+'</td></tr>');
+									$('#playersToPaint tr:last td:eq(0)').click(function(){
 										var column = $(this).parent().children().index(this);
 										var row = $(this).parent().parent().children().index(this.parentNode);
 										App.Host.lastRow = row;
 										App.Host.lastCol = column;
 										App.Host.Iscolor = 0;
-										alert(column+" "+ row);
 									});
 
 								$(this).empty();
-							}
-							else if(App.Host.Iscolor === 1){
-								$(this).html($('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								$(this).css('background',$('#colorsToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
-							}
-							else{
-							//	$(this).html(App.Host.selectedItem);
+								}
+							
 								$(this).html($('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').html());
-								$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
+								//$(this).css('background',$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').css('background'));
 								$('#playersToPaint tr:eq('+App.Host.lastRow+') td:eq('+App.Host.lastCol+')').remove();
 							}
 						
