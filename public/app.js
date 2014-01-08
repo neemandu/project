@@ -17,6 +17,7 @@ jQuery(function($){
          * to the Socket.IO server
          */
         init: function() {
+        	
             IO.socket = io.connect();
             IO.bindEvents();
         },
