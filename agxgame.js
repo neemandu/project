@@ -137,17 +137,21 @@ function hostStartGame(gameId) {
 	/**
 	 * create players data:
 	 */
+	var playersArray = new Array();
 	for (var i=0;i<room.length-1;i++)
 	{ 
 		player = {id:i, chips: createChips(), location: setLocation(i)};
 		player.score = setScore(player.chips, room, player.location.x, player.location.y);
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
+		playersArray[i] = player;
 		room.playerList[i].offer = [];
-		io.sockets.in(data.gameId).emit('addPlayer', player);
+		//io.sockets.in(data.gameId).emit('addPlayer', player);
 		console.log('player #'+i+' score is: '+room.playerList[i].score);
 		
 	}
+	data.playersList = playersArray;
+	data.playersToSend = playersArray;
 	for(var j=0;j<roomSize;j++){
 		for(var i=0;i<numOfColors;i++){
 			console.log('#'+j+' has: '+room.playerList[j].chips[i]+'of color: '+i);
@@ -160,7 +164,7 @@ function hostStartGame(gameId) {
 			console.log(room.board[i][j]);
 		}
 	}
-	beginphases(room);
+	beginphases(room, data);
 	
 	/*****************************************/
 	
@@ -421,32 +425,38 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
-function beginphases(room){
+function beginphases(room, data1){
 	room.gameOver = false;
 	console.log('beginphases');
 	var i=0;
 	var keys = Object.keys(conf.phases);
 	console.log('keys: '+keys.length);
-	phasesHalper(room,keys,i);
+	phasesHalper(room,keys,i, data1);
 }
-function phasesHalper(room,keys, i){
+function phasesHalper(room,keys, i, data1){
 	var data = {
+			playersToSend : data1.playersToSend,
+			playersList : data1.playersList,
+			gameId : data1.gameId,
+			board: data1.board,
+			goal: data1.goal,
 			name : conf.phases[keys[i]].name,
 			canMove : conf.phases[keys[i]].canMove,
 			canOffer : conf.phases[keys[i]].canOffer,
 			canTransfer : conf.phases[keys[i]].canTransfer,
-			time : conf.phases[keys[i]].time,
+			time : conf.phases[keys[i]].time
 		}
 	console.log('key: '+ conf.phases[keys[i]].name);
 	console.log('time: '+ conf.phases[keys[i]].time);
 	deleteFormerOffers(room);
 	io.sockets.in(room.gameId).emit('beginFaze', data);
+	
 	var f = i;
 	f++;
 	f %= keys.length;
 	console.log('room.gameOver: '+ room.gameOver);
 	if(!room.gameOver){
-		setTimeout(function(){ return phasesHalper(room,keys, f);}, conf.phases[keys[i]].time);
+		setTimeout(function(){ return phasesHalper(room,keys, f,data1);}, conf.phases[keys[i]].time);
 	}
 }
 

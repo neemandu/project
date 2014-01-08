@@ -17,7 +17,6 @@ jQuery(function($){
          * to the Socket.IO server
          */
         init: function() {
-        	
             IO.socket = io.connect();
             IO.bindEvents();
         },
@@ -391,18 +390,103 @@ jQuery(function($){
         },
 
           beginFaze : function(data){
-			//stops the blinking phases: 
-        	clearTimeout(App.timeout);
+        	//stops the blinking phases: 
+          	clearTimeout(App.timeout);
+        	  
+        	  /*******************  was brutally cut from gameStarted  *******************/
+        	// Update the current round
+//            alert('data: '+JSON.stringify(data));
+
+//            App.currentRound = data.round;
+                       
+
+            
+            $(".gameBoard").html(data.board);
+//            alert('board: \n' + data.board);
+            var params = {id:App.Player.myid };
+//            $(".playersList").append(App.Player.buildPlayer(params));
+          //  console.log('players: '+App.Host.players);
+          //  console.log('players.length: '+App.Host.players.length);
+		    var PList = data.playersList;
+			App.Player.canSendTo=data.playersToSend;
+			
+			$('#board table tr').each(function(){
+				 $(this).find('td').each(function(){
+					 $(this).click(function(){
+					 if(App.Player.canMove === 1){
+						var data = {
+							id : App.Player.myid,
+							col : $(this).parent().children().index($(this)),
+							row : $(this).parent().parent().children().index($(this).parent())
+						}
+						
+						var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
+						var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
+						
+						if(op1 || op2)
+						{								
+							var tdColor =  $(this).css('background-color');
+							var index = App.Player.colors.indexOf(tdColor);
+							var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+						//	var hasOtherPlayer = false;
+							
+							/*for(var i=0;i<App.Player.locations.length;i++){
+								if(i!=App.Player.myid){
+									if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
+										hasOtherPlayer = true;
+										break;
+									}
+								
+								}
+							}*/
+							if(chipsOfColor>0/* && hasOtherPlayer == false*/){
+								IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
+								}
+							}	
+					 	}
+					 })
+				 })
+			 })
+			 var url = "Pictures/goal.png";
+			$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
+			
+
+            //sets the player's list of offers num to 0;
+//			App.Player.resetOffersSent();
+			/*************************************************
+			 					adding players				
+			**************************************************/
+			//erase players table first:
+			$(".playersList").html('');
+			//and then:
+			for(var i=0; i<data.playersList.length; i++)
+			{
+					App.Player.addPlayer(data.playersList[i]);
+			}			
+			
+			/*************************************************/
+			
 //        	App.Player.resetOffersSent();
         	
         	$('#phases').html(data.name+' phase');
+        	/**
+        	 * the folowing are 2-cells arrays of (action, howManyTimesAllowed);
+        	 * 0 - can't perform an action;
+        	 * (-1) - limitless.
+        	 * natural number: the actual number... 
+        	 */
         	App.Player.canOffer    = data.canOffer;
         	App.Player.canTransfer = data.canTransfer;
         	App.Player.canMove     = data.canMove;
+        	App.Player.canReceive  = data.canReceive;
+        	/********  until here  ************/
         	
-        	if(App.Player.canOffer && $('#addTransaction').find('#addTrans').length === 0)
+        	/** an array of players' IDs to whom i can send offers : */
+        //	App.Player.canSendTo   = data.canSendTo; 
+        	
+        	if(App.Player.canOffer)
         	{
-				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
+				$('#addTransaction').html('<div id="addTrans" class="operations"><div>');
 			}
         	else
     		{
@@ -523,6 +607,7 @@ jQuery(function($){
                 // Show the gameId / room id on screen
                 $('#spanNewGameCode').text(App.gameId);
             },
+            
             GameStarted : function() {
                 
             },
@@ -690,14 +775,22 @@ jQuery(function($){
            ***************************** */
 
         Player : {
+        	myLocation: [],
+        	playersLocation: [],
+        	myChips: [],
+        	playersChips: [],
+        	playersScore: [],
+			canMove: 0,
+			canOffer: 0,
+			canTransfer: 0,
+			canReceive : 0,
+			score: 0,
+			canSendTo: [], 
+        	
         	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
         	otherPlayers: 0,
-			canMove: 0,
-			canOffer: 0,
-			canTransfer: 0,
-			score: 0,
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
@@ -748,9 +841,9 @@ jQuery(function($){
 										k++;
 										})
 				
-				for (var k in App.Player.otherPlayers) {
-                    if (App.Player.otherPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
-						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.otherPlayers[k]+'</option>');     
+				for (var k in App.Player.canSendTo) {
+                    if (k!=App.Player.myid) {
+						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+k+'</option>');     
                     }
                 }
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
@@ -891,65 +984,7 @@ jQuery(function($){
             
 
             GameStarted : function(data) {
-                // Update the current round
-//                   alert('GameStarted for real!! gameId: '+App.gameId);
-
-                App.currentRound = data.round;
-                           
                 App.$gameArea.html(App.$CTtemplateIntroScreen1);
-                
-                $(".gameBoard").html(data.board);
-                var params = {id:App.Player.myid };
-//                $(".playersList").append(App.Player.buildPlayer(params));
-              //  console.log('players: '+App.Host.players);
-              //  console.log('players.length: '+App.Host.players.length);
-			    var PList = data.playerList;
-				App.Player.otherPlayers=data.playerList;
-				
-				$('#board table tr').each(function(){
-					 $(this).find('td').each(function(){
-						 $(this).click(function(){
-						 if(App.Player.canMove === 1){
-							var data = {
-								id : App.Player.myid,
-								col : $(this).parent().children().index($(this)),
-								row : $(this).parent().parent().children().index($(this).parent())
-							}
-							
-							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
-							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
-							
-							if(op1 || op2)
-							{								
-								var tdColor =  $(this).css('background-color');
-								var index = App.Player.colors.indexOf(tdColor);
-								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
-							//	var hasOtherPlayer = false;
-								
-								/*for(var i=0;i<App.Player.locations.length;i++){
-									if(i!=App.Player.myid){
-										if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
-											hasOtherPlayer = true;
-											break;
-										}
-									
-									}
-								}*/
-								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
-									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
-									}
-								}	
-						 	}
-						 })
-					 })
-				 })
-				 var url = "Pictures/goal.png";
-				$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
-				
-
-                //sets the player's list of offers num to 0;
-//    			App.Player.resetOffersSent();
-				
             },
             
 			
