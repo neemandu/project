@@ -10,6 +10,8 @@ var url = log.url;
 
 var io;
 var gameSocket;
+var socketIdPair = [];
+var idSocketPair = [];
 var idRoomPair ={};
 var roomSize = 2;
 var numOfColors = 6;
@@ -20,20 +22,18 @@ var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
 //var playerCounter = 0;
 var admin = false;
-
-
-//nimrod -----------------------------------------
-var conf;
-
-fs = require('fs');
-fs.readFile('\conf.json', 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  conf = JSON.parse(data);
-
-});
-//nimrod -----------------------------------------
+////nimrod -----------------------------------------
+//var conf;
+//
+//fs = require('fs');
+//fs.readFile('\conf.json', 'utf8', function (err,data) {
+//  if (err) {
+//    return console.log(err);
+//  }
+//  conf = JSON.parse(data);
+//
+//});
+////nimrod -----------------------------------------
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -47,9 +47,9 @@ exports.initGame = function(sio, socket){
 	gameSocket.emit('connected', { message: "You are connected!" });
 
 	// Host Events
-	gameSocket.on('hostCreateNewGame', hostCreateNewGame);
-	gameSocket.on('hostRoomFull', hostPrepareGame);
-	gameSocket.on('hostCountdownFinished', hostStartGame);
+//	gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+//	gameSocket.on('hostRoomFull', hostPrepareGame);
+//	gameSocket.on('hostCountdownFinished', hostStartGame);
 
 	// Player Events
 	gameSocket.on('playerJoinGame', playerJoinGame);
@@ -60,45 +60,90 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('movePlayer', movePlayer);
 }
 
+exports.runConfig = function(configuration, playerList){
+	conf = configuration;
+	conf.playerList = playerList;
+	console.log(conf.playerList );
+	createRoom();
+	console.log(conf);
+}
 
 /* *******************************
  *                             *
  *       HOST FUNCTIONS        *
  *                             *
  ******************************* */
+function createRoom() {
+	console.log('createRoom');
+	// Create a unique Socket.IO Room
+	//var thisGameId = ( Math.random() * 100000 ) | 0;
+	var thisGameId = conf.id;
+	console.log('game id: '+thisGameId);
+	
+	gameLogger.trace('Game #'+thisGameId+' was created');
+
+	insertPlayersToRoom(thisGameId);
+	
+	hostStartGame(thisGameId);
+
+};
+//joining the players to the room
+function insertPlayersToRoom(thisGameId) {
+	console.log('insertPlayersToRoom');
+	var sock;
+	var room = gameSocket.manager.rooms["/" + 0];
+	for(var i=0;i<conf.playerList.length;i++){
+		var socketId = room[conf.playerList[i]];
+		var socket = io.sockets.sockets[socketId];
+		//sock = idSocketPair[conf.players[i]];
+		if(socket === undefined){
+			console.log('player #'+conf.playerList[i]+' does not exist');
+			gameLogger.trace('player #'+conf.playerList[i]+' does not exist');
+		}
+		else{
+			socket.join(thisGameId.toString()); 
+			room.playerList
+			gameLogger.trace('player #'+conf.playerList[i]+' was added to room #'+thisGameId.toString());
+		}
+	}
+};
+
+
+
+
 /**
  * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
  */
-function hostCreateNewGame() {
-	// Create a unique Socket.IO Room
-	var thisGameId = ( Math.random() * 100000 ) | 0;
-	// currentRoomId = thisGameId;
-	newRoomsQueue.enqueue(thisGameId);
-	
-	gameLogger.trace('Game #'+thisGameId+' was created by HOST:'+this.id);
-
-	// Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-	this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
-
-	// Join the Room and wait for the players
-	this.join(thisGameId.toString());
-
-};
+//function hostCreateNewGame() {
+//	// Create a unique Socket.IO Room
+//	var thisGameId = ( Math.random() * 100000 ) | 0;
+//	// currentRoomId = thisGameId;
+//	newRoomsQueue.enqueue(thisGameId);
+//	
+//	gameLogger.trace('Game #'+thisGameId+' was created by HOST:'+this.id);
+//
+//	// Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
+//	this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
+//
+//	// Join the Room and wait for the players
+//	this.join(thisGameId.toString());
+//
+//};
 
 /*
  * Two players have joined. Alert the host!
  * @param gameId The game ID / room ID
  */
-function hostPrepareGame(gameId) {
-	var sock = this;
-	var data = {
-			mySocketId : sock.id,
-			gameId : gameId
-	};
-	//console.log("All Players Present. Preparing game...");
-	io.sockets.in(data.gameId).emit('beginNewGame', data);
-	newRoomsQueue.dequeue();
-}
+//function hostPrepareGame(gameId) {
+//	var sock = this;
+//	var data = {
+//			mySocketId : sock.id,
+//			gameId : gameId
+//	};
+//	//console.log("All Players Present. Preparing game...");
+//	io.sockets.in(data.gameId).emit('beginNewGame', data);
+//	newRoomsQueue.dequeue();
+//}
 
 /*
  * The Countdown has finished, and the game begins!
@@ -107,59 +152,59 @@ function hostPrepareGame(gameId) {
 function hostStartGame(gameId) {
 	console.log('Game Started.');
 	var room = gameSocket.manager.rooms["/" + gameId];
-	var playerList = {};
+//	var playerList = {};
 	room.playerList = {};
-	for (var i=0;i<room.length-1;i++)
-	{ 
-		playerList[i] = i;
-		console.log('playerList['+i+']: '+playerList[i]);
-	}
+//	for (var i=0;i<room.length;i++)
+//	{ 
+//		playerList[i] = conf.playerList[i];
+//		console.log('playerList['+i+']: '+playerList[i]);
+//	}
 	//var params = {height: 8, width: 8, colorsNum: 6};
-	var boardHtml = paintBoard();
-	
-	room.board = createServerBoard();
-	
-	room.Goal = conf.Goal;
-	
-	room.gameOver = false;
-	
-	room.gameId = gameId;
+//	var boardHtml = paintBoard();
+//	
+//	room.board = createServerBoard();
+//	
+//	room.Goal = conf.Goal;
+//	
+//	room.gameOver = false;
+//	
+//	room.gameId = gameId;
 	
 	//  console.log('boardHtml:  '+boardHtml);
 	var data ={
-			playerList : playerList,
+		//	playerList : playerList,
 			gameId : gameId,
-			board: boardHtml,
-			goal: conf.Goal
+		//	board: boardHtml,
+		//	goal: conf.Goal
 	};
 	console.log("in the room: "+room);
 	io.sockets.in(data.gameId).emit('GameStarted', data);
 	/**
 	 * create players data:
 	 */
-	for (var i=0;i<room.length-1;i++)
-	{ 
-		player = {id:i, chips: createChips(), location: setLocation(i)};
-		player.score = setScore(player.chips, room, player.location.x, player.location.y);
-		room.board[player.location.x][player.location.y] = 1;
-		room.playerList[i] = player;
-		room.playerList[i].offer = [];
-		io.sockets.in(data.gameId).emit('addPlayer', player);
-		console.log('player #'+i+' score is: '+room.playerList[i].score);
-		
-	}
-	for(var j=0;j<roomSize;j++){
-		for(var i=0;i<numOfColors;i++){
-			console.log('#'+j+' has: '+room.playerList[j].chips[i]+'of color: '+i);
-		}
-	}
+//	for (var i=0;i<room.length;i++)
+//	{ 
+//		player = {id:i, chips: createChips(), location: setLocation(i)};
+//		player.score = setScore(player.chips, room, player.location.x, player.location.y);
+//		room.board[player.location.x][player.location.y] = 1;
+//		room.playerList[i] = player;
+//		room.playerList[i].offer = [];
+//		io.sockets.in(data.gameId).emit('addPlayer', player);
+//		console.log('player #'+i+' score is: '+room.playerList[i].score);
+//		
+//	}
+//	for(var j=0;j<room.length;j++){
+//		for(var i=0;i<numOfColors;i++){
+//			console.log('#'+j+' has: '+room.playerList[j].chips[i]+'of color: '+i);
+//		}
+//	}
 	//initialize offers
-	deleteFormerOffers(room);
-	for(var i=0;i<room.board.length;i++){
-		for(var j=0;j<room.board[i].length;j++){
-			console.log(room.board[i][j]);
-		}
-	}
+//	deleteFormerOffers(room);
+//	for(var i=0;i<room.board.length;i++){
+//		for(var j=0;j<room.board[i].length;j++){
+//			console.log(room.board[i][j]);
+//		}
+//	}
 	beginphases(room);
 	
 	/*****************************************/
@@ -277,26 +322,16 @@ function ChipScore(chips){
 	return sum;
 }
 
-
-/**
- * A player clicked the 'START GAME' button.
- * Attempt to connect them to the room that matches
- * the gameId entered by the player.
- * @param data Contains data entered via player's input - playerName and gameId.
- */
 function playerJoinGame(data) {
-	//console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
+	console.log('Player attempting to join game ');
 
 	// A reference to the player's Socket.IO socket object
 	var sock = this;
 
-	// Look up the room ID in the Socket.IO manager object.
-	// var room = gameSocket.manager.rooms["/" + data.gameId];
-	var currRoom = newRoomsQueue.peek();
-	data.gameId = currRoom;
-	console.log('currentRoomId: '+currRoom);
+	var currRoom = 0;
+//	data.gameId = currRoom;
 	var room = gameSocket.manager.rooms["/" + currRoom];
-	console.log('rooom id: '+room);
+	console.log('room id: '+room);
 
 	// If the room exists...
 	if( room != undefined ){
@@ -309,24 +344,93 @@ function playerJoinGame(data) {
 			data.mySocketId = sock.id;
 
 			//join the current open room.
-			sock.join(currRoom);
+			sock.join(currRoom.toString());
 			
-			data.playerId = room.length - 2;//minus the host. this player is the last in the room.
+			data.playerId = room.length - 1;//minus the host. this player is the last in the room.
 
-			console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
+			console.log('Player ' + data.playerId + ' joined the game');
 
 			// Emit an event notifying the clients that the player has joined the room.
 			sock.emit('playerJoinedRoom', data);
-			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
-				console.log('Room is full. Almost ready!');
-				hostPrepareGame(data.gameId);
-			}
+//			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
+//				console.log('Room is full. Almost ready!');
+//				hostPrepareGame(data.gameId);
+//			}
 		}
 	} else {
-		// Otherwise, send an error message back to the player.
-		this.emit('error',{message: "This room does not exist."} );
+		data.mySocketId = sock.id;
+
+		//join the current open room.
+		sock.join(currRoom.toString());
+		
+		data.playerId = 0;//minus the host. this player is the last in the room.
+
+		console.log('Player ' + data.playerId + ' joined the game');
+
+		// Emit an event notifying the clients that the player has joined the room.
+		sock.emit('playerJoinedRoom', data);
 	}
 }
+/**
+ * A player clicked the 'START GAME' button.
+ * Attempt to connect them to the room that matches
+ * the gameId entered by the player.
+ * @param data Contains data entered via player's input - playerName and gameId.
+ */
+//function playerJoinGame(data) {
+//	//console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
+//	
+//	// A reference to the player's Socket.IO socket object
+//	var sock = this;
+//	console.log(sock.id + ' is connecting');
+//	console.log(idSocketPair[idSocketPair.length] );
+//	console.log(socketIdPair[sock]);
+//	if(socketIdPair[sock] === undefined){
+//		socketIdPair[sock] = idSocketPair.length;
+//	
+//		idSocketPair[idSocketPair.length] = sock;
+//		
+//		console.log(idSocketPair);
+//		
+//		// Look up the room ID in the Socket.IO manager object.
+//		// var room = gameSocket.manager.rooms["/" + data.gameId];
+//	//	var currRoom = newRoomsQueue.peek();
+//	//	data.gameId = currRoom;
+//	//	console.log('currentRoomId: '+currRoom);
+//		var room = gameSocket.manager.rooms["/" + 0];
+//	//	console.log('rooom id: '+room);
+//	
+//		// If the room exists...
+//	//	if( room != undefined ){
+//	
+//	//		var playerID = getPlayerId(room,sock);
+//		//	console.log('playerID'+ playerID);
+//		//	if(playerID < 0){
+//	
+//				// attach the socket id to the data object.
+//				data.mySocketId = sock.id;
+//	
+//				//join the current open room.
+//	//			sock.join(currRoom);
+//				
+//		//		data.playerId = room.length - 2;//minus the host. this player is the last in the room.
+//	
+//				data.playerId = idSocketPair.length - 1;
+//					
+//				console.log('Player ' + data.playerId + ' said hello to the server!');
+//	
+//				// Emit an event notifying the clients that the player has joined the room.
+//				sock.emit('playerJoinedRoom', data);
+//	//			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
+//	//				console.log('Room is full. Almost ready!');
+//	//				hostPrepareGame(data.gameId);
+//	//			}
+//	//		}
+//	} 
+////		// Otherwise, send an error message back to the player.
+////		this.emit('error',{message: "This room does not exist."} );
+////	}
+//}
 /**
  * 
  * this function emits anyone in the room the new player's location.
@@ -451,7 +555,7 @@ function phasesHalper(room,keys, i){
 }
 
 function deleteFormerOffers(room){
-	for(var i=0;i<roomSize;i++){
+	for(var i=0;i<room.length;i++){
 		for(var j=0;j<numOfColors;j++){
 			room.playerList[i].offer[j] = 0;
 		}

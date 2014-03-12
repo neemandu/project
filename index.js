@@ -56,25 +56,38 @@ app.configure(function() {
 
 // Create a Node.js based http server on port 8080
 var server = require('http').createServer(app).listen(8080);
-var testerServer = require('http').createServer(app).listen(7070);
+//var testerServer = require('http').createServer(app).listen(7070);
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
-var testerIO = require('socket.io').listen(testerServer);
+//var testerIO = require('socket.io').listen(testerServer);
 
 // Reduce the logging output of Socket.IO
 io.set('log level',1);
-testerIO.set('log level',1);
+//testerIO.set('log level',1);
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', function (socket) {
     //console.log('client connected');
     agx.initGame(io, socket);
 });
 
-//Listen for Socket.IO Connections. Once connected, start the game logic.
-testerIO.sockets.on('connection', function (socket) {
-    //console.log('client connected');
-    tester.initGame(io, socket);
+var net = require('net');
+var testerIO = net.createServer(function (c)
+{ //'connection' listener
+	console.log('Java client connected to this nodeServer');
+    c.on('data', function (data)
+    {
+    	var res = tester.initGame(c,data);
+    	console.log('res: '+res);
+    	c.write(res);
+    	c.pipe(c);
+    });
+    c.on('end', function ()
+    {
+        console.log('nodeServer disconnected');
+    });
 });
-
-
+testerIO.listen(7070, function ()
+{ //'listening' listener
+    console.log('nodeServer listening port:7070');
+});
