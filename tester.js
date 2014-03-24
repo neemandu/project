@@ -1,16 +1,22 @@
 var confID = [];
+
 var agx = require('./agxgame');
 exports.initGame = function(socket, data){
 	var del = "\r\n";
 	var res = "";
 	console.log('tester Server!!!!!');
-//	console.log('data: '+ data);
-	var conf = JSON.parse(data);
+	//try{
+		var conf = JSON.parse(data);
+	//}
+	//catch(e){
+	//	return "Bad conf file. "+e+del;
+	//}
+	console.log('configuration file received');
 	
-	if(conf.what_to_do === "createConfig"){
+	if(conf.Global.what_to_do === "createConfig"){
 		res = createConfig(conf);
 	}
-	else if(conf.what_to_do === "runConfig"){
+	else if(conf.Global.what_to_do === "runConfig"){
 		res = runConfig(conf);
 	}
 //console.log(conf.Goal.x);
@@ -19,7 +25,7 @@ exports.initGame = function(socket, data){
 
 createConfig = function(conf){
 	var status = "200";
-	confID[conf.id] = conf;
+	confID[conf.Global.ID] = conf;
 	
 	//@TODO insert conf into DB, where conf id and writer are the key.
 	
@@ -28,11 +34,11 @@ createConfig = function(conf){
 
 runConfig = function(conf){
 	var status = "200";
-	var co = confID[conf.id];
+	var co = confID[conf.Global.ID];
 	//@TODO
 	if(co === undefined){
 		return 500;
 	}
-	agx.runConfig(co, conf.playerList);
+	agx.runConfig(co);
 	return status;
 }
