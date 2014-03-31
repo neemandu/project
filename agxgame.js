@@ -165,6 +165,7 @@ function hostStartGame(gameId, game) {
 	room.playerList = new Array();
 	room.gameGoal = game.GameConditions.gameGoal;
 	room.endConditions = game.GameConditions.endConditions;
+	room.GUIboard = conf.Global.boards[game.Board];
 	room.board = createServerBoard(game);
 	console.log('Server board was created.');
 //	
@@ -519,6 +520,7 @@ function playerRestart(data) {
  *                       *
  ************************* */
  function beginRounds(room, game){
+	var roundNumber = 0;
 	var from = game.rounds.rounds_defenitions.length;
 	var to = 0;
 	var numberOfTimesToRepeatRounds = 1;
@@ -537,13 +539,10 @@ function playerRestart(data) {
 	//doing rounds 0-from
 	console.log('doing rounds 0-from');
 	for(var i=0;i<game.rounds.rounds_defenitions.length && i<from;i++){
-		for(var k=0;k<game.rounds.rounds_defenitions[i].phases_in_round.length && (room.haveWinner === false ); k++){
-			console.log('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-			console.log('round: '+game.rounds.rounds_defenitions[i].name);
-			gameLogger.trace('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-			gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
-			beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], game.rounds.rounds_defenitions[i], room, game.roles, game.phases);
-		}
+		roundNumber++;
+		console.log('round: '+game.rounds.rounds_defenitions[i].name);
+		gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
+		beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], roundNumber,game.rounds.rounds_defenitions[i], room, game.roles, game.phases, 0);
 	}
 	if(from < game.rounds.rounds_defenitions.length){
 		if(numberOfTimesToRepeatRounds === -1){
@@ -551,13 +550,10 @@ function playerRestart(data) {
 			//doing rounds from-to for unlimited repetitions
 			while(room.haveWinner === false ){
 				for(var i=from ;i<=to && i<game.rounds.rounds_defenitions.length && (room.haveWinner === false ); i++){
-					for(var k=0;k<game.rounds.rounds_defenitions[i].phases_in_round.length && (room.haveWinner === false ); k++){
-						console.log('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						console.log('round: '+game.rounds.rounds_defenitions[i]);
-						gameLogger.trace('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
-						beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], game.rounds.rounds_defenitions[i], room, game.roles, game.phases);
-					}
+					roundNumber++;
+					console.log('round: '+game.rounds.rounds_defenitions[i]);
+					gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
+					beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], roundNumber, game.rounds.rounds_defenitions[i], room, game.roles, game.phases, 0);
 				}
 			}
 		}
@@ -566,24 +562,19 @@ function playerRestart(data) {
 			console.log('doing rounds from-to for limited repetitions');
 			for(var f = 0 ; f < numberOfTimesToRepeatRounds && (room.haveWinner === false ); f++){
 				for(var i=from ;i<=to && i<game.rounds.rounds_defenitions.length && (room.haveWinner === false ); i++){
-					for(var k=0;k<game.rounds.rounds_defenitions[i].phases_in_round.length && (room.haveWinner === false ); k++){
-						console.log('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						console.log('round: '+game.rounds.rounds_defenitions[i].name);
-						gameLogger.trace('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
-						beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], game.rounds.rounds_defenitions[i], room, game.roles, game.phases);
-					}
+					roundNumber++;
+					console.log('round: '+game.rounds.rounds_defenitions[i].name);
+					gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
+					beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], roundNumber, game.rounds.rounds_defenitions[i], room, game.roles, game.phases, 0);
 				}
 			}
 		//doing rounds to-end of the rounds		
 			console.log('doing rounds to-end of the rounds	');		
 			for(var i=to;i<game.rounds.rounds_defenitions.length && (room.haveWinner === false );i++){
-				for(var k=0;k<game.rounds.rounds_defenitions[i].phases_in_round.length && (room.haveWinner === false ); k++){
-						console.log('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						console.log('round: '+game.rounds.rounds_defenitions[i].name);
-						gameLogger.trace('phase: '+game.rounds.rounds_defenitions[i].phases_in_round[k]);
-						gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
-					beginphase(game.rounds.rounds_defenitions[i].phases_in_round[k], game.rounds.rounds_defenitions[i], room, game.roles, game.phases);
+					roundNumber++;
+					console.log('round: '+game.rounds.rounds_defenitions[i].name);
+					gameLogger.trace('round: '+game.rounds.rounds_defenitions[i].name);
+					beginphase(roundNumber, game.rounds.rounds_defenitions[i], room, game.roles, game.phases, 0);
 				}
 			}
 		}
@@ -592,28 +583,29 @@ function playerRestart(data) {
 }
 
 
-function beginphase(phaseName, round, room, roles, phases){
-	console.log('beginphase');
-	gameLogger.trace('beginphasev');
+function beginphase(roundNumber, round, room, roles, phases, phaseIndex){
+	console.log('phase name: '+ound.phases_in_round[phaseIndex]);
+	gameLogger.trace('phase name: '+ound.phases_in_round[phaseIndex]);
+	
 	clearPlayersAttributes(room);
-	buildPlayersAttributs(phaseName, round, room, roles, phases);
+	buildPlayersAttributs(round.phases_in_round[phaseIndex], round, room, roles, phases);
+	
 	console.log('finish building attributes');
 	console.log('room.playerList.length: '+room.playerList.length);
 	gameLogger.trace('finish building attributes');
 	gameLogger.trace('room.playerList.length: '+room.playerList.length);
-	for(var i=0;i<room.playerList.length;i++){
-	console.log('***********************');
-		gameLogger.trace(room.playerList[i].name+' attributes:');
-		gameLogger.trace('   canMove '+room.playerList[i].canMove);
-		gameLogger.trace('   canOffer '+room.playerList[i].canOffer);
-		gameLogger.trace('   canTransfer '+room.playerList[i].canTransfer);
-		gameLogger.trace('   canSeeChips '+room.playerList[i].canSeeChips);
-		gameLogger.trace('   canSeeLocations '+room.playerList[i].canSeeLocations);
-		gameLogger.trace('   num_of_offers_per_player '+room.playerList[i].num_of_offers_per_player);
-		gameLogger.trace('   total_num_of_offers '+room.playerList[i].total_num_of_offers);
-		gameLogger.trace('   can_offer_to '+room.playerList[i].can_offer_to);
-		gameLogger.trace('***********************');
-
+	
+	for(var i=0; i<room.playerList.length; i++){
+		var data = {
+				RoundNumber : roundNumber,
+				playerID : i,
+				phaseName : round.phases_in_round[phaseIndex],
+				board : room.GUIboard,
+				players : room.playerList,
+				phaseTime : phases[round.phases_in_round[phaseIndex]].time,
+				Goals : room.Goals
+			}
+			
 		console.log('***********************');
 		console.log(room.playerList[i].name+' attributes:');
 		console.log('   canMove '+room.playerList[i].canMove);
@@ -625,16 +617,23 @@ function beginphase(phaseName, round, room, roles, phases){
 		console.log('   total_num_of_offers '+room.playerList[i].total_num_of_offers);
 		console.log('   can_offer_to '+room.playerList[i].can_offer_to);
 		console.log('***********************');
+		
+		deleteFormerOffers(room);
+		var socketId = room[i];
+		var socket = io.sockets.sockets[socketId];
+		socket.emit('beginFaze',data);
+		phaseIndex++;
 	}
-	//phasesHalper(room,keys,i);
+	
+	if(!(room.gameOver || phaseIndex === round.phases_in_round.length)){
+		setTimeout(function(){ return beginphase(roundNumber, room, round, phases, roles, phaseIndex);}, phases[round.phases_in_round[phaseIndex]].time;
+	}
 }
 
 function clearPlayersAttributes(room){
-	console.log('clearPlayersAttributes');
-	console.log('room.playerList.length: '+room.playerList.length);
-	
+	console.log('clearPlayersAttributes');	
 	gameLogger.trace('clearPlayersAttributes');
-	gameLogger.trace('room.playerList.length: '+room.playerList.length);
+	
 	for(var i=0;i<room.playerList.length;i++){
 		room.playerList[i].canMove = 0;
 		room.playerList[i].canOffer = 0;
@@ -649,11 +648,8 @@ function clearPlayersAttributes(room){
 
 function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 	console.log('buildPlayersAttributs');
-	console.log('room.playerList.length: '+room.playerList.length);
-	
-	
 	gameLogger.trace('buildPlayersAttributs');
-	gameLogger.trace('room.playerList.length: '+room.playerList.length);
+	
 	for(var i=0;i<room.playerList.length;i++){
 		//going through all basic roles
 		gameLogger.trace('for 1');
@@ -714,27 +710,6 @@ console.log(' ');
 	}
 }
 
-function phasesHalper(room,keys, i){
-	var data = {
-			
-			name : conf.phases[keys[i]].name,
-			canMove : conf.phases[keys[i]].canMove,
-			canOffer : conf.phases[keys[i]].canOffer,
-			canTransfer : conf.phases[keys[i]].canTransfer,
-			time : conf.phases[keys[i]].time,
-		}
-	console.log('key: '+ conf.phases[keys[i]].name);
-	console.log('time: '+ conf.phases[keys[i]].time);
-	deleteFormerOffers(room);
-	io.sockets.in(room.gameId).emit('beginFaze', data);
-	var f = i;
-	f++;
-	f %= keys.length;
-	console.log('room.gameOver: '+ room.gameOver);
-	if(!room.gameOver){
-		setTimeout(function(){ return phasesHalper(room,keys, f);}, conf.phases[keys[i]].time);
-	}
-}
 
 function deleteFormerOffers(room){
 	for(var i=0;i<room.length;i++){
@@ -804,19 +779,18 @@ function paintBoard(){
 
 function createServerBoard(game){
 	var board = conf.Global.boards[game.Board];
-	/*
-	for (var i=0;i<conf.Board.Size.Lines;i++) {
-		board[i] = [];
+	var newBoard = new Array(){
+		for(var i=0 i<board.length;i++){
+			newBoard[i] = new Array();
+		}
 	}
-
-	var Color = 0;
-	*/	
+	
 	for (var i=0; i<board.length; i++){
 		for(var j=0; j< board[i].length; j++){
 			board[i][j] = 0;
 		}
 	}
-	return board;
+	return newBoard;
 }
 
 
