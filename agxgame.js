@@ -437,10 +437,12 @@ function movePlayer(data1){
 		room.board[data1.currX][data1.currY] = 0;
 		updateLocation(room, data1.playerId, data1.x, data1.y);
 		io.sockets.in(data.gameId).emit('movePlayer', data);
-		if((data1.x === room.Goal.x) && (data1.y === room.Goal.y)){
-			room.gameOver = true;
-			io.sockets.in(room.gameId).emit('Winner', data);
-			console.log('we have a winner!, player #'+data1.playerId)
+		for(var i=0;i<room.Goal.length;i++){
+			if((data1.x === room.Goal[i].x) && (data1.y === room.Goal[i].y)){
+				room.gameOver = true;
+				io.sockets.in(room.gameId).emit('Winner', data);
+				console.log('we have a winner!, player #'+data1.playerId)
+			}
 		}
 	}
 }
@@ -532,16 +534,20 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 	gameLogger.trace('finish building attributes');
 	gameLogger.trace('room.playerList.length: '+room.playerList.length);
 	
-	for(var i=0; i<room.playerList.length; i++){
-		var data = {
+	deleteFormerOffers(room);
+	
+	var data = {
 				RoundNumber : room.roundNumber,
-				playerID : i,
 				phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
 				board : room.guiboard,
 				players : room.playerList,
 				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
 				Goals : room.Goals
 			}
+			
+			
+	for(var i=0; i<room.playerList.length; i++){
+		data.playerID = 1;
 			
 		gameLogger.trace('***********************');
 		gameLogger.trace(room.playerList[i].name+' attributes:');
@@ -563,7 +569,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		gameLogger.trace('   Goals '+data.Goals);
 		gameLogger.trace('***********************');
 		
-		deleteFormerOffers(room);
+		
 		var socketId = room[i];
 		var socket = io.sockets.sockets[socketId];
 		socket.emit('beginFaze',data);
