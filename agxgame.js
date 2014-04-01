@@ -547,7 +547,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			
 			
 	for(var i=0; i<room.playerList.length; i++){
-		data.playerID = 1;
+		data.playerID = i;
 			
 		gameLogger.trace('***********************');
 		gameLogger.trace(room.playerList[i].name+' attributes:');
