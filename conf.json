@@ -1,52 +1,198 @@
 {
-    "Board": {
-    	"Colors" : ["black","white","darkblue","blue","green","yellow"],
-		"Size" : {
-			"Lines" :6,
-			"Rows" : 4
-			}
-    },
-	"Blocks" : [[2,2,3,3,3,3],
+	"Global" : {
+	
+		"ID" : 1,
+		
+		"what_to_do" : "runConfig",
+		
+		"Colors" : ["black","white","darkblue","blue","green","yellow"],
+
+		"boards" : {
+			"board_1" : [[2,2,3,3,3,3],
 					[2,5,3,4,4,4],
 					[2,2,3,4,5,4],
 					[3,3,3,4,4,4]],
-	"phases" : {
-    	"phase1" : {
-    		"name" : "move",
-    		"time" : 5000,
-    		"canMove" : 1,
-    		"canOffer" : 0,
-    		"canTransfer": 0 
-    	},
-    	"phase2" : {
-    		"name" : "offer",
-    		"time" : 55000,
-    		"canMove" : 0,
-    		"canOffer" : 1,
-    		"canTransfer": 0 
-    	},
-    	"phase3" : {
-    		"name" : "transfer",
-    		"time" : 5000,
-    		"canMove" : 0,
-    		"canOffer" : 0,
-    		"canTransfer": 1
-    	}
-    },
-    "Goal": {
-    	"x" : 1,
-		"y" : 1
-    },
-    "scoreMethod": {
-    	"purpleOfferSquare" : 1,
-    	"LGOfferSquare": 1,
-    	"LYOfferSquare": 1,
-    	"pinkOfferSquare": 1,
-    	"LBOfferSquare": 1,
-    	"DBOfferSquare": 1,
-    	"default": 1,
-    	"Winner" : 30
-    }
-    	
- }
-    
+			"board_2" : [[2,2,3,3,3,3],
+					[2,5,3,4,4,4],
+					[2,2,3,4,5,4],
+					[3,3,3,4,4,4]]
+		}					
+	},
+	
+	"Games" : {
+		"Game_1" : {
+
+			"playerList" : [0,1,2],		
+			
+			"Board" : "board_1",
+				
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canMove" : 0,
+							"canSeeChips" : 0,
+							"canSeeLocations" : 0,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : {
+							"player1" : {
+								"role" : ["responder"]
+							},
+							"player2" : {
+								"role" : ["proposer"]
+							},
+							"player3" : {
+								"role" : ["proposer"]
+							}
+						}
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : {
+							"player1" : {
+								"role" : ["proposer"]
+							},
+							"player2" : {
+								"role" : ["responder"]
+							},
+							"player3" : {
+								"role" : ["responder"]
+							}
+						}
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : {
+							"player1" : {
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							"player2" : {
+								"role" : ["proposer"]
+							},
+							"player3" : {
+								"role" : ["proposer"]
+							}
+						},
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"actions" : {
+							"canMove" : 0,
+							"canTransfer" : 0,
+							"canOfferTo" : []
+						}
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 5000,
+						"actions" : {
+							"canMove" : 0
+						}
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"actions" : {
+							"canOfferTo" : []
+						}
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"actions" : {
+							"canMove" : 0,
+							"canOfferTo" : []
+						}
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [
+						{
+							"name" : "Goal1", 
+							"x" : 0,
+							"y" : 1
+						},
+						{
+							"name" : "Goal2", 
+							"x" : 0,
+							"y" : 0
+						}
+					],
+					"gameGoal" : ["max_points","min_points", "reach_goal"],
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2,
+						"reachGoal" : "true"
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},
+			   
+			   
+			   
+			"players" : [
+					{
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 0,
+						"locationY" : 3,
+						"chips": [5,1,5,1,5,2]
+					},
+					{
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"id" : 1,
+						"locationX" : 1,
+						"locationY" : 2,
+						"chips": [4,5,4,5,5,2]
+					},
+					{
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"id" : 2,
+						"locationX" : 2,
+						"locationY" : 3,
+						"chips": [5,1,5,3,6,5]
+					}
+				]
+		}	
+	}
+}
