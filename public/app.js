@@ -35,7 +35,7 @@ jQuery(function($){
             IO.socket.on('recieveMessage', IO.recieveMessage );
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('GameStarted', IO.GameStarted );
-            IO.socket.on('addPlayer', App.Player.addPlayer);
+            IO.socket.on('addPlayers', App.Player.addPlayers);
             IO.socket.on('updateChips', IO.updateChips)
 			IO.socket.on('rejectOffer', IO.rejectOffer)
             IO.socket.on('error', IO.error );
@@ -389,14 +389,108 @@ jQuery(function($){
             App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
         },
 
-          beginFaze : function(data){
+		
+		paintBoard : function(board,colors){
+			var tablesCode = "<table class='trails'>";
+			var Color = 0;
+			for (var i=0; i<board.length; i++)
+			{
+				tablesCode += "<tr class='trails'>";
+				for(var j=0; j< board[0].length; j++)
+				{
+					tablesCode += "<td class='trails' style=background:" + App.getColor(colors[board[i][j]]) +" ;></td>" 
+				}
+				tablesCode += "</tr>";
+			}
+			tablesCode += "</table>";
+			$('#board').html(tablesCode);			
+		},
+		
+		getColor : function (loc){
+			//var loc = board[i][j];
+			//console.dir(loc[1]);
+			switch(loc) 
+			{
+			case "purple":
+				return "#aa88FF"; // purple
+				break;
+			case "green":
+				return "#9dffb4"; // light green
+				break;
+			case "yellow":
+				return "#f8ff9d"; // light yellow
+				break;
+			case "pink":
+				return "#ff9f9d"; // pink
+				break;
+			case "blue":
+				return "#99ccf5"; //light blue
+				break;
+			case "darkblue":
+				return "#5588b1";
+				break
+			case "black":
+				return "#2f2e19"; //
+			case "white":
+				return "#fcf7f7"; //
+			case "red":
+				return "#d90f0f"; //		
+			default:
+				return "#AAAAAA";
+			}
+		},
+		
+        beginFaze : function(data){
+		   
+		   //changing the screen to the game screen
+		   App.$gameArea.html(App.$CTtemplateIntroScreen1);
+		   
+		   
 			//stops the blinking phases: 
         	clearTimeout(App.timeout);
-        	$('#phases').html(data.name+' phase');
-        	App.Player.canOffer    = data.canOffer;
-        	App.Player.canTransfer = data.canTransfer;
-        	App.Player.canMove     = data.canMove;
-        	
+        	$('#phases').html(data.phaseName+' phase');
+        	App.Player.canOffer    = data.players[data.playerID].canOffer;
+        	App.Player.canTransfer = data.players[data.playerID].canTransfer;
+        	App.Player.canMove     = data.players[data.playerID].canMove;
+			
+			//NEED TO ADD
+			//- canSeeChips
+			//- canSeeLocations
+	//		 var url = "Pictures/goal.png";
+	//		for(var i=0;i<data.Goals.length;i++){
+	//			$('#board table tr:eq('+ data.Goals[i].x +') td:eq('+data.Goals[i].y+')').html("<img src=" +url+ " alt=goal>");
+	//		}
+			
+			App.Player.addPlayers(data);
+			App.paintBoard(data.board,data.colors);
+			//on click board 
+			$('#board table tr').each(function(){
+					 $(this).find('td').each(function(){
+						 $(this).click(function(){
+						 if(App.Player.canMove === 1){
+							var data = {
+								id : App.Player.myid,
+								col : $(this).parent().children().index($(this)),
+								row : $(this).parent().parent().children().index($(this).parent())
+							}
+							
+							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
+							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
+							
+							if(op1 || op2)
+							{								
+								var tdColor =  $(this).css('background-color');
+								var index = App.Player.colors.indexOf(tdColor);
+								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
+									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
+									}
+								}	
+						 	}
+						 })
+					 })
+				 })
+			
         	if(App.Player.canOffer && $('#addTransaction').find('#addTrans').length === 0)
         	{
 				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
@@ -424,11 +518,11 @@ jQuery(function($){
         	}
 			var func = function(time, j)
 			{
-				$('#phases').html(data.name+' phase: ' +(j)+' seconds');
+				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds');
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
-			var time = data.time/1000;
+			var time = data.phaseTime/1000;
 			func(time, time-1);
 		},
 
@@ -860,105 +954,44 @@ jQuery(function($){
                 App.Player.myName = data.playerName;
             },
             
-
-            GameStarted : function(data) {
-                // Update the current round
-//                   alert('GameStarted for real!! gameId: '+App.gameId);
-
-                App.currentRound = data.round;
-                //alert as number of players to see if it passed
-
-                
-               
-            
-                App.$gameArea.html(App.$CTtemplateIntroScreen1);
-                
-                $(".gameBoard").html(data.board);
-                var params = {id:App.Player.myid };
-//                $(".playersList").append(App.Player.buildPlayer(params));
-              //  console.log('players: '+App.Host.players);
-              //  console.log('players.length: '+App.Host.players.length);
-			    var PList = data.playerList;
-				App.Player.otherPlayers=data.playerList;
-				
-				$('#board table tr').each(function(){
-					 $(this).find('td').each(function(){
-						 $(this).click(function(){
-						 if(App.Player.canMove === 1){
-							var data = {
-								id : App.Player.myid,
-								col : $(this).parent().children().index($(this)),
-								row : $(this).parent().parent().children().index($(this).parent())
-							}
-							
-							var op1 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 0) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 1);
-							var op2 = (Math.abs(App.Player.locations[App.Player.myid][0]-data.row) === 1) && (Math.abs(App.Player.locations[App.Player.myid][1]-data.col) === 0);
-							
-							if(op1 || op2)
-							{								
-								var tdColor =  $(this).css('background-color');
-								var index = App.Player.colors.indexOf(tdColor);
-								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
-							//	var hasOtherPlayer = false;
-								
-								/*for(var i=0;i<App.Player.locations.length;i++){
-									if(i!=App.Player.myid){
-										if(App.Player.locations[i][0]==data.row && App.Player.locations[i][1]==data.col){
-											hasOtherPlayer = true;
-											break;
-										}
-									
-									}
-								}*/
-								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
-									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
-									}
-								}	
-						 	}
-						 })
-					 })
-				 })
-				 var url = "Pictures/goal.png";
-				$('#board table tr:eq('+ data.goal.x +') td:eq('+data.goal.y+')').html("<img src=" +url+ " alt=goal>");
-				
-            },
-            
 			
             /**
              * adds a player inside playersList
              * data= {id:num, chips: ["num", "num".."num], location: "some location"};
              */
-            addPlayer: function(data)
+            addPlayers : function(data)
             {
-            	var htmlPlayer = App.Player.buildPlayer(data);
-            	App.Player.score = data.score;    			
-            	$(".playersList").append(htmlPlayer);
+				for(var k=0;k<data.players.length;k++){
+					var htmlPlayer = App.Player.buildPlayer(data,k);
+					App.Player.score = data.players[data.playerID].score;    			
+					$(".playersList").append(htmlPlayer);
 
-    			App.Player.updateScore(data);
-    			
-            	if(data.id == App.Player.myid)
-            		{
-            			
-            			$('#player'+App.Player.myid).css("border-color", "#FF0000");
-            		}
-            	var pChips = new Array();
-            	for(var i=0; i<data.chips.length; i++)
-				{
-            		pChips[i] = data.chips[i];
+					App.Player.updateScore(data,k);
+					
+					if(k == data.playerID)
+						{
+							
+							$('#player'+data.playerID).css("border-color", "#FF0000");
+						}
+					var pChips = new Array();
+					for(var i=0; i<data.players[k].chips.length; i++)
+					{
+						pChips[i] = data.players[k].chips[i];
+					}
+					App.Player.Chips[k] = pChips;
+					
+					var pLoc = new Array();
+					pLoc[0]=data.players[k].location.x;
+					pLoc[1]=data.players[k].location.y;
+					App.Player.locations[k] = pLoc;
+					var url = "Pictures/" +App.playerColors[k] ;
+					//alert(url);
+					$('#player' + k).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
+					
+					//manage location of players:
+					var location = {playerId: k, x:data.players[k].location.x, y:data.players[k].location.y};
+					App.Player.locatePlayers(location);
 				}
-            	App.Player.Chips[data.id] = pChips;
-				
-				var pLoc = new Array();
-				pLoc[0]=data.location.x;
-				pLoc[1]=data.location.y;
-				App.Player.locations[data.id] = pLoc;
-            	var url = "Pictures/" +App.playerColors[data.id] ;
-            	//alert(url);
-    			$('#player' + data.id).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
-				
-            	//manage location of players:
-				var location = {playerId: data.id, x:data.location.x, y:data.location.y};
-				App.Player.locatePlayers(location);
             },
             
 			/**
@@ -972,20 +1005,20 @@ jQuery(function($){
              * build player html code given his id
              */
             
-            buildPlayer: function(data)
+            buildPlayer: function(data,id)
     		{
     		var playerCode ="";
-    		playerCode += '<table class="player" id="player' + data.id +'">';
+    		playerCode += '<table class="player" id="player' + id +'">';
     		playerCode +=	'<tr> <td class="playerIMG">image </td>'+
-    			'<td class="playerID"> id:<br>' + data.id + '</td>'+
+    			'<td class="playerID"> id:<br>' + id + '</td>'+
     			'<td class="playerChis" align="center">'+
     			'<table id="Chips">'+
     			'<tr>';
-    			for(var i=0; i<data.chips.length; i++)
+    			for(var i=0; i<data.players[id].chips.length; i++)
 				{
     				if(i==3)
     					playerCode += '</tr><tr>';
-    				playerCode += '<td class='+ App.colorArray[i] +'/><td class="colorAmount">' +data.chips[i]+ '</td>';	
+    				playerCode += '<td class='+ data.colors[i] +'/><td class="colorAmount">' +data.players[id].chips[i]+ '</td>';	
 				}
     			playerCode += '</tr></table></td> <td class="playerScore"> score:<br>'+ 0 +' </td> </tr></table>';
 		
@@ -995,9 +1028,9 @@ jQuery(function($){
     		/**
     		 * finds player's info and updates his score
     		 */
-    		updateScore: function(data)
+    		updateScore: function(data,k)
     		{
-    			$('#player'+data.id+' td:last').html('score:<br> '+ data.score);
+    			$('#player'+k+' td:last').html('score:<br> '+ data.players[k].score);
     		},
     		
     		/**

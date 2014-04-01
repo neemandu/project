@@ -542,7 +542,8 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 				board : room.guiboard,
 				players : room.playerList,
 				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
-				Goals : room.Goals
+				Goals : room.Goals,
+				colors : conf.Global.Colors
 			}
 			
 			
