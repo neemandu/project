@@ -153,9 +153,10 @@ function hostStartGame(gameId, game) {
 	room.playerList = new Array();
 	room.gameGoal = game.GameConditions.gameGoal;
 	room.endConditions = game.GameConditions.endConditions;
-	room.GUIboard = conf.Global.boards[game.Board];
-	gameLogger.trace("board: "+room.GUIboard);
+	room.guiboard = conf.Global.boards[game.Board];
+	gameLogger.trace("board: "+room.guiboard);
 	room.board = createServerBoard(game);
+	gameLogger.trace("board: "+room.guiboard);
 	gameLogger.trace('Server board was created.');
 //	
 	room.Goals = game.GameConditions.GoalCordinates;
@@ -513,6 +514,7 @@ function playerRestart(data) {
 		numberOfTimesToRepeatRounds = game.rounds.General.numberOfTimesToRepeatRounds;
 		gameLogger.trace('numberOfTimesToRepeatRounds: '+numberOfTimesToRepeatRounds);
 	}
+	gameLogger.trace('guiboard: '+room.guiboard);
 	beginphase(numberOfTimesToRepeatRounds, room, game, 0);
 }
 
@@ -534,8 +536,8 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		var data = {
 				RoundNumber : room.roundNumber,
 				playerID : i,
-				phaseName : round.phases_in_round[phaseIndex],
-				board : room.GUIboard,
+				phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
+				board : room.guiboard,
 				players : room.playerList,
 				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
 				Goals : room.Goals
@@ -570,11 +572,10 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 	newPhaseIndex++;
 	gameLogger.trace('room.gameOver: '+room.gameOver + ' newPhaseIndex: '+newPhaseIndex+' round.phases_in_round.length: '+round.phases_in_round.length);
 	if((room.gameOver === false) && (newPhaseIndex < round.phases_in_round.length)){
-		gameLogger.trace('######### in the IF ########');
 		setTimeout(function(){ return beginphase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
 	}
 	else{
-		gameLogger.trace('no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!');
+		gameLogger.trace('Round #'+room.roundNumber+'no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!');
 		room.roundNumber++;
 		if((numberOfTimesToRepeatRounds === -1) || (room.roundNumber < game.rounds.rounds_defenitions.length)){
 			setTimeout(function(){ return beginphase(numberOfTimesToRepeatRounds, room, game, 0);}, game.phases[round.phases_in_round[phaseIndex]].time);
@@ -744,7 +745,7 @@ function createServerBoard(game){
 	
 	for (var i=0; i<board.length; i++){
 		for(var j=0; j< board[i].length; j++){
-			board[i][j] = 0;
+			newBoard[i][j] = 0;
 		}
 	}
 	return newBoard;
