@@ -148,6 +148,7 @@ function insertPlayersToRoom(thisGameId, game) {
 function hostStartGame(gameId, game) {
 	gameLogger.trace('Game #' + gameId +' Started.');
 	var room = gameSocket.manager.rooms["/" + gameId];
+	room.gameId = gameId;
 	room.gameOver = false;
 	room.haveWinner = false;
 	room.playerList = new Array();
@@ -433,12 +434,14 @@ function movePlayer(data1){
 				y: data1.y,
 				chip: data1.chip
 		}
+		
 		room.board[data1.x][data1.y] = 1;
 		room.board[data1.currX][data1.currY] = 0;
 		updateLocation(room, data1.playerId, data1.x, data1.y);
+		room.playerList[data1.playerId].chips[data1.chip]--;
 		io.sockets.in(data.gameId).emit('movePlayer', data);
-		for(var i=0;i<room.Goal.length;i++){
-			if((data1.x === room.Goal[i].x) && (data1.y === room.Goal[i].y)){
+		for(var i=0;i<room.Goals.length;i++){
+			if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
 				room.gameOver = true;
 				io.sockets.in(room.gameId).emit('Winner', data);
 				console.log('we have a winner!, player #'+data1.playerId)
@@ -543,7 +546,8 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 				players : room.playerList,
 				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
 				Goals : room.Goals,
-				colors : conf.Global.Colors
+				colors : conf.Global.Colors,
+				gameId : room.gameId
 			}
 			
 			
@@ -669,7 +673,7 @@ console.log(' ');
 			case 'total_num_of_offers':
 				player.total_num_of_offers = searchPlace[h];
 				break;
-			case 'can_offer_to':
+			case 'canOfferTo':
 				player.can_offer_to = searchPlace[h];
 				break;
 		}

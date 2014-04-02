@@ -291,8 +291,8 @@ jQuery(function($){
 			App.Player.locations[data.playerId][0] = data.x;
 			App.Player.locations[data.playerId][1] = data.y;
 			App.Player.locatePlayers(data);
-			var params = {id: data.playerId, score: data.score };
-			App.Player.updateScore(params);
+			//var params = {id: data.playerId, score: data.score };
+			//App.Player.updateScore(params);
 		},
 	    
         /**
@@ -440,29 +440,66 @@ jQuery(function($){
 			}
 		},
 		
+		
+		rgb2hex : function(rgb) {
+			rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+			function hex(x) {
+				return ("0" + parseInt(x).toString(16)).slice(-2);
+			}
+			return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+		},
+
+
         beginFaze : function(data){
 		   
 		   //changing the screen to the game screen
 		   App.$gameArea.html(App.$CTtemplateIntroScreen1);
 		   
-		   
+		   App.gameId = data.gameId;
 			//stops the blinking phases: 
         	clearTimeout(App.timeout);
         	$('#phases').html(data.phaseName+' phase');
+			
+			for(var i =0; i<data.colors.length;i++){
+					App.Player.colors[i] = App.getColor(data.colors[i]);
+			}
+			
         	App.Player.canOffer    = data.players[data.playerID].canOffer;
         	App.Player.canTransfer = data.players[data.playerID].canTransfer;
         	App.Player.canMove     = data.players[data.playerID].canMove;
+			App.Player.myid = data.playerID;
+			App.Player.score =  data.players[data.playerID].score;
+			App.Player.offerToPlayers = data.players[data.playerID].can_offer_to;
 			
+			
+			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
+			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
+		
 			//NEED TO ADD
 			//- canSeeChips
 			//- canSeeLocations
-	//		 var url = "Pictures/goal.png";
-	//		for(var i=0;i<data.Goals.length;i++){
-	//			$('#board table tr:eq('+ data.Goals[i].x +') td:eq('+data.Goals[i].y+')').html("<img src=" +url+ " alt=goal>");
-	//		}
+
+					
+			
+			App.paintBoard(data.board,data.colors);
 			
 			App.Player.addPlayers(data);
-			App.paintBoard(data.board,data.colors);
+			//put goals
+			var url = "Pictures/goal.png";
+			var addGoal =1;
+			for(var i=0;i<data.Goals.length;i++){
+				for(var j=0;j<data.players.length;j++){
+					if(data.players[j].location.x==data.Goals[i][0] && data.players[j].location.y==data.Goals[i][1]){
+						addGoal = 0;
+					}
+				}
+				if(addGoal==1){
+					$('#board table tr:eq('+ data.Goals[i][0] +') td:eq('+data.Goals[i][1]+')').html("<img src=" +url+ " alt=goal>");
+				}
+				addGoal =1;
+			}
+			
+			
 			//on click board 
 			$('#board table tr').each(function(){
 					 $(this).find('td').each(function(){
@@ -479,7 +516,7 @@ jQuery(function($){
 							
 							if(op1 || op2)
 							{								
-								var tdColor =  $(this).css('background-color');
+								var tdColor =  App.rgb2hex($(this).css('background-color'));
 								var index = App.Player.colors.indexOf(tdColor);
 								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
 								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
@@ -491,10 +528,13 @@ jQuery(function($){
 					 })
 				 })
 			
-        	if(App.Player.canOffer && $('#addTransaction').find('#addTrans').length === 0)
+			
+			
+        	if(App.Player.canOffer==1/* && $('#addTransaction').find('#addTrans').length === 0*/)
         	{
 				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 			}
+			
         	else
     		{
         		$('#downTable').html('');
@@ -508,17 +548,16 @@ jQuery(function($){
 							$(this).remove();
 					})
     		}
+			
+						
         	if(App.Player.canTransfer)
         	{
         		// TODO somthing
 			}
-        	if(App.Player.canMove)
-        	{
-        		//TODO something
-        	}
+        	
 			var func = function(time, j)
 			{
-				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds');
+				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds'+'  '+data.RoundNumber);
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
@@ -784,18 +823,21 @@ jQuery(function($){
         	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
-        	otherPlayers: 0,
+        	offerToPlayers: 0,
 			canMove: 0,
 			canOffer: 0,
 			canTransfer: 0,
 			score: 0,
+			total_num_of_offers: 0,
+			num_of_offers_per_player: 0,			
         	/**
         	 *  an array of chips - represents the chip set of player. 
         	 */
 			Chips: [],
 			locations: [],
-        	colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
-            /**
+        	//colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
+            colors : [],
+			/**
              * A reference to the socket ID of the Host
              */
             hostSocketId: '',
@@ -839,9 +881,9 @@ jQuery(function($){
 										k++;
 										})
 				
-				for (var k in App.Player.otherPlayers) {
-                    if (App.Player.otherPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
-						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.otherPlayers[k]+'</option>');     
+				for (var k in App.Player.offerToPlayers) {
+                    if (App.Player.offerToPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
+						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     
                     }
                 }
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
@@ -963,16 +1005,17 @@ jQuery(function($){
             {
 				for(var k=0;k<data.players.length;k++){
 					var htmlPlayer = App.Player.buildPlayer(data,k);
-					App.Player.score = data.players[data.playerID].score;    			
-					$(".playersList").append(htmlPlayer);
-
-					App.Player.updateScore(data,k);
+					App.Player.score = data.players[data.playerID].score;    							
 					
+						$(".playersList").append(htmlPlayer);
 					if(k == data.playerID)
 						{
 							
 							$('#player'+data.playerID).css("border-color", "#FF0000");
+						//	$(".playersList").prepend(htmlPlayer);
 						}
+						
+				
 					var pChips = new Array();
 					for(var i=0; i<data.players[k].chips.length; i++)
 					{
@@ -984,10 +1027,12 @@ jQuery(function($){
 					pLoc[0]=data.players[k].location.x;
 					pLoc[1]=data.players[k].location.y;
 					App.Player.locations[k] = pLoc;
-					var url = "Pictures/" +App.playerColors[k] ;
+					var url = "Pictures/" +App.playerColors[k];
 					//alert(url);
 					$('#player' + k).find('td.playerIMG').html("<img src=" +url+ " alt=image>");
 					
+					$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html("<img src=" +url+ " alt=image>");
+
 					//manage location of players:
 					var location = {playerId: k, x:data.players[k].location.x, y:data.players[k].location.y};
 					App.Player.locatePlayers(location);
@@ -1018,7 +1063,7 @@ jQuery(function($){
 				{
     				if(i==3)
     					playerCode += '</tr><tr>';
-    				playerCode += '<td class='+ data.colors[i] +'/><td class="colorAmount">' +data.players[id].chips[i]+ '</td>';	
+    				playerCode += '<td style="background-color:'+  App.getColor(data.colors[i]) +'; width:5px;"></td><td class="colorAmount">' +data.players[id].chips[i]+ '</td>';	
 				}
     			playerCode += '</tr></table></td> <td class="playerScore"> score:<br>'+ 0 +' </td> </tr></table>';
 		
@@ -1028,9 +1073,9 @@ jQuery(function($){
     		/**
     		 * finds player's info and updates his score
     		 */
-    		updateScore: function(data,k)
+    		updateScore: function(k,score)
     		{
-    			$('#player'+k+' td:last').html('score:<br> '+ data.players[k].score);
+    			$('#player'+k+' td:last').html('score:<br> '+ App.players[k].score + score);
     		},
     		
     		/**
