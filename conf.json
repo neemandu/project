@@ -3,26 +3,28 @@
 	
 		"ID" : 1,
 		
-		"what_to_do" : "runConfig",
+		"what_to_do" : "createConfig",
 		
 		"Colors" : ["black","white","darkblue","blue","green","yellow"],
 
 		"boards" : {
 			"board_1" : [[2,2,3,3,3,3],
-					[2,5,3,4,4,4],
-					[2,2,3,4,5,4],
-					[3,3,3,4,4,4]],
+							[2,5,3,4,4,4],
+							[2,2,3,4,5,4],
+							[3,3,3,4,4,4]],
 			"board_2" : [[2,2,3,3,3,3],
-					[2,5,3,4,4,4],
-					[2,2,3,4,5,4],
-					[3,3,3,4,4,4]]
+							[2,5,3,4,4,4],
+							[2,2,3,4,5,4],
+							[3,3,3,4,4,4]]
 		}					
 	},
 	
 	"Games" : {
 		"Game_1" : {
 
-			"playerList" : [0,1,2],		
+			"playerList" : [0,1,2],
+			
+			
 			
 			"Board" : "board_1",
 				
@@ -31,11 +33,6 @@
 							"canOfferTo" : ["responder"]
 					},
 					"responder" : {
-							"canMove" : 0,
-							"canSeeChips" : 0,
-							"canSeeLocations" : 0,
-							"canTransfer" : 1
-							
 					},
 					"customer" : {
 							"canMove" : 1,
@@ -51,6 +48,11 @@
 				
 			"rounds" : {
 				"General" : {
+					"roundsToRepeat" : {
+						"from" : 1, 
+						"to" : 1
+					},
+					
 					"numberOfTimesToRepeatRounds" : 1
 				},
 				"rounds_defenitions" : [
@@ -112,7 +114,6 @@
 						"time" : 5000,
 						"actions" : {
 							"canMove" : 0,
-							"canTransfer" : 0,
 							"canOfferTo" : []
 						}
 					},
@@ -142,18 +143,13 @@
 					
 
 			"GameConditions" :{
-				"GoalCordinates": [
-						{
-							"name" : "Goal1", 
-							"x" : 0,
-							"y" : 1
-						},
-						{
-							"name" : "Goal2", 
-							"x" : 0,
-							"y" : 0
-						}
-					],
+				"GoalCordinates": {
+					"Goal1" : {
+						"x" : 0,
+						"y" : 1
+					}
+					
+				},
 					"gameGoal" : ["max_points","min_points", "reach_goal"],
 					"endConditions" : {
 						"numOfRoundsStandStill" : 2,
