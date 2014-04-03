@@ -563,7 +563,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		gameLogger.trace('   canSeeLocations '+room.playerList[i].canSeeLocations);
 		gameLogger.trace('   num_of_offers_per_player '+room.playerList[i].num_of_offers_per_player);
 		gameLogger.trace('   total_num_of_offers '+room.playerList[i].total_num_of_offers);
-		gameLogger.trace('   can_offer_to '+room.playerList[i].can_offer_to);
+		gameLogger.trace('   canOfferToList '+room.playerList[i].canOfferToList);
 		gameLogger.trace();
 		gameLogger.trace('   RoundNumber '+data.RoundNumber);
 		gameLogger.trace('   playerID '+data.playerID);
@@ -608,6 +608,7 @@ function clearPlayersAttributes(room){
 	gameLogger.trace('clearPlayersAttributes');
 	
 	for(var i=0;i<room.playerList.length;i++){
+		room.playerList[i].canOfferTo = new Array();
 		room.playerList[i].canMove = 0;
 		room.playerList[i].canOffer = 0;
 		room.playerList[i].canTransfer = 0;
@@ -624,13 +625,16 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 	gameLogger.trace('buildPlayersAttributs');
 	
 	for(var i=0;i<room.playerList.length;i++){
+		//initializing each player's role list.
+		room.playerList[i].roles = new Array();
 		//going through all basic roles
 		for(var j=0;j<room.playerList[i].basic_role.length;j++){
+			room.playerList[i].roles.push(room.playerList[i].basic_role[j]);
 			checkActions(room.playerList[i], gameRoles[room.playerList[i].basic_role[j]]);	
 		}
-		gameLogger.trace('for 2');
 		//going through all round's roles
 		for(var j=0;j<round.players_roles[room.playerList[i].name].role.length;j++){
+			room.playerList[i].roles.push(round.players_roles[room.playerList[i].name].role[j]);
 			checkActions(room.playerList[i], gameRoles[round.players_roles[room.playerList[i].name].role[j]]);	
 		}
 		//add additional actions from round
@@ -638,9 +642,35 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 		//going through all phase's roles
 		checkActions(room.playerList[i], phases[phaseName].actions);	
 	}
+	
+	//create can_offer_to list as players IDs, not roles.
+	for(var i=0;i<room.playerList.length;i++){
+		room.playerList[i].canOfferToList = new Array();
+		for(var k=0; k < room.playerList[i].can_offer_to.length; k++){	
+			for(var j=0;j<room.playerList.length;j++){
+				if(i != j){
+					var stop = false;
+					for(var f=0; (f < room.playerList[j].roles.length) && (!stop); f++){
+						if(room.playerList[j].roles[f] === room.playerList[i].can_offer_to[k]){
+							stop = true;
+							room.playerList[i].canOfferToList.push(j);
+						}
+					}
+				}
+			}
+		}
+	}
+	//print can OfferToList for debug
+	for(var i=0;i<room.playerList.length;i++){
+		gameLogger.trace('player #'+i+'can send offers to:');
+		for(var k=0; k < room.playerList[i].canOfferToList.length; k++){	
+			gameLogger.trace(room.playerList[i].canOfferToList[k]);
+		}
+	}
+	
 }
 function checkActions(player, searchPlace){
-console.log(' ');
+	console.log(' ');
 	console.log('***************************** ');
 	console.log('checkActions ');
 	
