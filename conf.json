@@ -143,13 +143,8 @@
 					
 
 			"GameConditions" :{
-				"GoalCordinates": {
-					"Goal1" : {
-						"x" : 0,
-						"y" : 1
-					}
-					
-				},
+				"GoalCordinates": [[0,1]],
+			
 					"gameGoal" : ["max_points","min_points", "reach_goal"],
 					"endConditions" : {
 						"numOfRoundsStandStill" : 2,
