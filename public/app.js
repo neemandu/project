@@ -137,7 +137,7 @@ jQuery(function($){
 			$('#colorsToOffer'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			$('#colorsToGet'+ App.Player.currentCount).append('<tr></tr><tr></tr>');
 			var k =0
-			var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+			//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
 			
 			/*
 			 * on click accept : move chips between players 
@@ -149,10 +149,10 @@ jQuery(function($){
 						var params;
 						//alert(data.JcolorsToGet);
 						var JcolorsToGet = JSON.parse(data.JcolorsToGet);
-						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet,rowid: data.rowid};
+						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet,rowid: data.rowid,score: App.players[data.sentFrom].score};
 						
 						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
-						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer};
+						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer,score: App.players[data.sentFrom].score};
 						var d={
 							gameId :App.gameId,
 							player1 : player1,
@@ -177,7 +177,7 @@ jQuery(function($){
 						var id = this.id[this.id.length-1];
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
-						p++;
+						//p++;
 						var player1 = {id :p, gameId : App.gameId, rowid : id};	
 						IO.socket.emit('rejectOffer',player1);
 						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
@@ -194,25 +194,27 @@ jQuery(function($){
 					/*
 					 * until here.
 					 */
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
+				var count =0;
+				while(count<3&&k<App.Player.colors.length){
+					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+					k++;
+					count++;
+					}
 					
-			$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
-									k++;
-                                    })
+					
+				})
+                       
 
-            k=0;
-			$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
-									k++;
-                                    })
+				k=0;
+				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
+				var count =0;
+				while(count<3&&k<App.Player.colors.length){
+					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+					k++;
+					count++;
+					}
+				})
 			
             $('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
                 App.Player.currentCount++;
@@ -267,11 +269,11 @@ jQuery(function($){
 	    	App.Player.addChips(toSend1);
 	    	App.Player.addChips(toSend2);
 	    	
-	    	var score1 = {id: data.player1.id, score: data.player1.score};
-	    	var score2 = {id: data.player2.id, score: data.player2.score};
+	    //	var score1 = {id: data.player1.id, score: data.player1.score};
+	    //	var score2 = {id: data.player2.id, score: data.player2.score};
 	    	
-	    	App.Player.score(score1);
-	    	App.Player.updateScore(score2);
+	    	App.Player.updateScore(data.player1.id,data.player1.score);
+	    	App.Player.updateScore(data.player2.id,data.player1.score);
 	    },
 	
 		movePlayer : function(data){
@@ -338,6 +340,8 @@ jQuery(function($){
          * to the array of word data stored on the server.
          */
         currentRound: 0,
+		players : 0,
+		firstphase: 1,
 
         /* *************************************
          *                Setup                *
@@ -412,7 +416,7 @@ jQuery(function($){
 			switch(loc) 
 			{
 			case "purple":
-				return "#aa88FF"; // purple
+				return "#aa88ff"; // purple
 				break;
 			case "green":
 				return "#9dffb4"; // light green
@@ -431,8 +435,8 @@ jQuery(function($){
 				break
 			case "black":
 				return "#2f2e19"; //
-			case "white":
-				return "#fcf7f7"; //
+			case "grey":
+				return "#dbdbd5"; //
 			case "red":
 				return "#d90f0f"; //		
 			default:
@@ -453,7 +457,10 @@ jQuery(function($){
         beginFaze : function(data){
 		   
 		   //changing the screen to the game screen
-		   App.$gameArea.html(App.$CTtemplateIntroScreen1);
+		   if(App.firstphase==1){
+				App.$gameArea.html(App.$CTtemplateIntroScreen1);
+				App.firstphase=0;
+   		   }
 		   
 		   App.gameId = data.gameId;
 			//stops the blinking phases: 
@@ -469,8 +476,8 @@ jQuery(function($){
         	App.Player.canMove     = data.players[data.playerID].canMove;
 			App.Player.myid = data.playerID;
 			App.Player.score =  data.players[data.playerID].score;
-			App.Player.offerToPlayers = data.players[data.playerID].can_offer_to;
-			
+			App.Player.offerToPlayers = data.players[data.playerID].canOfferToList;
+			App.players = data.players;
 			
 			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
@@ -483,7 +490,9 @@ jQuery(function($){
 			
 			App.paintBoard(data.board,data.colors);
 			
+			
 			App.Player.addPlayers(data);
+			
 			//put goals
 			var url = "Pictures/goal.png";
 			var addGoal =1;
@@ -519,6 +528,7 @@ jQuery(function($){
 								var tdColor =  App.rgb2hex($(this).css('background-color'));
 								var index = App.Player.colors.indexOf(tdColor);
 								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
+								
 								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
 									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
 									}
@@ -554,7 +564,7 @@ jQuery(function($){
         	{
         		// TODO somthing
 			}
-        	
+        	App.Player.updateScore(App.Player.myid,App.Player.score);
 			var func = function(time, j)
 			{
 				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds'+'  '+data.RoundNumber);
@@ -563,6 +573,8 @@ jQuery(function($){
 			}
 			var time = data.phaseTime/1000;
 			func(time, time-1);
+			
+
 		},
 
         /* *************************************
@@ -859,37 +871,41 @@ jQuery(function($){
 				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
 				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
 			
-				var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+				//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
+
 				
 				var k=0;
+				
 				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
-                                    $(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-									k++;
-									$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-									k++;
-                                    })
+				var count =0;
+				while(count<3&&k<App.Player.colors.length){
+					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td><input type="number" min="1" style="width:30px;"></td>');
+					k++;
+					count++;
+					}
+					
+					
+				})
+                       
 
 				k=0;
 				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-										k++;
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-										k++;
-										$(this).append('<td class="'+colors[k]+'"/><td><input type="number" min="1" style="width:30px;"></td>');
-										k++;
-										})
-				
-				for (var k in App.Player.offerToPlayers) {
-                    if (App.Player.offerToPlayers.hasOwnProperty(k)&&k!=App.Player.myid) {
+				var count =0;
+				while(count<3&&k<App.Player.colors.length){
+					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td><input type="number" min="1" style="width:30px;"></td>');
+					k++;
+					count++;
+					}
+				})
+				for (var k =0; k<App.Player.offerToPlayers.length;k++) {
+                    if (App.Player.offerToPlayers[k]!=App.Player.myid) {
 						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     
                     }
                 }
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
 				$('#sendOffer'+App.Player.currentCount).click( function(){
-								var id = this.id[this.id.length-1];
-								var player = $('#playersDropDown'+id).val();
+								var id = this.id[this.id.length-1];//index 
+								var player = $('#playersDropDown'+id+' option:selected').text();
 								var colorsToOffer = new Array();
 								var colorsToGet = new Array();
 								var i=0;
@@ -1003,6 +1019,7 @@ jQuery(function($){
              */
             addPlayers : function(data)
             {
+				$(".playersList").html("");
 				for(var k=0;k<data.players.length;k++){
 					var htmlPlayer = App.Player.buildPlayer(data,k);
 					App.Player.score = data.players[data.playerID].score;    							
