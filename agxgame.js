@@ -9,7 +9,7 @@ var transactionLogger = log.transactionLogger;
 var url = log.url;
 var gameIDs = new Array();
 //initializing gameIDs array.
-for(var i=1;i<=10000;i++){
+for(var i=1;i<=1000;i++){
 	gameIDs[i] = 0;
 }
 var io;
@@ -53,7 +53,7 @@ exports.initGame = function(sio, socket){
 
 exports.runConfig = function(configuration){
 	conf = configuration;
-	console.log("Creating game: " +conf.Games[i].GAME_NAME);
+	numOfColors = conf.Global.Colors.length;
 	createRoom(0);
 }
 
@@ -63,9 +63,10 @@ exports.runConfig = function(configuration){
  *                             *
  ******************************* */
 function createRoom(currGame) {
-	var game_id=Math.floor((Math.random()*10000)+1);
+	gameLogger.trace("Creating game: " +conf.Games[currGame].GAME_NAME);
+	var game_id=Math.floor((Math.random()*1000)+1);
 	while(gameIDs[game_id] != 0){
-		game_id=Math.floor((Math.random()*10000)+1);
+		game_id=Math.floor((Math.random()*1000)+1);
 	}
 	gameIDs[game_id] = 1;//this game id is available.
 
@@ -112,7 +113,9 @@ function insertPlayersToRoom(thisGameId, playerList) {
 function hostStartGame(gameId,currGame, game) {
 	gameLogger.trace('Game #' + gameId +' Started.');
 	var room = gameSocket.manager.rooms["/" + gameId];
-	room.currGame = currGame; //the current index of the game of the conf.Games array.
+	gameLogger.trace('room 0: '+gameSocket.manager.rooms["/" + 0]);
+	gameLogger.trace('room of play: '+room);
+	room.currentGame = currGame; //the current index of the game of the conf.Games array.
 	room.gameId = gameId;
 	room.gameOver = false;
 	room.haveWinner = false;
@@ -205,11 +208,11 @@ function sendOffer(data) {
 		this.emit('addRowToHistory',data);
 		console.log('in the room:'+ room);
 
-		var clientNumber = data.recieverId;
-		clientNumber++;
-		console.log(clientNumber);
+		//var clientNumber = data.recieverId;
+		//clientNumber++;
+		//console.log(clientNumber);
 		//what is the receiver socket id
-		var socketId = room[''+clientNumber];//the host is the first in the room
+		var socketId = room[''+data.recieverId];//the host is the first in the room
 
 		console.log('socket id to send to: '+socketId);
 		//get the socket
@@ -337,35 +340,39 @@ function movePlayer(data1){
 	console.log('y: '+data1.y);
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
+	//check if player reached one of the goals
 	for(var i=0;i<room.Goals.length;i++){
-			if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
-				room.gameOver = true;
-				room.playerList[data1.playerId].chips[data1.chip]--;
-				updateWinnerChips(room.playerList[data1.playerId],conf.Games[room.currGame].GameConditions);
-				gameOver(room, conf.Games[room.currGame]);
-			}
-	}
-	if(room.gameOver === false){
-		if(room.board[data1.x][data1.y] === 0){
-			var data = {
-					playerId: data1.playerId,
-					x: data1.x,
-					y: data1.y,
-					chip: data1.chip
-			}
-			room.playerList[data1.playerId].moved = true;
-			room.playerList[data1.playerId].roundsNotMoving = 0;
-			room.board[data1.x][data1.y] = 1;
-			room.board[data1.currX][data1.currY] = 0;
-			updateLocation(room, data1.playerId, data1.x, data1.y);
-			room.playerList[data1.playerId].chips[data1.chip]--;
-			io.sockets.in(data.gameId).emit('movePlayer', data);
+		if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
+			room.gameOver = true;
+			updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+			room.gameOver = true;
 		}
 	}
+	
+	if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
+		var data = {
+				playerId: data1.playerId,
+				x: data1.x,
+				y: data1.y,
+				chip: data1.chip,
+				newChips : room.playerList[data1.playerId].chips
+		}
+		room.playerList[data1.playerId].moved = true;
+		room.playerList[data1.playerId].roundsNotMoving = 0;
+		room.board[data1.x][data1.y] = 1;
+		room.board[data1.currX][data1.currY] = 0;
+		updateLocation(room, data1.playerId, data1.x, data1.y);
+		room.playerList[data1.playerId].chips[data1.chip]--;
+		io.sockets.in(data.gameId).emit('movePlayer', data);
+	}
+	if(room.gameOver){
+		gameOver(room, conf.Games[room.currentGame]);
+	}
+	
 }
 
 
-function updateWinnerChips(x, y, player, gameConditions){
+function updateWinnerChips(room, x, y, player, gameConditions){
 	if(gameConditions.score != undefined){
 		if(gameConditions.score.onReachGoalPlayerView != undefined){
 			player.score += gameConditions.score.onReachGoalPlayerView;
@@ -374,7 +381,7 @@ function updateWinnerChips(x, y, player, gameConditions){
 		var stop = false;
 			for(var i=0;i<room.playerList.length && !stop;i++){
 				if((room.playerList[i].location.x === x) && (room.playerList[i].location.y === y)){
-					room.playerList[i].score += gameConditions.score.onReachGoalPlayerView;
+					room.playerList[i].score += gameConditions.score.onReachGoalGoalView;
 					stop = true;
 				}
 			}
@@ -389,7 +396,7 @@ function updateLocation(room, playerId, x, y){
 	console.log('new x: '+ room.playerList[playerId].location.x + '       new y: '+ room.playerList[playerId].location.y);
 	console.log('player id: '+room.playerList[playerId].id);
 }
-
+/*
 function createChips(){
 	var chips = new Array();	
 	for(var i=0; i<numOfColors;i++){	 
@@ -399,7 +406,7 @@ function createChips(){
 	}
 	return chips;
 }
-
+*/
 function setLocation(p){
 	var location = {
 			x : p.locationX,
@@ -554,17 +561,22 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 }
 
 function gameOver(room, game){
-
+	gameLogger.trace('room 0'+gameSocket.manager.rooms["/" + 0]);
+	gameLogger.trace('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
 		playerId : room.playerList[winner].name
 	}
-	gameLogger.trace('game is over');
+	gameLogger.trace('winner: '+room.playerList[winner].name);
+	gameLogger.trace('score: '+room.playerList[winner].score);
+	gameLogger.trace('');
+	gameLogger.trace('number ofo games'+conf.Games.length);
 	gameIDs[room.gameId] = 0;
+	gameLogger.trace('currentGame: '+room.currentGame);
 	if(room.currentGame < conf.Games.length-1){
 		room.currentGame++;
 		io.sockets.in(room.gameId).emit('Winner', data);
-		setTimeout(function(){ return createRoom(currentGame);}, 5);
+		setTimeout(function(){ return createRoom(room.currentGame);}, 5000);
 	}
 	else{
 		io.sockets.in(room.gameId).emit('noMoreGames', data);
