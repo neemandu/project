@@ -1045,3 +1045,1024 @@
 [2014-03-24 23:00:17.197] [TRACE] gameLogger -    total_num_of_offers -1
 [2014-03-24 23:00:17.197] [TRACE] gameLogger -    can_offer_to 
 [2014-03-24 23:00:17.197] [TRACE] gameLogger - ***********************
+[2014-04-07 14:45:58.557] [DEBUG] gameLogger - Creating game: Game_1
+[2014-04-07 14:45:58.569] [DEBUG] gameLogger - Game #368 was created
+[2014-04-07 14:45:58.574] [DEBUG] gameLogger - player #0 was added to room #368
+[2014-04-07 14:45:58.576] [DEBUG] gameLogger - player #1 was added to room #368
+[2014-04-07 14:45:58.579] [DEBUG] gameLogger - player #2 was added to room #368
+[2014-04-07 14:45:58.582] [DEBUG] gameLogger - Game #368 Started.
+[2014-04-07 14:45:58.584] [DEBUG] gameLogger - room 0: Tdzu0P6aF8lkpWBZAfhi,zGJg62DHZ-ki42MyAfhj,jijYwlJRuMC5-0RlAfhh
+[2014-04-07 14:45:58.586] [DEBUG] gameLogger - room of play: Tdzu0P6aF8lkpWBZAfhi,zGJg62DHZ-ki42MyAfhj,jijYwlJRuMC5-0RlAfhh
+[2014-04-07 14:45:58.589] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.592] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.595] [DEBUG] gameLogger - Server board was created.
+[2014-04-07 14:45:58.601] [DEBUG] gameLogger - player1 id: 0
+[2014-04-07 14:45:58.613] [DEBUG] gameLogger - player1 chips: 5,1,5,1,5
+[2014-04-07 14:45:58.615] [DEBUG] gameLogger - player1 locationX: 5 locationY: 4
+[2014-04-07 14:45:58.617] [DEBUG] gameLogger - player1 score: 85
+[2014-04-07 14:45:58.619] [DEBUG] gameLogger - player1 basic_role: customer
+[2014-04-07 14:45:58.621] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:45:58.633] [DEBUG] gameLogger - player2 id: 1
+[2014-04-07 14:45:58.638] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-04-07 14:45:58.640] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-04-07 14:45:58.642] [DEBUG] gameLogger - player2 score: 115
+[2014-04-07 14:45:58.644] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-04-07 14:45:58.646] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:45:58.651] [DEBUG] gameLogger - player3 id: 2
+[2014-04-07 14:45:58.653] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-04-07 14:45:58.655] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-04-07 14:45:58.658] [DEBUG] gameLogger - player3 score: 100
+[2014-04-07 14:45:58.662] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-04-07 14:45:58.665] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:45:58.669] [DEBUG] gameLogger - numberOfTimesToRepeatRounds: 1
+[2014-04-07 14:45:58.671] [DEBUG] gameLogger - guiboard: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.677] [DEBUG] gameLogger - phase name: phase1
+[2014-04-07 14:45:58.680] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:45:58.686] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:45:58.691] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.692] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.694] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.698] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.700] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.703] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.707] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.709] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.711] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.715] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.719] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.721] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.725] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.727] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.729] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.733] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.736] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.738] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.742] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.744] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.746] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.750] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.752] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.754] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.757] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.760] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.762] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.766] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.768] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.770] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.774] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.776] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.787] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.791] [DEBUG] gameLogger -  
+[2014-04-07 14:45:58.793] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:45:58.795] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:45:58.797] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:45:58.799] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:45:58.801] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:45:58.805] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:45:58.807] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:45:58.810] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:58.812] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:45:58.814] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:45:58.816] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:45:58.818] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:45:58.820] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:45:58.823] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:45:58.825] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:45:58.827] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:45:58.829] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:45:58.831] [DEBUG] gameLogger - 
+[2014-04-07 14:45:58.833] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:45:58.835] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:45:58.839] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:45:58.841] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.844] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:45:58.848] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:45:58.852] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:45:58.855] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:58.860] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:58.863] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:45:58.872] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:45:58.875] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:45:58.877] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:45:58.880] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:45:58.883] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:45:58.886] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:45:58.889] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:45:58.891] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:45:58.894] [DEBUG] gameLogger - 
+[2014-04-07 14:45:58.897] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:45:58.899] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:45:58.903] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:45:58.905] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.909] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:45:58.915] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:45:58.917] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:45:58.921] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:58.925] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:58.933] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:45:58.936] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:45:58.940] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:45:58.942] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:45:58.944] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:45:58.947] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:45:58.949] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:45:58.951] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:45:58.953] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:45:58.956] [DEBUG] gameLogger - 
+[2014-04-07 14:45:58.965] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:45:58.968] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:45:58.971] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:45:58.974] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:45:58.978] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:45:58.980] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:45:58.983] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:45:58.994] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:45:59.005] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 3
+[2014-04-07 14:46:04.018] [DEBUG] gameLogger - phase name: phase2
+[2014-04-07 14:46:04.023] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:46:04.026] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:46:04.033] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.036] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.038] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.042] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.045] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.048] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.052] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.054] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.056] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.061] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.064] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.066] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.071] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.073] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.075] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.079] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.082] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.084] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.089] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.091] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.093] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.097] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.100] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.102] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.106] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.109] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.111] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.116] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.118] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.120] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.125] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.128] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.136] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.141] [DEBUG] gameLogger -  
+[2014-04-07 14:46:04.144] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:04.146] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:04.150] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:46:04.154] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:46:04.157] [DEBUG] gameLogger - 0
+[2014-04-07 14:46:04.163] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:46:04.165] [DEBUG] gameLogger - 0
+[2014-04-07 14:46:04.170] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:46:04.172] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:46:04.175] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.179] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:46:04.181] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:04.183] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:04.186] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:46:04.189] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:04.191] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:04.193] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:04.199] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:04.202] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:04.204] [DEBUG] gameLogger - 
+[2014-04-07 14:46:04.206] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:04.208] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:46:04.210] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:04.213] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:04.216] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:04.218] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:04.221] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:04.235] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.239] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.241] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:46:04.243] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:04.245] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:04.247] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:46:04.249] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:04.251] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:04.254] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:04.256] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:04.265] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:46:04.267] [DEBUG] gameLogger - 
+[2014-04-07 14:46:04.269] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:04.272] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:46:04.274] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:04.276] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:04.282] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:04.297] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:04.301] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:04.303] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.312] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.315] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:46:04.319] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:04.320] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:04.322] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:46:04.324] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:04.327] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:04.328] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:04.331] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:04.333] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:46:04.335] [DEBUG] gameLogger - 
+[2014-04-07 14:46:04.337] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:04.339] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:46:04.341] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:04.343] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:04.346] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:04.349] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:04.351] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:04.352] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:04.355] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3
+[2014-04-07 14:46:34.371] [DEBUG] gameLogger - phase name: phase3
+[2014-04-07 14:46:34.376] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:46:34.380] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:46:34.385] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.388] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.390] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.394] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.397] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.399] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.403] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.405] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.408] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.412] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.414] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.417] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.421] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.423] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.427] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.431] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.433] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.435] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.440] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.442] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.444] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.449] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.451] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.453] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.457] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.459] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.461] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.465] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.467] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.469] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.478] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.480] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.482] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.485] [DEBUG] gameLogger -  
+[2014-04-07 14:46:34.487] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:34.489] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:34.492] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:46:34.495] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:46:34.498] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:46:34.501] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:46:34.503] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:46:34.505] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.508] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:46:34.510] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:34.512] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:34.514] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:46:34.527] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:34.530] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:34.533] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:34.536] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:34.539] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:34.542] [DEBUG] gameLogger - 
+[2014-04-07 14:46:34.544] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:34.547] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:46:34.550] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:46:34.553] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:34.556] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:34.558] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:46:34.560] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:34.563] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.566] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.568] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:46:34.571] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:34.573] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:34.576] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:46:34.579] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:34.583] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:34.585] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:34.588] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:34.590] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:34.592] [DEBUG] gameLogger - 
+[2014-04-07 14:46:34.594] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:34.597] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:46:34.599] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:46:34.601] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:34.604] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:34.606] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:46:34.608] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:34.611] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.614] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.617] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:46:34.619] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:34.621] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:34.623] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:46:34.625] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:34.628] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:34.630] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:34.632] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:34.634] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:34.637] [DEBUG] gameLogger - 
+[2014-04-07 14:46:34.639] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:46:34.641] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:46:34.644] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:46:34.652] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:34.655] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:34.657] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:46:34.659] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:34.661] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:34.668] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 3 round.phases_in_round.length: 3
+[2014-04-07 14:46:34.726] [DEBUG] gameLogger - Round #0no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-04-07 14:46:54.752] [DEBUG] gameLogger - phase name: phase2
+[2014-04-07 14:46:54.756] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:46:54.760] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:46:54.765] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.768] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.771] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.776] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.779] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.781] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.785] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.790] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.799] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.803] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.814] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.817] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.822] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.824] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.826] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.831] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.833] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.835] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.839] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.841] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.843] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.846] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.848] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.851] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.855] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.858] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.861] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.866] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.868] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.870] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.875] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.877] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.879] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.884] [DEBUG] gameLogger -  
+[2014-04-07 14:46:54.886] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:46:54.888] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:46:54.891] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:46:54.893] [DEBUG] gameLogger - 1
+[2014-04-07 14:46:54.895] [DEBUG] gameLogger - 2
+[2014-04-07 14:46:54.897] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:46:54.899] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:46:54.903] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:46:54.905] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:46:54.907] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:54.909] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:46:54.912] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:54.914] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:54.916] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:46:54.919] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:54.921] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:54.924] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:54.931] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:54.933] [DEBUG] gameLogger -    canOfferToList 1,2
+[2014-04-07 14:46:54.936] [DEBUG] gameLogger - 
+[2014-04-07 14:46:54.939] [DEBUG] gameLogger -    RoundNumber 1
+[2014-04-07 14:46:54.941] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:46:54.943] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:54.945] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:54.948] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:54.951] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:54.953] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:54.955] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:54.959] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:54.962] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:46:54.964] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:54.966] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:54.968] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:46:54.971] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:54.973] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:54.976] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:54.978] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:54.981] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:54.985] [DEBUG] gameLogger - 
+[2014-04-07 14:46:54.987] [DEBUG] gameLogger -    RoundNumber 1
+[2014-04-07 14:46:54.990] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:46:54.992] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:54.994] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:54.997] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:54.999] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:55.002] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:55.004] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:55.013] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:55.015] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:46:55.017] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:46:55.020] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:46:55.022] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:46:55.025] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:46:55.027] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:46:55.029] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:46:55.031] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:46:55.033] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:46:55.035] [DEBUG] gameLogger - 
+[2014-04-07 14:46:55.037] [DEBUG] gameLogger -    RoundNumber 1
+[2014-04-07 14:46:55.039] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:46:55.041] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:46:55.043] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:46:55.046] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:46:55.049] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:46:55.051] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:46:55.053] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:46:55.056] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 2
+[2014-04-07 14:48:51.960] [DEBUG] gameLogger - Creating game: Game_1
+[2014-04-07 14:48:51.973] [DEBUG] gameLogger - Game #135 was created
+[2014-04-07 14:48:51.979] [DEBUG] gameLogger - player #0 was added to room #135
+[2014-04-07 14:48:51.984] [DEBUG] gameLogger - player #1 was added to room #135
+[2014-04-07 14:48:51.988] [DEBUG] gameLogger - player #2 was added to room #135
+[2014-04-07 14:48:51.993] [DEBUG] gameLogger - Game #135 Started.
+[2014-04-07 14:48:51.996] [DEBUG] gameLogger - room 0: YNr-fU0ztUIESfy1BH8t,YvuyBhigQCN2-snPBH8u,KLgmV2eFQnH48UdCBH8s
+[2014-04-07 14:48:51.999] [DEBUG] gameLogger - room of play: YNr-fU0ztUIESfy1BH8t,YvuyBhigQCN2-snPBH8u,KLgmV2eFQnH48UdCBH8s
+[2014-04-07 14:48:52.002] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.006] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.011] [DEBUG] gameLogger - Server board was created.
+[2014-04-07 14:48:52.033] [DEBUG] gameLogger - player1 id: 0
+[2014-04-07 14:48:52.037] [DEBUG] gameLogger - player1 chips: 5,1,5,1,5
+[2014-04-07 14:48:52.040] [DEBUG] gameLogger - player1 locationX: 5 locationY: 4
+[2014-04-07 14:48:52.043] [DEBUG] gameLogger - player1 score: 85
+[2014-04-07 14:48:52.046] [DEBUG] gameLogger - player1 basic_role: customer
+[2014-04-07 14:48:52.049] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:48:52.068] [DEBUG] gameLogger - player2 id: 1
+[2014-04-07 14:48:52.071] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-04-07 14:48:52.073] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-04-07 14:48:52.076] [DEBUG] gameLogger - player2 score: 115
+[2014-04-07 14:48:52.079] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-04-07 14:48:52.083] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:48:52.089] [DEBUG] gameLogger - player3 id: 2
+[2014-04-07 14:48:52.091] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-04-07 14:48:52.094] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-04-07 14:48:52.098] [DEBUG] gameLogger - player3 score: 100
+[2014-04-07 14:48:52.100] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-04-07 14:48:52.103] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:48:52.108] [DEBUG] gameLogger - numberOfTimesToRepeatRounds: 1
+[2014-04-07 14:48:52.111] [DEBUG] gameLogger - guiboard: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.117] [DEBUG] gameLogger - phase name: phase1
+[2014-04-07 14:48:52.121] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:48:52.128] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:48:52.134] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.137] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.139] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.145] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.147] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.150] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.156] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.158] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.161] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.166] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.171] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.174] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.179] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.181] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.184] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.189] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.192] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.194] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.199] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.201] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.204] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.209] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.212] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.214] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.219] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.221] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.224] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.228] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.230] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.233] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.237] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.240] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.252] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.258] [DEBUG] gameLogger -  
+[2014-04-07 14:48:52.260] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:52.262] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:52.265] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:48:52.268] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:48:52.270] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:48:52.274] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:48:52.277] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:48:52.279] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.282] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:48:52.284] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:48:52.287] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:52.289] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:48:52.292] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:52.294] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:52.298] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:52.301] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:52.304] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:48:52.306] [DEBUG] gameLogger - 
+[2014-04-07 14:48:52.309] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:52.311] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:48:52.316] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:48:52.319] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.322] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:52.325] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:48:52.327] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:52.329] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.334] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.337] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:48:52.345] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:48:52.347] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:52.350] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:48:52.352] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:52.355] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:52.359] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:52.361] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:52.364] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:48:52.366] [DEBUG] gameLogger - 
+[2014-04-07 14:48:52.369] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:52.372] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:48:52.376] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:48:52.378] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.381] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:52.383] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:48:52.387] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:52.389] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.397] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.402] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:48:52.409] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:48:52.412] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:52.414] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:48:52.417] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:52.422] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:52.424] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:52.426] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:52.439] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:48:52.441] [DEBUG] gameLogger - 
+[2014-04-07 14:48:52.443] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:52.445] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:48:52.447] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:48:52.449] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:52.454] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:52.457] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:48:52.459] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:52.469] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:52.482] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 3
+[2014-04-07 14:48:57.497] [DEBUG] gameLogger - phase name: phase2
+[2014-04-07 14:48:57.502] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:48:57.506] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:48:57.510] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.512] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.515] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.519] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.521] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.523] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.528] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.530] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.533] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.536] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.538] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.541] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.545] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.547] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.550] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.555] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.557] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.560] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.564] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.566] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.568] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.572] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.575] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.577] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.582] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.584] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.587] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.591] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.593] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.596] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.605] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.607] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.610] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.614] [DEBUG] gameLogger -  
+[2014-04-07 14:48:57.616] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:48:57.618] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:48:57.621] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:48:57.624] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:48:57.626] [DEBUG] gameLogger - 0
+[2014-04-07 14:48:57.633] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:48:57.636] [DEBUG] gameLogger - 0
+[2014-04-07 14:48:57.639] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:48:57.642] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:48:57.645] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.649] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:48:57.651] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:48:57.654] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:57.657] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:48:57.660] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:57.662] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:57.665] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:57.668] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:57.670] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:48:57.672] [DEBUG] gameLogger - 
+[2014-04-07 14:48:57.674] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:57.677] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:48:57.680] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:48:57.682] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:57.685] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:57.687] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:48:57.690] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:57.706] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.710] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.713] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:48:57.715] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:48:57.718] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:57.721] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:48:57.723] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:57.726] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:57.729] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:57.731] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:57.734] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:48:57.736] [DEBUG] gameLogger - 
+[2014-04-07 14:48:57.738] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:57.741] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:48:57.743] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:48:57.753] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:57.755] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:57.758] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:48:57.761] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:57.763] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.771] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.775] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:48:57.777] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:48:57.788] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:48:57.790] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:48:57.792] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:48:57.794] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:48:57.796] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:48:57.798] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:48:57.801] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:48:57.805] [DEBUG] gameLogger - 
+[2014-04-07 14:48:57.808] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:48:57.811] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:48:57.817] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:48:57.822] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:48:57.828] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:48:57.842] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:48:57.846] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:48:57.849] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:48:57.854] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3
+[2014-04-07 14:49:27.869] [DEBUG] gameLogger - phase name: phase3
+[2014-04-07 14:49:27.874] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:49:27.878] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:49:27.883] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.886] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.888] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.892] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.894] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.897] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.901] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.903] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.906] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.910] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.912] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.914] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.919] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.921] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.924] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.928] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.930] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.933] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.937] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.940] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.942] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.946] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.948] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.950] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.953] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.955] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.957] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.961] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.963] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.966] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.977] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.979] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.982] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.986] [DEBUG] gameLogger -  
+[2014-04-07 14:49:27.989] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:49:27.991] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:49:27.994] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:49:27.996] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:49:27.999] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:49:28.002] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:49:28.004] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:49:28.006] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.008] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:49:28.011] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:49:28.016] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:49:28.028] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:49:28.030] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:49:28.033] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:49:28.035] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:49:28.037] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:49:28.039] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:49:28.041] [DEBUG] gameLogger - 
+[2014-04-07 14:49:28.044] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:49:28.047] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:49:28.049] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:49:28.052] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:49:28.055] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:49:28.058] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:49:28.060] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:49:28.063] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.066] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.070] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:49:28.072] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:49:28.074] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:49:28.080] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:49:28.082] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:49:28.086] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:49:28.088] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:49:28.091] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:49:28.094] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:49:28.096] [DEBUG] gameLogger - 
+[2014-04-07 14:49:28.099] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:49:28.109] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:49:28.112] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:49:28.114] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:49:28.118] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:49:28.121] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:49:28.125] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:49:28.131] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.136] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.138] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:49:28.140] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:49:28.143] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:49:28.145] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:49:28.146] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:49:28.148] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:49:28.150] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:49:28.153] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:49:28.155] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:49:28.157] [DEBUG] gameLogger - 
+[2014-04-07 14:49:28.158] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:49:28.161] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:49:28.163] [DEBUG] gameLogger -    phaseName movement
+[2014-04-07 14:49:28.166] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:49:28.170] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:49:28.173] [DEBUG] gameLogger -    phaseTime 20000
+[2014-04-07 14:49:28.176] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:49:28.189] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:49:28.194] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 3 round.phases_in_round.length: 3
+[2014-04-07 14:49:28.198] [DEBUG] gameLogger - Round #0no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-04-07 14:51:48.948] [DEBUG] gameLogger - Creating game: Game_1
+[2014-04-07 14:51:48.961] [DEBUG] gameLogger - Game #712 was created
+[2014-04-07 14:51:48.967] [DEBUG] gameLogger - player #0 was added to room #712
+[2014-04-07 14:51:48.971] [DEBUG] gameLogger - player #1 was added to room #712
+[2014-04-07 14:51:48.974] [DEBUG] gameLogger - player #2 was added to room #712
+[2014-04-07 14:51:48.978] [DEBUG] gameLogger - Game #712 Started.
+[2014-04-07 14:51:48.980] [DEBUG] gameLogger - room 0: kMfL-JdgRpY3BH1yBzu1,UVcy9KohPCja6EhlBzu0,SamvABSRXRGKUOCuBzuz
+[2014-04-07 14:51:48.984] [DEBUG] gameLogger - room of play: kMfL-JdgRpY3BH1yBzu1,UVcy9KohPCja6EhlBzu0,SamvABSRXRGKUOCuBzuz
+[2014-04-07 14:51:48.986] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:48.990] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:48.993] [DEBUG] gameLogger - Server board was created.
+[2014-04-07 14:51:49.001] [DEBUG] gameLogger - player1 id: 0
+[2014-04-07 14:51:49.013] [DEBUG] gameLogger - player1 chips: 5,1,5,1,5
+[2014-04-07 14:51:49.015] [DEBUG] gameLogger - player1 locationX: 5 locationY: 4
+[2014-04-07 14:51:49.018] [DEBUG] gameLogger - player1 score: 85
+[2014-04-07 14:51:49.021] [DEBUG] gameLogger - player1 basic_role: customer
+[2014-04-07 14:51:49.023] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:51:49.038] [DEBUG] gameLogger - player2 id: 1
+[2014-04-07 14:51:49.041] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-04-07 14:51:49.047] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-04-07 14:51:49.049] [DEBUG] gameLogger - player2 score: 115
+[2014-04-07 14:51:49.052] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-04-07 14:51:49.054] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:51:49.059] [DEBUG] gameLogger - player3 id: 2
+[2014-04-07 14:51:49.061] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-04-07 14:51:49.063] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-04-07 14:51:49.065] [DEBUG] gameLogger - player3 score: 100
+[2014-04-07 14:51:49.067] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-04-07 14:51:49.069] [DEBUG] gameLogger - ****************************
+[2014-04-07 14:51:49.073] [DEBUG] gameLogger - numberOfTimesToRepeatRounds: 1
+[2014-04-07 14:51:49.075] [DEBUG] gameLogger - guiboard: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:49.081] [DEBUG] gameLogger - phase name: phase1
+[2014-04-07 14:51:49.084] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:51:49.090] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:51:49.095] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.097] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.099] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.103] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.105] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.107] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.112] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.114] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.116] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.119] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.124] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.126] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.130] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.132] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.133] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.137] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.139] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.142] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.146] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.148] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.150] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.153] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.156] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.158] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.163] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.165] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.168] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.172] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.174] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.176] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.180] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.182] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.193] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.197] [DEBUG] gameLogger -  
+[2014-04-07 14:51:49.200] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:49.202] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:49.204] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:51:49.207] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:51:49.209] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:51:49.212] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:51:49.214] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:51:49.217] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.219] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:51:49.221] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:51:49.223] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:49.225] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:51:49.227] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:49.230] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:49.232] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:49.233] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:49.236] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:51:49.238] [DEBUG] gameLogger - 
+[2014-04-07 14:51:49.239] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:49.242] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:51:49.247] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:51:49.250] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:49.253] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:49.256] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:51:49.259] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:49.261] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.266] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.269] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:51:49.277] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:51:49.280] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:49.282] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:51:49.285] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:49.287] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:49.290] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:49.293] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:49.296] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:51:49.299] [DEBUG] gameLogger - 
+[2014-04-07 14:51:49.302] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:49.304] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:51:49.308] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:51:49.313] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:49.315] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:49.318] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:51:49.321] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:49.324] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.330] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.335] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:51:49.341] [DEBUG] gameLogger -    canMove 0
+[2014-04-07 14:51:49.344] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:49.348] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:51:49.350] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:49.352] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:49.354] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:49.358] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:49.361] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:51:49.377] [DEBUG] gameLogger - 
+[2014-04-07 14:51:49.382] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:49.391] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:51:49.405] [DEBUG] gameLogger -    phaseName strategy
+[2014-04-07 14:51:49.408] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:49.411] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:49.413] [DEBUG] gameLogger -    phaseTime 5000
+[2014-04-07 14:51:49.415] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:49.419] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:49.432] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 3
+[2014-04-07 14:51:54.500] [DEBUG] gameLogger - phase name: phase2
+[2014-04-07 14:51:54.502] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-04-07 14:51:54.504] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-04-07 14:51:54.511] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.513] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.516] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.525] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.527] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.530] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.537] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.539] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.540] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.543] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.544] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.546] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.548] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.550] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.551] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.554] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.556] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.559] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.561] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.562] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.564] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.567] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.568] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.570] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.572] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.573] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.574] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.577] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.578] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.579] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.581] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.586] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.588] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.590] [DEBUG] gameLogger -  
+[2014-04-07 14:51:54.592] [DEBUG] gameLogger - ***************************** 
+[2014-04-07 14:51:54.593] [DEBUG] gameLogger - checkActions 
+[2014-04-07 14:51:54.595] [DEBUG] gameLogger - player #0can send offers to:
+[2014-04-07 14:51:54.597] [DEBUG] gameLogger - player #1can send offers to:
+[2014-04-07 14:51:54.598] [DEBUG] gameLogger - 0
+[2014-04-07 14:51:54.602] [DEBUG] gameLogger - player #2can send offers to:
+[2014-04-07 14:51:54.604] [DEBUG] gameLogger - 0
+[2014-04-07 14:51:54.606] [DEBUG] gameLogger - finish building attributes
+[2014-04-07 14:51:54.607] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-04-07 14:51:54.609] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.611] [DEBUG] gameLogger - player1 attributes:
+[2014-04-07 14:51:54.612] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:51:54.613] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:54.615] [DEBUG] gameLogger -    canTransfer 1
+[2014-04-07 14:51:54.617] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:54.619] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:54.621] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:54.622] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:54.624] [DEBUG] gameLogger -    canOfferToList 
+[2014-04-07 14:51:54.625] [DEBUG] gameLogger - 
+[2014-04-07 14:51:54.627] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:54.629] [DEBUG] gameLogger -    playerID 0
+[2014-04-07 14:51:54.630] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:51:54.632] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:54.634] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:54.636] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:51:54.638] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:54.649] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.652] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.654] [DEBUG] gameLogger - player2 attributes:
+[2014-04-07 14:51:54.656] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:51:54.657] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:54.659] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:51:54.667] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:54.669] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:54.671] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:54.672] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:54.674] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:51:54.676] [DEBUG] gameLogger - 
+[2014-04-07 14:51:54.677] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:54.679] [DEBUG] gameLogger -    playerID 1
+[2014-04-07 14:51:54.681] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:51:54.683] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:54.685] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:54.687] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:51:54.689] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:54.691] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.698] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.700] [DEBUG] gameLogger - player3 attributes:
+[2014-04-07 14:51:54.702] [DEBUG] gameLogger -    canMove 1
+[2014-04-07 14:51:54.705] [DEBUG] gameLogger -    canOffer 0
+[2014-04-07 14:51:54.707] [DEBUG] gameLogger -    canTransfer 0
+[2014-04-07 14:51:54.709] [DEBUG] gameLogger -    canSeeChips 1
+[2014-04-07 14:51:54.711] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-04-07 14:51:54.713] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-04-07 14:51:54.716] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-04-07 14:51:54.719] [DEBUG] gameLogger -    canOfferToList 0
+[2014-04-07 14:51:54.721] [DEBUG] gameLogger - 
+[2014-04-07 14:51:54.723] [DEBUG] gameLogger -    RoundNumber 0
+[2014-04-07 14:51:54.725] [DEBUG] gameLogger -    playerID 2
+[2014-04-07 14:51:54.726] [DEBUG] gameLogger -    phaseName communication
+[2014-04-07 14:51:54.729] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-04-07 14:51:54.732] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-04-07 14:51:54.736] [DEBUG] gameLogger -    phaseTime 30000
+[2014-04-07 14:51:54.738] [DEBUG] gameLogger -    Goals 0,0
+[2014-04-07 14:51:54.740] [DEBUG] gameLogger - ***********************
+[2014-04-07 14:51:54.743] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3

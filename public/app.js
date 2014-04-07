@@ -294,7 +294,7 @@ jQuery(function($){
 			App.Player.locations[data.playerId][1] = data.y;
 			App.Player.locatePlayers(data);
 			//var params = {id: data.playerId, score: data.score };
-			//App.Player.updateScore(params);
+			App.Player.updateScore(data.playerId,data.score);
 		},
 	    
         /**
@@ -506,9 +506,7 @@ jQuery(function($){
 					$('#board table tr:eq('+ data.Goals[i][0] +') td:eq('+data.Goals[i][1]+')').html("<img src=" +url+ " alt=goal>");
 				}
 				addGoal =1;
-			}
-			
-			
+			}			
 			//on click board 
 			$('#board table tr').each(function(){
 					 $(this).find('td').each(function(){
@@ -564,7 +562,9 @@ jQuery(function($){
         	{
         		// TODO somthing
 			}
-        	App.Player.updateScore(App.Player.myid,App.Player.score);
+			for(var i=0;i< data.players.length; i++){
+				App.Player.updateScore(i,data.players[i].score);
+			}
 			var func = function(time, j)
 			{
 				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds'+'  '+data.RoundNumber);
@@ -1092,7 +1092,8 @@ jQuery(function($){
     		 */
     		updateScore: function(k,score)
     		{
-    			$('#player'+k+' td:last').html('score:<br> '+ App.players[k].score + score);
+				App.players[k].score = score;
+    			$('#player'+k+' td:last').html('score:<br> '+score);
     		},
     		
     		/**
