@@ -210,7 +210,7 @@ jQuery(function($){
 				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
 				var count =0;
 				while(count<3&&k<App.Player.colors.length){
-					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td class="chipsNum">'+JSON.parse(data.JcolorsToOffer)[k]+'</td>');
+					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td class="chipsNum">'+JSON.parse(data.JcolorsToGet)[k]+'</td>');
 					k++;
 					count++;
 					}
@@ -456,6 +456,8 @@ jQuery(function($){
 
         beginFaze : function(data){
 		   
+		   //stops the blinking phases: 
+        	clearTimeout(App.timeout);
 		   //changing the screen to the game screen
 		   if(App.firstphase==1){
 				App.$gameArea.html(App.$CTtemplateIntroScreen1);
@@ -463,8 +465,7 @@ jQuery(function($){
    		   }
 		   
 		   App.gameId = data.gameId;
-			//stops the blinking phases: 
-        	clearTimeout(App.timeout);
+			
         	$('#phases').html(data.phaseName+' phase');
 			
 			for(var i =0; i<data.colors.length;i++){
@@ -567,7 +568,7 @@ jQuery(function($){
 			}
 			var func = function(time, j)
 			{
-				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds'+'  '+data.RoundNumber);
+				$('#phases').html(data.phaseName+' phase: ' +(j)+' seconds');
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
@@ -936,7 +937,7 @@ jQuery(function($){
 									{
 										CTO = colorsToOffer[colorsNum];
 										CTG = colorsToGet[colorsNum];
-										if( CTO == '' || CTG == '' || (CTO < 0) || (CTG < 0) )
+										if( /*CTO == '' || CTG == '' || */(CTO < 0) || (CTG < 0) )
 											{
 												alert('chips value must be a number greater than 0');
 												return;
