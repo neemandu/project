@@ -186,7 +186,13 @@ function sendOffer(data) {
 		console.log('sender Id: '+data.sentFrom);
 		for(var i=0;i<numOfColors;i++){
 			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
+			if(sum1 === undefined){
+				sum1 = 0;
+			}
 			var sum2 = JSON.parse(data.JcolorsToGet)[i];
+			if(sum2 === undefined){
+				sum2 = 0;
+			}
 			console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
 			if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
 				data.answer = 'no';
@@ -346,19 +352,20 @@ function movePlayer(data1){
 	}
 	
 	if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
+		room.playerList[data1.playerId].chips[data1.chip]--;
+		room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].score, room.conf.Games[room.currentGame].GameConditions.score);
 		var data = {
 				playerId: data1.playerId,
 				x: data1.x,
 				y: data1.y,
 				chip: data1.chip,
-				score : setScore(room.playerList[data1.playerId].score, room.conf.Games[room.currentGame].GameConditions.score)
+				score : room.playerList[data1.playerId].score
 		}
 		room.playerList[data1.playerId].moved = true;
 		room.playerList[data1.playerId].roundsNotMoving = 0;
 		room.board[data1.x][data1.y] = 1;
 		room.board[data1.currX][data1.currY] = 0;
 		updateLocation(room, data1.playerId, data1.x, data1.y);
-		room.playerList[data1.playerId].chips[data1.chip]--;
 		io.sockets.in(data.gameId).emit('movePlayer', data);
 	}
 	if(room.gameOver){

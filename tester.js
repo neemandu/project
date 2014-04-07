@@ -5,12 +5,12 @@ exports.initGame = function(socket, data){
 	var del = "\r\n";
 	var res = "";
 	console.log('tester Server!!!!!');
-	//try{
+	try{
 		var conf = JSON.parse(data);
-	//}
-	//catch(e){
-	//	return "Bad conf file. "+e+del;
-	//}
+	}
+	catch(e){
+		return "Bad conf file. "+e+del;
+	}
 	console.log('configuration file received');
 	
 	if(conf.Global.what_to_do === "createConfig"){
