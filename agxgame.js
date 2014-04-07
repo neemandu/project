@@ -123,7 +123,7 @@ function hostStartGame(gameId,currGame, game) {
 	room.playerList = new Array();
 	room.gameGoal = game.GameConditions.gameGoal;
 	room.endConditions = game.GameConditions.endConditions;
-	room.guiboard = conf.Global.boards[game.Board];
+	room.guiboard =room.conf.Global.boards[game.Board];
 	gameLogger.debug("board: "+room.guiboard);
 	room.board = createServerBoard(game);
 	gameLogger.debug("board: "+room.guiboard);
@@ -332,10 +332,6 @@ function playerJoinGame(data) {
  * @param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
  */
 function movePlayer(data1){
-	var xbigone = data1.x;
-	xbigone++;
-	var ybigone = data1.y;
-	ybigone++;
 	console.log('x: '+data1.x);
 	console.log('currX: '+data1.currX);
 	console.log('y: '+data1.y);
@@ -366,7 +362,8 @@ function movePlayer(data1){
 		io.sockets.in(data.gameId).emit('movePlayer', data);
 	}
 	if(room.gameOver){
-		gameOver(room, conf.Games[room.currentGame]);
+		gameLogger.debug('line 369' );
+		gameOver(room, room.conf.Games[room.currentGame]);
 	}
 	
 }
@@ -573,9 +570,9 @@ function gameOver(room, game){
 	gameLogger.debug('number ofo games'+conf.Games.length);
 	gameIDs[room.gameId] = 0;
 	gameLogger.debug('currentGame: '+room.currentGame);
+	io.sockets.in(room.gameId).emit('Winner', data);
 	if(room.currentGame < conf.Games.length-1){
 		room.currentGame++;
-		io.sockets.in(room.gameId).emit('Winner', data);
 		setTimeout(function(){ return createRoom(room.currentGame);}, 5000);
 	}
 	else{
