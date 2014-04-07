@@ -540,7 +540,7 @@ jQuery(function($){
 			
 			
 			
-        	if(App.Player.canOffer==1/* && $('#addTransaction').find('#addTrans').length === 0*/)
+        	if(App.Player.offerToPlayers.length>0/* && $('#addTransaction').find('#addTrans').length === 0*/)
         	{
 				$('#addTransaction').append('<div id="addTrans" class="operations"><div>');
 			}
