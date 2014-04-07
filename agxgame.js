@@ -361,6 +361,7 @@ function movePlayer(data1){
 				chip: data1.chip,
 				score : room.playerList[data1.playerId].score
 		}
+		gameLogger.debug('score:'+room.playerList[data1.playerId].score);
 		room.playerList[data1.playerId].moved = true;
 		room.playerList[data1.playerId].roundsNotMoving = 0;
 		room.board[data1.x][data1.y] = 1;
