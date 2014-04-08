@@ -264,18 +264,22 @@ function isSumOfOffersLegal(id,room, tmp){
 }
 function setScore(chips, score){
 	var sum = 0;
+	gameLogger.trace('setScore');
+	gameLogger.trace('pointsPerChips = '+score.pointsPerChips);
 	for(var i=0;i<chips.length;i++){
-	console.log('chips['+i+'] = '+chips[i]);
+		gameLogger.trace('chips['+i+'] = '+chips[i]);
 		sum += chips[i];
+		
 	}
 	sum *= score.pointsPerChips;
+	gameLogger.trace('sum = '+sum);
 	return sum
 }
 function ChipScore(chips){
 	var sum = 0;
 	for(var i=0;i<chips.length;i++){
-		console.log('conf.scoreMethod['+i+']: '+conf.scoreMethod[i]);
-		console.log('chips['+i+']: '+chips[i]);
+		gameLogger.trace('conf.scoreMethod['+i+']: '+conf.scoreMethod[i]);
+		gameLogger.trace('chips['+i+']: '+chips[i]);
 		sum =+sum + (+chips[i] * +conf.scoreMethod[i]);
 		console.log('sum: '+sum);
 	}
@@ -353,7 +357,7 @@ function movePlayer(data1){
 	
 	if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
 		room.playerList[data1.playerId].chips[data1.chip]--;
-		room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].score, room.conf.Games[room.currentGame].GameConditions.score);
+		room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
 		var data = {
 				playerId: data1.playerId,
 				x: data1.x,
@@ -361,7 +365,6 @@ function movePlayer(data1){
 				chip: data1.chip,
 				score : room.playerList[data1.playerId].score
 		}
-		gameLogger.debug('score:'+room.playerList[data1.playerId].score);
 		room.playerList[data1.playerId].moved = true;
 		room.playerList[data1.playerId].roundsNotMoving = 0;
 		room.board[data1.x][data1.y] = 1;
@@ -584,7 +587,6 @@ function gameOver(room, game){
 		setTimeout(function(){ return createRoom(room.currentGame);}, 5000);
 	}
 	else{
-		io.sockets.in(room.gameId).emit('noMoreGames', data);
 		gameLogger.debug('NO MORE GAMES');
 	}
 }
