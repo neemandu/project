@@ -174,7 +174,7 @@ function makePlayerAttributes(i, game, player) {
  * @param data msg and other recieverId and gameId.
  */
 function sendOffer(data) {
-	console.log('sendOffer');
+	gameLogger.trace('sendOffer');
 	
 	console.log('game id: '+data.gameId);
 	var tmp =new Array();
@@ -183,7 +183,7 @@ function sendOffer(data) {
 	if(room.playerList[data.recieverId] != undefined){	
 		//validating chips
 		data.answer = 'yes';
-		console.log('sender Id: '+data.sentFrom);
+		gameLogger.trace('sender Id: '+data.sentFrom);
 		for(var i=0;i<numOfColors;i++){
 			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
 			if(sum1 === undefined){
@@ -193,50 +193,36 @@ function sendOffer(data) {
 			if(sum2 === undefined){
 				sum2 = 0;
 			}
-			console.log('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
+			gameLogger.trace('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
 			if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
 				data.answer = 'no';
-				console.log('NO');
+				gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
 				break;
 			}
 			tmp[i] = sum1;
 		}
 		data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
-		console.log('reciever Id: '+data.recieverId);
+		gameLogger.trace('reciever Id: '+data.recieverId);
 	}
 	else{
 		data.answer = 'no';
 	}
 	if(data.answer === 'no'){
-
 		this.emit('recieveMessage',data);
 	}
 	else{
 		this.emit('addRowToHistory',data);
-		console.log('in the room:'+ room);
-
-		//var clientNumber = data.recieverId;
-		//clientNumber++;
-		//console.log(clientNumber);
-		//what is the receiver socket id
-		var socketId = room[''+data.recieverId];//the host is the first in the room
-
-		console.log('socket id to send to: '+socketId);
-		//get the socket
+	
+		var socketId = room[''+data.recieverId];
 		var socket = io.sockets.sockets[socketId];
-
 		if(socket == null){
-			console.log('trying to send message but the #id: '+data.recieverId+' doesnt exist')
+			gameLogger.trace('trying to send offer but the #id: '+data.recieverId+' doesnt exist')
 		}
 		else{
-			console.log('msg: '+data.msg+'to: '+socketId+'from: '+this.id);
 			data.playerId = this.id;
 			socket.emit('recieveMessage', data)
 		}
 	}
-	
-
-//	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 }
 
 
@@ -264,15 +250,10 @@ function isSumOfOffersLegal(id,room, tmp){
 }
 function setScore(chips, score){
 	var sum = 0;
-	gameLogger.trace('setScore');
-	gameLogger.trace('pointsPerChips = '+score.pointsPerChips);
 	for(var i=0;i<chips.length;i++){
-		gameLogger.trace('chips['+i+'] = '+chips[i]);
 		sum += chips[i];
-		
 	}
 	sum *= score.pointsPerChips;
-	gameLogger.trace('sum = '+sum);
 	return sum
 }
 function ChipScore(chips){
@@ -825,11 +806,6 @@ function createServerBoard(game){
  */
 function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	 
-	console.log('');
-	for(var i=0;i<numOfColors;i++){
-		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
-		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
-	}
 	for(var i=0;i<numOfColors;i++){
 		var sum1 = data.player1.colorsToAdd[i];
 		var sum2 = data.player2.colorsToAdd[i];
@@ -840,10 +816,13 @@ function updateChips(data){
 		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum2;
 		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum2;
 	}
-	for(var i=0;i<numOfColors;i++){
-		console.log('#'+data.player1.id+' has: '+room.playerList[data.player1.id].chips[i]+' of color: '+i);
-		console.log('#'+data.player2.id+' has: '+room.playerList[data.player2.id].chips[i]+' of color: '+i);
-	}
+	room.playerList[data.player1.id].score = setScore(room.playerList[data.player1.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
+	room.playerList[data.player2.id].score = setScore(room.playerList[data.player2.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
+	data.player1.chips = room.playerList[data.player1.id].chips;
+	data.player2.chips = room.playerList[data.player2.id].chips;
+	data.player1.score = room.playerList[data.player1.id].score;
+	data.player2.score = room.playerList[data.player2.id].score;
+	
 	var data =
 	{
 			gameId:data.gameId,
