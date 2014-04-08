@@ -256,18 +256,18 @@ jQuery(function($){
 				$('#sendOffer'+data.player1.rowid).parent().html('<font color="green">accepted</font>');
 			}
 	    	
-			var toAdd1 = new Array();
-	    	var toAdd2 = new Array();
-	    	for(var i=0; i<data.player1.colorsToAdd.length; i++)
-	    		{
-	    			toAdd1[i] = data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i];
-	    			toAdd2[i] = -(data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i]);
-	    		}
-	    	var toSend1 = {id: data.player1.id, colorsToAdd: toAdd1};
-	    	var toSend2 = {id: data.player2.id, colorsToAdd: toAdd2};
+	//		var toAdd1 = new Array();
+	 //   	var toAdd2 = new Array();
+	  //  	for(var i=0; i<data.player1.colorsToAdd.length; i++)
+	  //  		{
+	   // 			toAdd1[i] = data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i];
+	   // 			toAdd2[i] = -(data.player1.colorsToAdd[i] - data.player2.colorsToAdd[i]);
+	   // 		}
+	   // 	var toSend1 = {id: data.player1.id, colorsToAdd: toAdd1};
+	   // 	var toSend2 = {id: data.player2.id, colorsToAdd: toAdd2};
 	    	
-	    	App.Player.addChips(toSend1);
-	    	App.Player.addChips(toSend2);
+	    	App.Player.addChips(data.player1);
+	    	App.Player.addChips(data.player2);
 	    	
 	    //	var score1 = {id: data.player1.id, score: data.player1.score};
 	    //	var score2 = {id: data.player2.id, score: data.player2.score};
@@ -1111,8 +1111,8 @@ jQuery(function($){
     	        var myPlayerTable = '#player' + data.id + ' tr';
 				 $(myPlayerTable).each(function(){
 					 $(this).find('#Chips td:odd').each(function(i){
-						 var currChips = parseInt($(this).html()) + parseInt(colors[i]);
-						 $(this).html(currChips);
+						 //var currChips = parseInt($(this).html()) + parseInt(colors[i]);
+						 $(this).html(data.chips[i]);
 					 })
 				 })
     		},
