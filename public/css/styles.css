@@ -136,7 +136,7 @@ td.trails:hover
 .gameMainContent
 {
 	background-color:#EEEEEE;
-	width:900px; 
+	width:950px; 
 	height:1200px;
 	border-radius:10px;
 }
@@ -148,7 +148,7 @@ td.trails:hover
 
 table.topTable
 {
-	width:730px;
+	width:950px;
 	height:450px;
 	/*border:1px solid black;	
 	border-radius:10px;	*/
@@ -172,7 +172,7 @@ tr.upperTable
 
 td.gameBoard
 {
-	width:500px;
+	width:600px;
 	border-style:groove;
 	border-width:2px;
 	border-radius:5px;
@@ -207,23 +207,107 @@ td.playersListHeader
 
 table.downTable
 {
-	width:730px;
-	height:150px;
+	width:100%;
+	border-spacing:0px;
+	border-collapse:separate;
+
+}
+
+.downTable table
+{
+	border: none;
+}
+
+.downTable table td
+{
+	border: none;
+	padding:2px;
+	
+}
+.downTable table tr:first-child td:first-child
+{
+	border: none;
+}
+.downTable table tr:first-child td:last-child
+{
+	border: none;
+}
+.downTable  table tr:last-child td:first-child
+{
+	border: none;
+}
+.downTable table tr:last-child td:last-child
+{
+	border: none;
+}
+
+.downTable tr:first-child td:first-child
+{
+	border-top-left-radius:5px;
+	border-width:2px;
+}
+.downTable tr:first-child td:last-child
+{
+	border-top-right-radius:5px;
+	border-width:2px;
+}
+.downTable tr:last-child td:first-child
+{
+	border-bottom-left-radius:5px;
+	border-width:2px;
+}
+.downTable tr:last-child td:last-child
+{
+	border-bottom-left-radius:5px;
+	border-width:2px;
+}
+
+
+.downTable td:first-child
+{
+	border-left-style:groove;
+	border-left-width:1px;
+	border-left-color:#AAAAAA;
+}
+
+.downTable td:last-child
+{
+	border-right-style:groove;
+	border-right-width:1px;
+	border-right-color:#AAAAAA;
+}
+
+.downTable td
+{
+	border-top-style:groove;
+	border-top-width:1px;
+	border-top-color:#AAAAAA;
+	border-bottom-style:groove;
+	border-bottom-width:1px;
+	border-bottom-color:#AAAAAA;
+	padding:5px;
+}
+
+
+.downDiv
+{
+	width:930px;
+	height:250px;
 	display: block;
 	overflow-y: scroll;
-	/*border-style:groove;
-	border-width:2px;
-	border-radius:5px;
-	border-color:#AAAAAA;*/
+}
+.playersDropDown
+{
+	width:100px;
 }
 
 td.makeGetOffer
 {
-	height:30px;
 	border-style:groove;
 	border-width:2px;
 	border-radius:5px;
 	border-color:#AAAAAA;
+	border-spacing:0px;
 }
 
 table.historyRow

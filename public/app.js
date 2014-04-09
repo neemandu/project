@@ -410,6 +410,33 @@ jQuery(function($){
 			$('#board').html(tablesCode);			
 		},
 		
+		getChipImg : function (loc){
+			//var loc = board[i][j];
+			//console.dir(loc[1]);
+			switch(loc) 
+			{
+			case "purple":
+				return '<img src="Pictures/purpleChip.png" alt="" style="width:100%; height:auto;">'; // purple
+				break;
+			case "green":
+				return '<img src="Pictures/greenChip.png" alt="" style="width:100%; height:auto;">'; // light green
+				break;
+			case "yellow":
+				return '<img src="Pictures/yellowChip.png" alt="" style="width:100%; height:auto;">'; // light yellow
+				break;
+			case "pink":
+				return '<img src="Pictures/pinkChip.png" alt="" style="width:100%; height:auto;">'; // pink
+				break;
+			case "blue":
+				return '<img src="Pictures/lightBlueChip.png" alt="" style="width:100%; height:auto;">'; //light blue
+				break;
+			case "darkblue":
+				return '<img src="Pictures/darkBlueChip.png" alt="" style="width:100%; height:auto;">';
+				break;		
+			default:
+				return "#AAAAAA";
+			}
+		},
 		getColor : function (loc){
 			//var loc = board[i][j];
 			//console.dir(loc[1]);
@@ -470,6 +497,7 @@ jQuery(function($){
 			
 			for(var i =0; i<data.colors.length;i++){
 					App.Player.colors[i] = App.getColor(data.colors[i]);
+					App.Player.chipsImages[i] = App.getChipImg(data.colors[i]);
 			}
 			
         	App.Player.canOffer    = data.players[data.playerID].canOffer;
@@ -850,6 +878,7 @@ jQuery(function($){
 			locations: [],
         	//colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
             colors : [],
+			chipsImages :[],
 			/**
              * A reference to the socket ID of the Host
              */
@@ -861,16 +890,15 @@ jQuery(function($){
             myName: '',
 			
 			onAddTransClick : function(){
-	//			alert(App.Player.currentCount);
-				$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');
-				
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>make an offer to</td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><select id="playersDropDown'+App.Player.currentCount+'"><option value="empty"></option></select></td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>for</td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td>in exchange for:</td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
-				$('#historyRow'+App.Player.currentCount+' tr:first').append('<td><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
+				//alert(App.Player.currentCount);
+				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
+		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%; cursor:pointer;"><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:15%;"><b>Offer to</b><br><select id="playersDropDown'+App.Player.currentCount+'"><option value="empty"></option></select></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:9%;"><img src="Pictures/arrow.png" alt="<->" style="width:100%; height:auto;"></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=15%;"><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
 			
 				//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
 
@@ -880,7 +908,7 @@ jQuery(function($){
 				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
 				var count =0;
 				while(count<3&&k<App.Player.colors.length){
-					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td><input type="number" min="1" style="width:30px;"></td>');
+					$(this).append('<td style="width:30px;">'+App.Player.chipsImages[k]+'</td><td><input type="number" min="1" style="width:30px;"></td>');
 					k++;
 					count++;
 					}
@@ -893,7 +921,7 @@ jQuery(function($){
 				$('#colorsToGet'+ App.Player.currentCount+' tr').each(function(){
 				var count =0;
 				while(count<3&&k<App.Player.colors.length){
-					$(this).append('<td style="background-color:'+  App.Player.colors[k] +'; width:5px;"></td><td><input type="number" min="1" style="width:30px;"></td>');
+					$(this).append('<td style="width:30px;">'+App.Player.chipsImages[k]+'</td><td><input type="number" min="1" style="width:30px;"></td>');
 					k++;
 					count++;
 					}
@@ -904,6 +932,11 @@ jQuery(function($){
                     }
                 }
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
+				$('#removeLine'+App.Player.currentCount).click( function(){
+					var id = this.id[this.id.length-1];//index 
+					$('#historyRow'+id).remove();
+				})
+				
 				$('#sendOffer'+App.Player.currentCount).click( function(){
 								var id = this.id[this.id.length-1];//index 
 								var player = $('#playersDropDown'+id+' option:selected').text();
