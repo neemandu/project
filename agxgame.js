@@ -25,6 +25,26 @@ newRoomsQueue.Queue();
 var admin = false;
 var conf;
 
+var DATABASE = true;
+
+async = require("async");
+
+
+if (DATABASE){
+var presistance  = require('./Presistence');
+async.series([
+              
+              function(callback){
+            	  //presistance.syncDatabase();
+            	  callback();
+              },
+              function(callback){
+            	  presistance.addUser(1);
+              callback();
+              }
+          ]);
+};
+
 
 /**
  * This function is called by index.js to initialize a new game instance.
