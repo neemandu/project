@@ -103,7 +103,7 @@ tr.trails
 td.trails
 {
 	border-style:groove;
-	border-color:#FF7f00;
+	/*border-color:#FF7f00;*/
 	border-width:2px;
 	border-radius:3px; 
 	width:45px;
@@ -189,11 +189,34 @@ td.sideTable
 
 table.playersList
 {
+	border-spacing:0px;
 	border-style:groove;
 	border-width:2px;
 	border-radius:5px;
 	border-color:#AAAAAA;
 	width:100%;
+}
+
+table.playersListNoBorder
+{
+	border:none;
+}
+
+.playersList td
+{
+	border-bottom-style:groove;
+	border-bottom-width:1px;
+	border-bottom-color:#AAAAAA;
+}
+
+.playersList table td
+{
+	border:none;
+}
+
+.playersList tr:last-child td
+{
+	border-bottom: none;
 }
 
 td.playersListHeader
@@ -209,22 +232,37 @@ table.downTable
 {
 	width:100%;
 	border-spacing:0px;
-	border-collapse:separate;
+	/*border-collapse:separate;*/
+	border-style:groove;
+	border-width:2px;
+	border-radius:4px;
+	border-color:#AAAAAA;
 
 }
-
-.downTable table
+.downTable td
 {
-	border: none;
+	border-bottom-style:groove;
+	border-bottom-width:1px;
+	border-bottom-color:#AAAAAA;
+	
+}	
+.downTable tr:last-child td
+{
+	border-bottom:none;
 }
 
 .downTable table td
 {
 	border: none;
+}
+/*
+.downTable table td
+{
+	border: none;
 	padding:2px;
 	
-}
-.downTable table tr:first-child td:first-child
+}*/
+/*.downTable table tr:first-child td:first-child
 {
 	border: none;
 }
@@ -288,7 +326,7 @@ table.downTable
 	padding:5px;
 }
 
-
+*/
 .downDiv
 {
 	width:930px;
@@ -296,6 +334,7 @@ table.downTable
 	display: block;
 	overflow-y: scroll;
 }
+
 .playersDropDown
 {
 	width:100px;
@@ -346,7 +385,7 @@ td.inputTable
 *	style of the offers' squares  ================================================
 */
 .chipsNum{
-	width:30px;
+	width:20px;
 	background-color:white;
 	height:20px;
 }	
@@ -421,26 +460,40 @@ table.player
 	border-color:#AAAAAA;
 	background-color:#EEEEEE;
 	height:30px;
-	width:230px;
+	width:100%;
 }
 
 td.playerIMG
 {
-	width:20px;
+	/*width:25px;
+	height:25px;
 	background-color:#99ccf5;
 	border-style:groove;
 	border-width:2px;
-	border-radius:5px;
-	border-color:#AAAAAA;
+	border-radius:5px;*/
+	/*border-color:#AAAAAA;*/
 }
+.player td
+{
+	height:40px;
+	
+}
+
+.player table td
+{
+	height:20px;
+	background-color: transparent;
+	
+}
+
 td.playerID
 {
-	width:20px;
+/*	width:20px;
 	text-align:center;
 	border-style:groove;
 	border-width:2px;
 	border-radius:5px;
-	border-color:#AAAAAA;
+	border-color:#AAAAAA;*/
 }
 
 td.colorAmount
