@@ -141,6 +141,17 @@ td.trails:hover
 	border-radius:10px;
 }
 
+@font-face
+{
+font-family: myFirstFont;
+src: url('campus_relief.ttf');
+}
+
+gameOver
+{
+font-family:myFirstFont;
+font-size: 42px;
+}
 /*
 * tables styles 	=============================================================
 */

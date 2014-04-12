@@ -180,11 +180,10 @@ jQuery(function($){
 					
 						//$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 						//$('#historyRow'+id).parent().parent().remove();
-						
+
 						var h = $('#historyRow'+id).html();
-						alert(h);
-						$('#historyRow'+id).parent().parent().remove();		
-						
+						$('#historyRow'+id).parent().remove();		
+
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
 						}
@@ -209,7 +208,7 @@ jQuery(function($){
 					//	$('#historyRow'+id).parent().parent().remove();
 						
 						var h = $('#historyRow'+id).html();
-						$('#historyRow'+id).parent().parent().remove();
+						$('#historyRow'+id).parent().remove();
 						
 						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
 					})
@@ -542,29 +541,36 @@ jQuery(function($){
 				for(var i =0; i<data.colors.length;i++){
 					App.Player.colors[i] = App.getColor(data.colors[i]);
 					App.Player.chipsImages[i] = App.getChipImg(data.colors[i]);
+					
 				}
 				App.paintBoard(data.board,data.colors);
-				App.Player.addPlayers(data);	
 				
 				
 				for(var i=0;i<data.Goals.length;i++){
 				for(var j=0;j<data.players.length;j++){
 					if(data.players[j].location.x==data.Goals[i][1] && data.players[j].location.y==data.Goals[i][0]){
 						var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
+						App.Player.playerImages[j]= url;
 						$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
 						data.Goals[i][0]=-1;
 					}
 					else{
 						var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
+						if(App.Player.playerImages[j] == null){
+							App.Player.playerImages[j]= url;
+						}			
 						$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
 					}
+					//alert(App.Player.playerImages[j]);
 				}
 				if(data.Goals[i][0]!=-1){
 					var url = "Pictures/goal.png";
 					$('#board table tr:eq('+ data.Goals[i][1] +') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
 				}
 				
+				App.Player.addPlayers(data);	
 			}
+				
 			
    		   }
 		   else{
@@ -976,6 +982,7 @@ jQuery(function($){
         	//colors : ["rgb(170, 136, 255)","rgb(157, 255, 180)","rgb(248, 255, 157)","rgb(255, 159, 157)","rgb(153, 204, 245)","rgb(85, 136, 177)"],
             colors : [],
 			chipsImages :[],
+			playerImages :[],
 			/**
              * A reference to the socket ID of the Host
              */
@@ -987,8 +994,8 @@ jQuery(function($){
             myName: '',
 			
 			onAddTransClick : function(){
+//				alert($('#downTable').html());
 				$('#downTable').attr("class", "downTable");
-				//alert(App.Player.currentCount);
 				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
 		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%; cursor:pointer;"><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
@@ -1182,8 +1189,7 @@ jQuery(function($){
 					pLoc[1]=data.players[k].location.y;
 					App.Player.locations[k] = pLoc;
 					var url = 'Pictures/'+'flagTroop'+k+'.png';
-					//alert(url);
-					$('#player' + k).find('#playerIMG').html('<img style="weight:auto; height:40px; " src="' +url+ '" alt=image>');
+					$('#player' + k).find('#playerIMG').html('<img style="weight:auto; height:40px; " src="' +App.Player.playerImages[k]+ '" alt=image>');
 					
 					//$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html("<img src=" +url+ " alt=image>");
 
@@ -1198,7 +1204,7 @@ jQuery(function($){
              */
 			locatePlayers : function(data){
 				var url = "Pictures/flagTroop"+data.playerId+".png" ;
-				$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
+				$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html('<img style="width:45px; height:40px;" src=' +App.Player.playerImages[data.playerId]+ ' alt=image>');
 			},
             /**
              * build player html code given his id
@@ -1260,8 +1266,11 @@ jQuery(function($){
     		 */
     		thereIsAWinner: function(data)
     		{
-    				alert('GAME IS OVER ! \n WINNER IS PLAYER: '+ data.playerId);
-    				App.$gameArea.html(App.$CTtemplateIntroScreen);
+				App.firstphase=0;
+    			var winner = '<gameOver> GAME IS OVER ! <br> WINNER IS PLAYER ' + data.playerId + '<gameOver>';
+    			$('.gameMainContent').html(winner);
+    			clearTimeout(App.timeout);
+    			App.timeout = setTimeout(function(){App.$gameArea.html(App.$CTtemplateIntroScreen);}, 15000);
     		},
             /**
              *  Click handler for the Player hitting a word in the word list.
