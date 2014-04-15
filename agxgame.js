@@ -74,7 +74,32 @@ exports.initGame = function(sio, socket){
 exports.runConfig = function(configuration){
 	conf = configuration;
 	numOfColors = conf.Global.Colors.length;
-	createRoom(0);
+	//creating gameID
+	var game_id=Math.floor((Math.random()*1000)+1);
+	while(gameIDs[game_id] != 0){
+		game_id=Math.floor((Math.random()*1000)+1);
+	}
+	gameIDs[game_id] = 1;//this game id is available.
+			
+	gameLogger.debug('Game #'+game_id+' was created');
+	if(gameSocket != undefined){
+	
+		var shouldStartGame = insertPlayersToRoom(game_id);
+		
+		if(shouldStartGame){
+			var room = gameSocket.manager.rooms["/" + game_id];
+			room.gameId = game_id;
+			room.conf = conf;		
+			room.currentGame = 0; //the current index of the game of the conf.Games array.
+			hostStartGame(room);
+		}
+	}
+	else{
+		console.log('no player have said Hello to the Server yet...');
+		return false;
+	}
+	
+	
 }
 
 /* *******************************
@@ -82,28 +107,9 @@ exports.runConfig = function(configuration){
  *       HOST FUNCTIONS        *
  *                             *
  ******************************* */
-function createRoom(currGame) {
-	gameLogger.debug("Creating game: " +conf.Games[currGame].GAME_NAME);
-	var game_id=Math.floor((Math.random()*1000)+1);
-	while(gameIDs[game_id] != 0){
-		game_id=Math.floor((Math.random()*1000)+1);
-	}
-	gameIDs[game_id] = 1;//this game id is available.
-
-	console.log('createRoom');
-	// Create a unique Socket.IO Room
-	console.log('game id: '+game_id);
-	
-	gameLogger.debug('Game #'+game_id+' was created');
-
-	var shouldStartGame = insertPlayersToRoom(game_id, conf.Global.playerList);
-	
-	if(shouldStartGame){
-		hostStartGame(game_id, currGame, conf.Games[currGame]);
-	}
-};
 //joining the players to the room
-function insertPlayersToRoom(thisGameId, playerList) {
+function insertPlayersToRoom(thisGameId) {
+	var playerList = conf.Global.playerList;
 	console.log('Inserting Players Into The Room');
 	var sock;
 	if(gameSocket != undefined){
@@ -129,15 +135,10 @@ function insertPlayersToRoom(thisGameId, playerList) {
 		return false;
 	}
 };
-
-function hostStartGame(gameId,currGame, game) {
-	gameLogger.debug('Game #' + gameId +' Started.');
-	var room = gameSocket.manager.rooms["/" + gameId];
-	gameLogger.debug('room 0: '+gameSocket.manager.rooms["/" + 0]);
-	gameLogger.debug('room of play: '+room);
-	room.conf = conf;
-	room.currentGame = currGame; //the current index of the game of the conf.Games array.
-	room.gameId = gameId;
+function hostStartGame(room) {
+	
+	var game = room.conf.Games[room.currentGame];
+	gameLogger.debug("Starting game: " +room.conf.Games[room.currentGame].GAME_NAME);
 	room.gameOver = false;
 	room.haveWinner = false;
 	room.playerList = new Array();
@@ -167,7 +168,7 @@ function hostStartGame(gameId,currGame, game) {
 		gameLogger.debug(player.name+' basic_role: '+room.playerList[i].basic_role);
 		gameLogger.debug('****************************');
 	}
-
+	
 	beginRounds(room, game);
 	
 	/*****************************************/
@@ -214,14 +215,18 @@ function sendOffer(data) {
 				sum2 = 0;
 			}
 			gameLogger.trace('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
-			if((sum1 > room.playerList[data.sentFrom].chips[i]) || (sum2 > room.playerList[data.recieverId].chips[i])){
-				data.answer = 'no';
-				gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
-				break;
+			if(sum1 > room.playerList[data.sentFrom].chips[i]){
+				if(room.playerList[data.sentFrom].canSeeChips === 1){
+					if(sum2 > room.playerList[data.recieverId].chips[i]){
+						data.answer = 'no';
+						gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
+						break;
+					}
+				}
 			}
 			tmp[i] = sum1;
 		}
-		data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
+		//data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
 		gameLogger.trace('reciever Id: '+data.recieverId);
 	}
 	else{
@@ -311,10 +316,13 @@ function playerJoinGame(data) {
 			//join the current open room.
 			sock.join(currRoom.toString());
 			
-			data.playerId = room.length - 1;//minus the host. this player is the last in the room.
+			data.playerId = room.length - 1;//this player is the last in the room.
 
 			console.log('Player ' + data.playerId + ' joined the game');
 
+			if(data.agent === true){
+				return 200;
+			}
 			// Emit an event notifying the clients that the player has joined the room.
 			sock.emit('playerJoinedRoom', data);
 //			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
@@ -331,7 +339,11 @@ function playerJoinGame(data) {
 		data.playerId = 0;//minus the host. this player is the last in the room.
 
 		console.log('Player ' + data.playerId + ' joined the game');
-
+		
+		if(data.agent === true){
+				return 200;
+		}
+		
 		// Emit an event notifying the clients that the player has joined the room.
 		sock.emit('playerJoinedRoom', data);
 	}
@@ -477,6 +489,14 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		var round = game.rounds.rounds_defenitions[room.roundNumber];
 		console.log('phase name: '+round.phases_in_round[phaseIndex]);
 		gameLogger.debug('phase name: '+round.phases_in_round[phaseIndex]);
+		gameLogger.debug('roundNumber : '+room.roundNumber);
+		gameLogger.debug('phaseTime : '+game.phases[round.phases_in_round[phaseIndex]].name);
+		gameLogger.debug('board : '+room.guiboard);
+		gameLogger.debug('players : '+room.playerList);
+		gameLogger.debug('phaseTime : '+game.phases[round.phases_in_round[phaseIndex]].time);
+		gameLogger.debug('Goals : '+room.Goals);
+		gameLogger.debug('colors : '+conf.Global.Colors);
+		gameLogger.debug('gameId : '+room.gameId);
 		
 		clearPlayersAttributes(room);
 		buildPlayersAttributs(round.phases_in_round[phaseIndex], round, room, game.roles, game.phases);
@@ -489,6 +509,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		deleteFormerOffers(room);
 		
 		var data = {
+					cg : room.currentGame,
 					RoundNumber : room.roundNumber,
 					phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
 					board : room.guiboard,
@@ -498,10 +519,10 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 					colors : conf.Global.Colors,
 					gameId : room.gameId
 				}
-				
+
 				
 		for(var i=0; i<room.playerList.length; i++){
-			data.playerID = i;
+			data.playerID = room.playerList[i].id;
 				
 			gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
@@ -574,21 +595,21 @@ function gameOver(room, game){
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
-		playerId : room.playerList[winner].name
+		playerId : room.playerList[winner].id
 	}
 	gameLogger.debug('winner: '+room.playerList[winner].name);
 	gameLogger.debug('score: '+room.playerList[winner].score);
 	gameLogger.debug('');
-	gameLogger.debug('number ofo games'+conf.Games.length);
-	gameIDs[room.gameId] = 0;
+	gameLogger.debug('number of games'+conf.Games.length);
 	gameLogger.debug('currentGame: '+room.currentGame);
 	io.sockets.in(room.gameId).emit('Winner', data);
 	if(room.currentGame < conf.Games.length-1){
 		room.currentGame++;
-		setTimeout(function(){ return createRoom(room.currentGame);}, 5000);
+		setTimeout(function(){ return hostStartGame(room);}, 5000);
 	}
 	else{
 		gameLogger.debug('NO MORE GAMES');
+		gameIDs[room.gameId] = 0;
 	}
 }
 
@@ -658,13 +679,17 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 			room.playerList[i].roles.push(room.playerList[i].basic_role[j]);
 			checkActions(room.playerList[i], gameRoles[room.playerList[i].basic_role[j]]);	
 		}
+	}
 		//going through all round's roles
-		for(var j=0;j<round.players_roles[room.playerList[i].name].role.length;j++){
-			room.playerList[i].roles.push(round.players_roles[room.playerList[i].name].role[j]);
-			checkActions(room.playerList[i], gameRoles[round.players_roles[room.playerList[i].name].role[j]]);	
+	for(var i=0;i<round.players_roles.length;i++){
+		for(var j=0;j<round.players_roles[i].role.length;j++){
+			room.playerList[i].roles.push(round.players_roles[i].role[j]);
+			checkActions(room.playerList[i], gameRoles[round.players_roles[i].role[j]]);	
 		}
+	}
+	for(var i=0;i < round.players_roles.length;i++){
 		//add additional actions from round
-		checkActions(room.playerList[i], round.players_roles[room.playerList[i].name].additional_actions);
+		checkActions(room.playerList[i], round.players_roles[i].additional_actions);
 		//going through all phase's roles
 		checkActions(room.playerList[i], phases[phaseName].actions);	
 	}
@@ -825,19 +850,29 @@ function createServerBoard(game){
  * @param player2 the sender player
  */
 function updateChips(data){
-	var room = gameSocket.manager.rooms["/" + data.gameId];	 
+	var room = gameSocket.manager.rooms["/" + data.gameId];	
+	
 	for(var i=0;i<numOfColors;i++){
 		var sum1 = data.player1.colorsToAdd[i];
 		var sum2 = data.player2.colorsToAdd[i];
-		console.log('sum1: '+sum1);
-		console.log('sum2: '+sum2);
+		gameLogger.trace('sum1: '+sum1);
+		gameLogger.trace('sum2: '+sum2);
+		gameLogger.trace('before');
 		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum1;
+		gameLogger.trace('pl 1 chips['+i+']: '+room.playerList[data.player1.id].chips[i]);
 		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum1;
+		gameLogger.trace('pl 2 chips['+i+']: '+room.playerList[data.player2.id].chips[i]);
+		gameLogger.trace('after');
 		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum2;
+		gameLogger.trace('pl 1 chips['+i+']: '+room.playerList[data.player1.id].chips[i]);
 		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum2;
+		gameLogger.trace('pl 2 chips['+i+']: '+room.playerList[data.player2.id].chips[i]);
 	}
+	
 	room.playerList[data.player1.id].score = setScore(room.playerList[data.player1.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
 	room.playerList[data.player2.id].score = setScore(room.playerList[data.player2.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
+	gameLogger.trace('pl SCORE: '+room.playerList[data.player1.id].score);
+	gameLogger.trace('p2 SCORE: '+room.playerList[data.player2.id].score);
 	data.player1.chips = room.playerList[data.player1.id].chips;
 	data.player2.chips = room.playerList[data.player2.id].chips;
 	data.player1.score = room.playerList[data.player1.id].score;
@@ -860,5 +895,34 @@ function rejectOffer(data){
 			rowid : data.rowid
 	}
 	socket.emit('rejectOffer',send);
+}
+
+exports.getPlayers = function(pl){
+	var room = gameSocket.manager.rooms["/" + 0];	
+	for(var i=0;i<pl.length;i++){
+		if(pl[i] >= room.length){
+		console.log('inside!!!!!!!1');
+			return false;
+		}
+	}
+	return true;
+}
+
+exports.sendOffer = function(data){
+	
+}
+exports.movePlayer = function(data){
+	
+}
+exports.joinGame = function(data){
+//	try{
+	return playerJoinGame(data);
+//	}
+	//catch(e){
+	 //return 700;
+	//}
+}
+exports.rejectOffer = function(data){
+	
 }
 
