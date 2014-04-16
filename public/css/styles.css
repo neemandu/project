@@ -396,9 +396,10 @@ td.inputTable
 *	style of the offers' squares  ================================================
 */
 .chipsNum{
-	width:20px;
+	width:30px;
 	background-color:white;
 	height:20px;
+	background-color: transparent;
 }	
 td.purpleOfferSquare
 {

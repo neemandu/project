@@ -178,18 +178,21 @@ jQuery(function($){
 						
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
 					
+					
+					
 						//$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 						//$('#historyRow'+id).parent().parent().remove();
 
-						var h = $('#historyRow'+id).html();
+						var h = $('#historyRow'+id).parent().html();
 						$('#historyRow'+id).parent().remove();		
 
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
 						}
 						
-						$('#histTable').prepend(h);
+						
 						$('#histTable').attr("class", "downTable");
+						$('#histTable').prepend(h);
 						
 					})
 					
@@ -201,16 +204,22 @@ jQuery(function($){
 						//p++;
 						var player1 = {id :p, gameId : App.gameId, rowid : id};	
 						IO.socket.emit('rejectOffer',player1);
-						$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
+					//	$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
 					
 					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 					//	$('#historyRow'+id).parent().parent().remove();
 						
-						var h = $('#historyRow'+id).html();
+						var h = $('#historyRow'+id).parent().html();
 						$('#historyRow'+id).parent().remove();
 						
-						$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+id+'" class="historyRow">'+h+'</tabble></td></tr>');
+						if($('#downTable tr').length == 0){
+							$('#downTable').attr("class", "playersListNoBorder");
+						}
+						
+						
+						$('#histTable').attr("class", "downTable");
+						$('#histTable').prepend(h);
 					})
 					/*
 					 * until here.
@@ -253,14 +262,21 @@ jQuery(function($){
 					$(this).parent().attr('class','chipsNum');
 					$(this).parent().html($(this).val());
 			})
-			$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
+		//	$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
 			$('#playersDropDown'+data.rowid).parent().html($('#playersDropDown'+data.rowid).val());
 			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="red">waiting for respond</font>');
-
-			var h = $('#historyRow'+data.rowid).html();
-			$('#historyRow'+data.rowid).parent().parent().remove();
+		//	$('#historyRow'+data.rowid+' tr:eq(0) td:eq(0)').html('');
 			
-			$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
+			var h = $('#historyRow'+data.rowid).parent().html();
+			$('#historyRow'+data.rowid).parent().remove();
+			
+			if($('#downTable tr').length == 0){
+				$('#downTable').attr("class", "playersListNoBorder");
+			}
+			
+			$('#histTable').attr("class", "downTable");
+			$('#histTable').prepend(h);
+			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
 					
 		},
 		
@@ -294,7 +310,7 @@ jQuery(function($){
 	    //	var score2 = {id: data.player2.id, score: data.player2.score};
 	    	
 	    	App.Player.updateScore(data.player1.id,data.player1.score);
-	    	App.Player.updateScore(data.player2.id,data.player1.score);
+	    	App.Player.updateScore(data.player2.id,data.player2.score);
 	    },
 	
 		movePlayer : function(data){
@@ -594,7 +610,8 @@ jQuery(function($){
 					}
 			   }
 		   }
-
+			
+			
 		//   if($('#downTable tr').length == 0){
 		   
 				$('#downTable').attr("class", "playersListNoBorder");
@@ -678,15 +695,15 @@ jQuery(function($){
         		$('#downTable').html('');
         		$('#addTransaction').html('');
 				//Remove unresponded offers:
-				$('#histTable tr').each(
-					function()
-					{
-						var tr = $(this).find('td:last').children().children().html();
-						if(tr === 'waiting for respond')
-							$(this).remove();
-					})
     		}
 			
+			$('#histTable').each(
+				function()
+				{
+					var td = $(this).find('td:last').children().html();
+					if(td === '<font color="red">waiting for respond</font>')
+						$(this).remove();
+				})
 						
         	if(App.Player.canTransfer)
         	{
