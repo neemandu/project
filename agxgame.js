@@ -1,5 +1,6 @@
 //importing loggers
 var log = require('./index');
+var net = require('net');
 var connectionLogger = log.connectionLogger;
 var gameLogger = log.gameLogger;
 var winnersLogger = log.winnerLogger;
@@ -14,7 +15,7 @@ for(var i=1;i<=1000;i++){
 }
 var io;
 var gameSocket;
-var socketIdPair = [];
+var agents = [];
 var idSocketPair = [];
 var idRoomPair ={};
 var numOfColors = 6;
@@ -24,6 +25,8 @@ var newRoomsQueue = require('./Queue');
 newRoomsQueue.Queue();
 var admin = false;
 var conf;
+
+var OK = 200;
 
 var DATABASE = true;
 
@@ -107,11 +110,24 @@ exports.runConfig = function(configuration){
  *       HOST FUNCTIONS        *
  *                             *
  ******************************* */
+ function addAgent(data){
+	console.log('addAgent');
+	agents[data.ID] = data;
+	for(i in agents) {
+		if (agents.hasOwnProperty(i)) {
+			console.log (i, agents[i].ID);
+		}
+	}
+	return OK;
+}
+ 
+ 
+ 
 //joining the players to the room
 function insertPlayersToRoom(thisGameId) {
 	var playerList = conf.Global.playerList;
+	var agentList = conf.Global.agentList;
 	console.log('Inserting Players Into The Room');
-	var sock;
 	if(gameSocket != undefined){
 		var room = gameSocket.manager.rooms["/" + 0];
 		for(var i=0;i<playerList.length;i++){
@@ -120,6 +136,7 @@ function insertPlayersToRoom(thisGameId) {
 			if(socket === undefined){
 				console.log('player #'+playerList[i]+' does not exist');
 				gameLogger.debug('player #'+playerList[i]+' does not exist');
+				return false;
 			}
 			else{
 				socket.join(thisGameId.toString()); 
@@ -127,7 +144,14 @@ function insertPlayersToRoom(thisGameId) {
 				gameLogger.debug('player #'+playerList[i]+' was added to room #'+thisGameId.toString());
 			}
 		}
-		console.log("Finished inserting players to the room");
+		for(var i=0;i<agentList.length;i++){
+			if(agents[agentList[i]] === undefined){
+				console.log('agent #'+agentList[i]+' does not exist');
+				gameLogger.debug('agent #'+agentList[i]+' does not exist');
+				return false;
+			}
+		}
+		console.log("Finished entering players to the room");
 		return true;
 	}
 	else{
@@ -147,6 +171,7 @@ function hostStartGame(room) {
 	room.guiboard =room.conf.Global.boards[game.Board];
 	gameLogger.debug("board: "+room.guiboard);
 	room.board = createServerBoard(game);
+	room.agentsIDs = room.conf.Global.agentList;
 	gameLogger.debug("board: "+room.guiboard);
 	gameLogger.debug('Server board was created.');
 //	
@@ -155,9 +180,16 @@ function hostStartGame(room) {
 	/**
 	 * create players data:
 	 */
-	for (var i = 0; i < game.players.length; i++)
+	for (var i = 0; i < room.conf.Global.playerList.length; i++)
 	{ 
-		var player = makePlayerAttributes(i, game, game.players[i]);
+		var p = findPlayer(game.players, room.conf.Global.playerList[i]);
+		var player = makePlayerAttributes(game, p);
+		player.agent = false;
+		/*
+		var socketId = room[i];
+		var socket = io.sockets.sockets[socketId];
+		player.socket = socket;
+		*/
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
@@ -168,21 +200,64 @@ function hostStartGame(room) {
 		gameLogger.debug(player.name+' basic_role: '+room.playerList[i].basic_role);
 		gameLogger.debug('****************************');
 	}
-	
+	var l = room.conf.Global.playerList.length;
+	//joining all agents.
+	for (var i = l; i < l + room.conf.Global.agentList.length; i++)
+	{ 
+		var p = findPlayer(game.agents, room.conf.Global.agentList[i-l]);
+		var player = makeAgentAttributes(game, p);
+		room.board[player.location.x][player.location.y] = 1;
+		room.playerList[i] = player;
+		room.playerList[i].offer = [];
+		gameLogger.debug(player.name+' id: '+room.playerList[i].id);
+		gameLogger.debug(player.name+' chips: '+room.playerList[i].chips);
+		gameLogger.debug(player.name+' locationX: '+room.playerList[i].location.x+' locationY: '+room.playerList[i].location.y);
+		gameLogger.debug(player.name+' score: '+room.playerList[i].score);
+		gameLogger.debug(player.name+' basic_role: '+room.playerList[i].basic_role);
+		gameLogger.debug('is agent: '+room.playerList[i].agent);
+		gameLogger.debug('****************************');
+	}
+	gameLogger.debug('###########################');
 	beginRounds(room, game);
 	
 	/*****************************************/
 	
 };
 
-function makePlayerAttributes(i, game, player) {
+function findPlayer(pl, id) {
+	for(var i=0;i<pl.length; i++){
+		if(pl[i].id === id){
+			return pl[i];
+		}
+	}
+}
+function findPlayerInd(pl, id) {
+	console.log('findPlayerInd');
+	for(var i=0;i<pl.length; i++){
+		if(pl[i].id === id){
+			console.log('findPlayerInd FOUND!');
+			console.log('index: '+i);
+			return i;
+		}
+	}
+}
+function makePlayerAttributes(game, player) {
 	var p = {};
-	p.id = i;
+	p.id = player.id;
 	p.chips = player.chips;
 	p.location = setLocation(player);
 	p.basic_role =  player.basic_role;
 	p.name = player.name;
 	p.score = setScore(p.chips, game.GameConditions.score);
+	p.agent = false;
+	return p;
+}
+function makeAgentAttributes(game, player) {
+	var p = makePlayerAttributes(game, player);
+	p.agent = true;
+	p.listening_port = player.listening_port;
+	p.IP = player.IP;
+	p.specialID = player.specialID;
 	return p;
 }
 /* *****************************
@@ -233,20 +308,26 @@ function sendOffer(data) {
 		data.answer = 'no';
 	}
 	if(data.answer === 'no'){
-		this.emit('recieveMessage',data);
+		sendMsg(room, data.sentFrom, 'recieveMessage', data);
+	//	this.emit('recieveMessage',data);
 	}
 	else{
-		this.emit('addRowToHistory',data);
-	
-		var socketId = room[''+data.recieverId];
+		sendMsg(room, data.sentFrom, 'addRowToHistory', data);
+		//this.emit('addRowToHistory',data);
+		data.playerId = this.id;
+		sendMsg(room, data.recieverId, 'recieveMessage', data);
+/*	
+	var socketId = room[''+data.recieverId];
 		var socket = io.sockets.sockets[socketId];
 		if(socket == null){
 			gameLogger.trace('trying to send offer but the #id: '+data.recieverId+' doesnt exist')
 		}
 		else{
 			data.playerId = this.id;
+			
 			socket.emit('recieveMessage', data)
 		}
+		*/
 	}
 }
 
@@ -320,9 +401,6 @@ function playerJoinGame(data) {
 
 			console.log('Player ' + data.playerId + ' joined the game');
 
-			if(data.agent === true){
-				return 200;
-			}
 			// Emit an event notifying the clients that the player has joined the room.
 			sock.emit('playerJoinedRoom', data);
 //			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
@@ -339,10 +417,6 @@ function playerJoinGame(data) {
 		data.playerId = 0;//minus the host. this player is the last in the room.
 
 		console.log('Player ' + data.playerId + ' joined the game');
-		
-		if(data.agent === true){
-				return 200;
-		}
 		
 		// Emit an event notifying the clients that the player has joined the room.
 		sock.emit('playerJoinedRoom', data);
@@ -361,35 +435,39 @@ function movePlayer(data1){
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
 	//check if player reached one of the goals
-	for(var i=0;i<room.Goals.length;i++){
-		if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
-			room.gameOver = true;
-			updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+	if(room != undefined){
+		for(var i=0;i<room.Goals.length;i++){
+			if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
+				room.gameOver = true;
+				updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+			}
+		}
+		
+		if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
+			room.playerList[data1.playerId].chips[data1.chip]--;
+			room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
+			var data = {
+					playerId: data1.playerId,
+					x: data1.x,
+					y: data1.y,
+					chip: data1.chip,
+					score : room.playerList[data1.playerId].score
+			}
+			room.playerList[data1.playerId].moved = true;
+			room.playerList[data1.playerId].roundsNotMoving = 0;
+			room.board[data1.x][data1.y] = 1;
+			room.board[data1.currX][data1.currY] = 0;
+			updateLocation(room, data1.playerId, data1.x, data1.y);
+			for(var i=0;i<room.playerList.length;i++){
+				sendMsg(room, i, 'movePlayer', data);
+			}
+		//	io.sockets.in(data.gameId).emit('movePlayer', data);
+		}
+		if(room.gameOver){
+			gameLogger.debug('line 369' );
+			gameOver(room, room.conf.Games[room.currentGame]);
 		}
 	}
-	
-	if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
-		room.playerList[data1.playerId].chips[data1.chip]--;
-		room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
-		var data = {
-				playerId: data1.playerId,
-				x: data1.x,
-				y: data1.y,
-				chip: data1.chip,
-				score : room.playerList[data1.playerId].score
-		}
-		room.playerList[data1.playerId].moved = true;
-		room.playerList[data1.playerId].roundsNotMoving = 0;
-		room.board[data1.x][data1.y] = 1;
-		room.board[data1.currX][data1.currY] = 0;
-		updateLocation(room, data1.playerId, data1.x, data1.y);
-		io.sockets.in(data.gameId).emit('movePlayer', data);
-	}
-	if(room.gameOver){
-		gameLogger.debug('line 369' );
-		gameOver(room, room.conf.Games[room.currentGame]);
-	}
-	
 }
 
 
@@ -460,10 +538,13 @@ function getPlayerId(room,socket){
  */
 function playerRestart(data) {
 	// console.log('Player: ' + data.playerName + ' ready for new game.');
-
+	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	// Emit the player's data back to the clients in the game room.
 	data.playerId = this.id;
-	io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
+	for(var i=0;i<room.playerList.length;i++){
+		sendMsg(room, i, 'playerJoinedRoom', data);
+	}
+	//io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 }
 
 /* *************************
@@ -544,10 +625,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			gameLogger.debug('   Goals '+data.Goals);
 			gameLogger.debug('***********************');
 			
-			
-			var socketId = room[i];
-			var socket = io.sockets.sockets[socketId];
-			socket.emit('beginFaze',data);
+			sendMsg(room, i, 'beginFaze', data);
 		}
 		var newPhaseIndex = phaseIndex;
 		newPhaseIndex++;
@@ -589,7 +667,43 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		}
 	}
 }
+function sendMsg(room, id, funcName, data){
+	var player = room.playerList[id];
+	console.log('player.agent: '+player.agent);
+	console.log('funcName: '+funcName);
+	console.log('data: '+data);
+	if(player.agent === false){
+		console.log('id' + id);
+		var socketId = room[id];
+		var socket = io.sockets.sockets[socketId];
+		console.log('socket' + socketId);
+		socket.emit(funcName, data);
+	}
+	else if(player.agent === true){
+		console.log('port: '+player.listening_port);
+		console.log('ip: '+player.IP);
+		var client = net.connect({port: player.listening_port},{host: player.IP},
 
+			function() { //'connect' listener
+
+				console.log('client connected');
+				data = JSON.stringify(data);
+				client.write(data);
+
+			});
+			
+		client.on('data', function(data) {
+			console.log(data.toString());
+			client.end();
+
+		});
+		
+		client.on('end', function() {
+			console.log('client disconnected');
+		});
+	}
+
+}
 function gameOver(room, game){
 	gameLogger.debug('room 0'+gameSocket.manager.rooms["/" + 0]);
 	gameLogger.debug('game is over');
@@ -602,14 +716,21 @@ function gameOver(room, game){
 	gameLogger.debug('');
 	gameLogger.debug('number of games'+conf.Games.length);
 	gameLogger.debug('currentGame: '+room.currentGame);
-	io.sockets.in(room.gameId).emit('Winner', data);
+	for(var i=0;i<room.playerList.length;i++){
+		sendMsg(room, i, 'Winner', data);
+	}
+	//io.sockets.in(room.gameId).emit('Winner', data);
 	if(room.currentGame < conf.Games.length-1){
 		room.currentGame++;
 		setTimeout(function(){ return hostStartGame(room);}, 5000);
 	}
 	else{
+		gameSocket.manager.rooms["/" + room.gameId] = undefined;
 		gameLogger.debug('NO MORE GAMES');
 		gameIDs[room.gameId] = 0;
+		for(var i=0; i<room.agentsIDs.length; i++){
+			agents[room.agentsIDs[i]] = undefined;
+		}	
 	}
 }
 
@@ -672,31 +793,44 @@ function clearPlayersAttributes(room){
 function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 	console.log('buildPlayersAttributs');
 	gameLogger.debug('buildPlayersAttributs');
-	
 	for(var i=0;i<room.playerList.length;i++){
 		//going through all basic roles
-		for(var j=0;j<room.playerList[i].basic_role.length;j++){
-			room.playerList[i].roles.push(room.playerList[i].basic_role[j]);
-			checkActions(room.playerList[i], gameRoles[room.playerList[i].basic_role[j]]);	
+		if(room.playerList[i].basic_role != undefined){
+			for(var j=0;j<room.playerList[i].basic_role.length;j++){
+				room.playerList[i].roles.push(room.playerList[i].basic_role[j]);
+				checkActions(room.playerList[i], gameRoles[room.playerList[i].basic_role[j]]);	
+			}
 		}
 	}
-		//going through all round's roles
+		//going through all round's roles and additional_actions
 	for(var i=0;i<round.players_roles.length;i++){
-		for(var j=0;j<round.players_roles[i].role.length;j++){
-			room.playerList[i].roles.push(round.players_roles[i].role[j]);
-			checkActions(room.playerList[i], gameRoles[round.players_roles[i].role[j]]);	
+		var index = findPlayerInd(room.playerList, round.players_roles[i].id);
+		if(round.players_roles[i].role != undefined){
+			for(var j=0;j<round.players_roles[i].role.length;j++){
+				room.playerList[index].roles.push(round.players_roles[i].role[j]);
+				checkActions(room.playerList[index], gameRoles[round.players_roles[i].role[j]]);	
+			}
+		}
+		if(round.players_roles[i].additional_actions != undefined){
+			checkActions(room.playerList[index], round.players_roles[i].additional_actions);
 		}
 	}
-	for(var i=0;i < round.players_roles.length;i++){
-		//add additional actions from round
-		checkActions(room.playerList[i], round.players_roles[i].additional_actions);
-		//going through all phase's roles
-		checkActions(room.playerList[i], phases[phaseName].actions);	
+	for(var i=0;i < phases[phaseName].players_roles.length; i++){
+		var ind = findPlayerInd(room.playerList, phases[phaseName].players_roles[i].id);
+		if(phases[phaseName].players_roles[i].role != undefined){
+			for(var j=0;j<phases[phaseName].players_roles[i].role.length;j++){
+				room.playerList[ind].roles.push(phases[phaseName].players_roles[i].role[j]);
+				checkActions(room.playerList[ind], gameRoles[phases[phaseName].players_roles[i].role[j]]);	
+			}
+		}
+		if(phases[phaseName].players_roles[i].additional_actions != undefined){
+			checkActions(room.playerList[ind], phases[phaseName].players_roles[i].additional_actions);
+		}
 	}
+
 	
 	//create can_offer_to list as players IDs, not roles.
 	for(var i=0;i<room.playerList.length;i++){
-		
 		for(var k=0; k < room.playerList[i].can_offer_to.length; k++){	
 			for(var j=0;j<room.playerList.length;j++){
 				if(i != j){
@@ -884,23 +1018,36 @@ function updateChips(data){
 			player1:data.player1,
 			player2:data.player2
 	};
-	io.sockets.in(data.gameId).emit('updateChips', data );
+	for(var i=0;i<room.playerList.length;i++){
+		sendMsg(room, i, 'updateChips', data);
+	}
+	//io.sockets.in(data.gameId).emit('updateChips', data );
 }
 
 function rejectOffer(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
-	var socketId = room[''+data.id];
-	var socket = io.sockets.sockets[socketId];
 	var send ={
 			rowid : data.rowid
 	}
-	socket.emit('rejectOffer',send);
+	sendMsg(room, data.id, 'rejectOffer', send);
+//	var socketId = room[''+data.id];
+//	var socket = io.sockets.sockets[socketId];
+//	var send ={
+//			rowid : data.rowid
+//	}
+//	socket.emit('rejectOffer',send);
 }
 
-exports.getPlayers = function(pl){
+exports.getPlayers = function(pl, al){
 	var room = gameSocket.manager.rooms["/" + 0];	
 	for(var i=0;i<pl.length;i++){
 		if(pl[i] >= room.length){
+		console.log('inside!!!!!!!1');
+			return false;
+		}
+	}
+	for(var i=0;i<al.length;i++){
+		if(agents[al[i]] === undefined){
 		console.log('inside!!!!!!!1');
 			return false;
 		}
@@ -915,14 +1062,24 @@ exports.movePlayer = function(data){
 	
 }
 exports.joinGame = function(data){
-//	try{
-	return playerJoinGame(data);
-//	}
-	//catch(e){
-	 //return 700;
-	//}
+	try{
+		return addAgent(data);
+	}
+	catch(e){
+		return 700;
+	}
 }
 exports.rejectOffer = function(data){
 	
 }
+
+exports.doesSpecialIDExist = function(id){
+	console.log(agents[id]);
+	if(agents[id] != undefined){
+		return true;
+	}
+	else{
+		return false;
+	}
+ }
 

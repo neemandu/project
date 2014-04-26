@@ -44,6 +44,23 @@ exports.doAction = function(sock, data){
 }
 
 function joinGame(data){
+	console.log('joinGame');
+	data.agent = true;
+	return agx.joinGame(data);
+}
+function movePlayer(data){
+	console.log('movePlayer');
+	data.agent = true;
+	return agx.joinGame(data);
+}
+function sendOffer(data){
+	console.log('sendOffer');
+	data.agent = true;
+	
+	return agx.joinGame(data);
+}
+function rejectOffer(data){
+	console.log('rejectOffer');
 	data.agent = true;
 	return agx.joinGame(data);
 }

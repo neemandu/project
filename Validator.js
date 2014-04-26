@@ -4,7 +4,6 @@ var agx = require('./agxgame');
 //status codes
 //conf status codes
 var OK = 200;
-var whatToDo = 300;//illegal what_to_do value
 var playerNumber = 301;//illegal player number in playerList
 var missingPlayerDef = 302;//one of the players in one of the rounds is not configured.
 var identicalPlayersNames = 303;//two or more players have the same name
@@ -25,7 +24,7 @@ var illegalJoinValues = 401;//illegal join value in agent's JSON.
 var illegalMoveValues = 402;//illegal move value in agent's JSON.
 var illegalSendOfferValues = 403;//illegal send offer value in agent's JSON.
 var illegalRejectOfferValues = 404;//illegal reject offer value in agent's JSON.
-
+var agentAlreadyExist = 405;//specialID already exist - should choose a different one.
 
 
 
@@ -63,7 +62,9 @@ exports.validateConf = function(conf){
 	if(!validatePhasesDef(conf)){
 		return invalidPhase;
 	}
-	
+	if(!validateAgentsSpecialID(conf)){
+		return agentAlreadyExist;
+	}
 	return 200;
 }
 
@@ -115,43 +116,75 @@ try{
 
 
 assertPhasesTab = function(conf){
-try{
-	for(var i=0;i<conf.Games.length;i++){
-		//going through all the phases
-		for(var phase in conf.Games[i].phases){
-			if(phase.name === undefined){
-				return false;
-			}
-			if(phase.time != undefined){
-				if(typeof(phase.time) != 'String'){
+	try{
+		for(var i=0;i<conf.Games.length;i++){
+			//going through all the phases
+			for(var phase in conf.Games[i].phases){
+				if(phase.name === undefined){
 					return false;
 				}
-			}
-			else{
-				return false;
-			}
-			if(phase.actions != undefined){
-				if((typeof(phase.actions.canMove) != 'Number') && (typeof(phase.actions.canMove) != 'null')){
+				if(phase.time === undefined){
 					return false;
 				}
-				if((typeof(phase.actions.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
+				else if(typeof(phase.time) != 'Number'){
+						return false;
+				}
+				if(phase.players_roles === undefined){
 					return false;
 				}
-				if((typeof(phase.actions.canSeeChips) != 'Number') && (typeof(phase.actions.canSeeChips) != 'null')){
-					return false;
-				}
-				if((typeof(phase.actions.canSeeLocations) != 'Number') && (typeof(phase.actions.canSeeLocations) != 'null')){
-					return false;
-				}
-				if((typeof(phase.actions.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
-					return false;
+				else{
+					for(var j=0;j < phase.players_roles.length; j++){
+						//validating name
+						if(phase.players_roles[j].name === null){
+							return false;
+						}
+						else{
+							var foundName = false;
+							for(var f=0;f<conf.Games[i].players.length; f++){
+								if(conf.Games[i].players[f].name === phase.players_roles[j].name){
+									foundName = true;
+									break;
+								}
+							}
+							if(!foundName){
+								return false;
+							}
+						}
+						//validating roles
+						for(var e=0;e < phase.players_roles[j].role.length; e++){
+							if(conf.Games[i].roles[phase.players_roles[j].role[e]] === undefined){
+								return false;
+							}
+						}
+						//validating additional actions
+						for(var action in phase.players_roles[j].additional_actions){
+							if((typeof(action.canMove) != 'Number') && (typeof(phase.actions.canMove) != 'null')){
+								return false;
+							}
+							if((typeof(action.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
+								return false;
+							}
+							if((typeof(action.canSeeChips) != 'Number') && (typeof(phase.actions.canSeeChips) != 'null')){
+								return false;
+							}
+							if((typeof(action.canSeeLocations) != 'Number') && (typeof(phase.actions.canSeeLocations) != 'null')){
+								return false;
+							}
+							if((typeof(action.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
+								return false;
+							}
+							if((typeof(action.canOfferTo) != 'Object') && (typeof(phase.actions.canTransfer) != 'null')){
+								return false;
+							}
+						}
+					}
 				}
 			}
 		}
-	}
-	return true;
-}catch(e){
-			return false;
+		return true;
+	}	
+	catch(e){
+		return false;
 	}
 }
 
@@ -230,8 +263,30 @@ try{
 checkPlayersDef = function(conf){
 try{
 	for(var i=0;i<conf.Games.length;i++){
-		if(conf.Games[i].players.length != conf.Global.playerList.length){
-			return false;
+		for(var j=0;j<conf.Global.playerList.length; j++){
+			var found = false;
+			for(var g=0;g<conf.Games[i].players.length; g++){
+				if(conf.Games[i].players[g].id === conf.Global.playerList[j]){
+					found = true;
+					break;
+				}
+			}
+			if(found === false){
+				return false;
+			}
+		}
+		
+		for(var j=0;j<conf.Global.agentList.length; j++){
+			found = false;
+			for(var g=0;g<conf.Games[i].agents.length; g++){
+				if(conf.Games[i].agents[g].id === conf.Global.agentList[j]){
+					found = true;
+					break;
+				}
+			}
+			if(found === false){
+				return false;
+			}
 		}
 	}
 	return true;
@@ -285,6 +340,30 @@ try{
 				return false;
 			}
 		}
+		for(var j=0;j<conf.Games[i].agents.length;j++){
+			var x = conf.Games[i].agents[j].locationX;
+			var y = conf.Games[i].agents[j].locationY;
+			if(conf.Global.boards[conf.Games[i].Board][x][y] === undefined){
+				return false;
+			}
+		}
+	}
+	return true;
+}catch(e){
+			return false;
+	}
+}
+
+validateAgentsSpecialID = function(conf){
+try{
+	for(var i=0;i<conf.Games.length;i++){
+		for(var j=0;j<conf.Games[i].agents.length;j++){
+			var id = conf.Games[i].agents[j].id;
+			console.log('id: '+id);
+			if(agx.doesSpecialIDExist(id)){
+				return false;
+			}
+		}
 	}
 	return true;
 }catch(e){
@@ -317,7 +396,7 @@ try{
 
 exports.validateRun = function(conf){
 
-	if(!agx.getPlayers(conf.Global.playerList)){
+	if(!agx.getPlayers(conf.Global.playerList, conf.Global.agentList)){
 		return playerNumber;
 	}
 	return OK;
