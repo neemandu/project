@@ -110,16 +110,7 @@ exports.runConfig = function(configuration){
  *       HOST FUNCTIONS        *
  *                             *
  ******************************* */
- function addAgent(data){
-	console.log('addAgent');
-	agents[data.ID] = data;
-	for(i in agents) {
-		if (agents.hasOwnProperty(i)) {
-			console.log (i, agents[i].ID);
-		}
-	}
-	return OK;
-}
+
  
  
  
@@ -1063,7 +1054,14 @@ exports.movePlayer = function(data){
 }
 exports.joinGame = function(data){
 	try{
-		return addAgent(data);
+		console.log('addAgent');
+		agents[data.ID] = data;
+		for(i in agents) {
+			if (agents.hasOwnProperty(i)) {
+				console.log (i, agents[i].ID);
+			}
+		}
+		return OK;
 	}
 	catch(e){
 		return 700;
