@@ -131,7 +131,7 @@ jQuery(function($){
       //  	App.Player.addRowToHistory(data.rowid);
 				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
 		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
-				$('#historyRow'+App.Player.currentCount).append('<tr><td align="center" style="width:5%; cursor:pointer;"></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%;"></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td id="sentBy'+ App.Player.currentCount+'" align="center"  style="width:15%;"></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Offered</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:9%;"><img src="Pictures/arrow.png" alt="<->" style="width:100%; height:auto;"></td>');
@@ -186,16 +186,17 @@ jQuery(function($){
 						//var h = $('#historyRow'+id).parent().html();
 						//$('#historyRow'+id).parent().remove();
 						
-						var h = $('#historyRow'+id).html();
-						$('#historyRow'+id).remove();		
-
+						
+						var h = $('#historyRow'+id).parent().html();
+						$('#historyRow'+id).parent().remove();
+						
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
 						}
 						
-						
 						$('#histTable').attr("class", "downTable");
 						$('#histTable').prepend(h);
+						
 						
 					})
 					
@@ -213,8 +214,8 @@ jQuery(function($){
 					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 					//	$('#historyRow'+id).parent().parent().remove();
 						
-						var h = $('#historyRow'+id).html();
-						$('#historyRow'+id).remove();
+						var h = $('#historyRow'+id).parent().html();
+						$('#historyRow'+id).parent().remove();
 						
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
@@ -270,7 +271,10 @@ jQuery(function($){
 			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="red">waiting for respond</font>');
 		//	$('#historyRow'+data.rowid+' tr:eq(0) td:eq(0)').html('');
 			
-			var h = $('#historyRow'+data.rowid).parent().html();
+			var h = $('#historyRow'+data.rowid).parent();
+			h.find('td:eq(0)').css('cursor','default');
+			h.find('td:eq(0)').html('');
+			
 			$('#historyRow'+data.rowid).parent().remove();
 			
 			if($('#downTable tr').length == 0){
@@ -278,7 +282,7 @@ jQuery(function($){
 			}
 			
 			$('#histTable').attr("class", "downTable");
-			$('#histTable').prepend(h);
+			$('#histTable').prepend(h.html());
 			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
 					
 		},
