@@ -31,8 +31,25 @@ exports.doAction = function(sock, data){
 		case "joinGame" :
 			return joinGame(data);
 			break;
-		case "movePlayer" :
-			return movePlayer(data);
+		case "moveUp" :
+			console.log('moveUp');
+			data.up = true;
+			return move(data);
+			break;
+		case "moveDown" :
+			console.log('moveDown');
+			data.down = true;
+			return move(data);
+			break;
+		case "moveLeft" :
+			console.log('moveLeft');
+			data.left = true;
+			return move(data);
+			break;
+		case "moveRight" :
+			console.log('moveRight');
+			data.right = true;
+			return move(data);
 			break;
 		case "sendOffer" :
 			return sendOffer(data);
@@ -48,19 +65,19 @@ function joinGame(data){
 	data.agent = true;
 	return agx.joinGame(data);
 }
-function movePlayer(data){
-	console.log('movePlayer');
+
+function move(data){
 	data.agent = true;
-	return agx.joinGame(data);
+	return agx.move(data);
 }
 function sendOffer(data){
 	console.log('sendOffer');
 	data.agent = true;
 	
-	return agx.joinGame(data);
+	return agx.sendOffer(data);
 }
 function rejectOffer(data){
 	console.log('rejectOffer');
 	data.agent = true;
-	return agx.joinGame(data);
+	return agx.rejectOffer(data);
 }

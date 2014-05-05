@@ -425,38 +425,41 @@ function movePlayer(data1){
 	console.log('y: '+data1.y);
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
+	
 	//check if player reached one of the goals
 	if(room != undefined){
-		for(var i=0;i<room.Goals.length;i++){
-			if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
-				room.gameOver = true;
-				updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+		if(room.board[data1.x][data1.y] != undefined){
+			for(var i=0;i<room.Goals.length;i++){
+				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
+					room.gameOver = true;
+					updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+				}
 			}
-		}
-		
-		if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
-			room.playerList[data1.playerId].chips[data1.chip]--;
-			room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
-			var data = {
-					playerId: data1.playerId,
-					x: data1.x,
-					y: data1.y,
-					chip: data1.chip,
-					score : room.playerList[data1.playerId].score
+			
+			if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
+				room.playerList[data1.playerId].chips[data1.chip]--;
+				room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
+				var data = {
+						playerId: data1.playerId,
+						x: data1.x,
+						y: data1.y,
+						chip: data1.chip,
+						score : room.playerList[data1.playerId].score
+				}
+				room.playerList[data1.playerId].moved = true;
+				room.playerList[data1.playerId].roundsNotMoving = 0;
+				room.board[data1.x][data1.y] = 1;
+				room.board[data1.currX][data1.currY] = 0;
+				updateLocation(room, data1.playerId, data1.x, data1.y);
+				for(var i=0;i<room.playerList.length;i++){
+					sendMsg(room, i, 'movePlayer', data);
+				}
+			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
-			room.playerList[data1.playerId].moved = true;
-			room.playerList[data1.playerId].roundsNotMoving = 0;
-			room.board[data1.x][data1.y] = 1;
-			room.board[data1.currX][data1.currY] = 0;
-			updateLocation(room, data1.playerId, data1.x, data1.y);
-			for(var i=0;i<room.playerList.length;i++){
-				sendMsg(room, i, 'movePlayer', data);
+			if(room.gameOver){
+				gameLogger.debug('line 369' );
+				gameOver(room, room.conf.Games[room.currentGame]);
 			}
-		//	io.sockets.in(data.gameId).emit('movePlayer', data);
-		}
-		if(room.gameOver){
-			gameLogger.debug('line 369' );
-			gameOver(room, room.conf.Games[room.currentGame]);
 		}
 	}
 }
@@ -1049,8 +1052,61 @@ exports.getPlayers = function(pl, al){
 exports.sendOffer = function(data){
 	
 }
-exports.movePlayer = function(data){
-	
+// @param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
+function moveUp(data){
+	data.x = room.playerList[data.playerId].locationX;
+	data.y = room.playerList[data.playerId].locationY - 1;
+	data.chip = room.guiboard[x][y];
+}
+function moveDown(data){
+	data.x = room.playerList[data.playerId].locationX;
+	data.y = room.playerList[data.playerId].locationY + +1;
+	data.chip = room.guiboard[x][y];
+}
+function moveLeft(data){
+			data.x = room.playerList[data.playerId].locationX - 1;
+			data.y = room.playerList[data.playerId].locationY;
+			data.chip = room.guiboard[x][y];
+}
+
+function moveRight(data){
+	data.x = room.playerList[data.playerId].locationX + +1;
+	data.y = room.playerList[data.playerId].locationY;
+	data.chip = room.guiboard[x][y];
+}
+exports.move = function(data){
+	var room = gameSocket.manager.rooms["/" + data.gameId];	
+	var p = findPlayer(room.playerList, data.playerId);
+	if(p != undefined){
+		if(p.canMove === 1){
+			if(room != undefined){
+				if(data.up === true){
+					moveUp(data);
+				}
+				else if(data.down === true){
+					moveDown(data);
+				}
+				else if(data.left === true){
+					moveLeft(data);
+				}
+				else if(data.right === true){
+					moveRight(data);
+				}
+				
+				var newData = {
+					gameId : data.gameId,
+					playerId : data.playerId,
+					currX : p.locationX,
+					currY : p.locationY,
+					x : data.x,
+					y : data.y,
+					chip : data.chip					
+				}
+				
+				movePlayer(newData);
+			}
+		}
+	}
 }
 exports.joinGame = function(data){
 	try{

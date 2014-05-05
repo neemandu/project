@@ -407,7 +407,11 @@ exports.agent = function(data){
 		case "joinGame" :
 			return joinGame(data);
 			break;
-		case "movePlayer" :
+		case "moveUp" :
+		case "moveDown" :
+		case "moveLeft" :
+		case "moveRight" :
+			console.log("yohana said it will work");
 			return movePlayer(data);
 			break;
 		case "sendOffer" :
