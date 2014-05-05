@@ -187,8 +187,8 @@ jQuery(function($){
 						//$('#historyRow'+id).parent().remove();
 						
 						
-						var h = $('#historyRow'+id).parent().html();
-						$('#historyRow'+id).parent().remove();
+						var h = $('#historyRow'+id);
+						$('#historyRow'+id).remove();
 						
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
@@ -206,7 +206,7 @@ jQuery(function($){
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
 						//p++;
-						var player1 = {id :p, gameId : App.gameId, rowid : id};	
+						var player1 = {id :p, gameId : App.gameId, rowid :  data.rowid};	
 						IO.socket.emit('rejectOffer',player1);
 					//	$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
@@ -214,8 +214,8 @@ jQuery(function($){
 					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 					//	$('#historyRow'+id).parent().parent().remove();
 						
-						var h = $('#historyRow'+id).parent().html();
-						$('#historyRow'+id).parent().remove();
+						var h = $('#historyRow'+id);
+						$('#historyRow'+id).remove();
 						
 						if($('#downTable tr').length == 0){
 							$('#downTable').attr("class", "playersListNoBorder");
@@ -250,7 +250,11 @@ jQuery(function($){
 					}
 				})
 			
-            $('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
+			var tmp = '<b>Sent from</b><br><img src="'+App.Player.playerImages[data.sentFrom]+'" alt="'+data.sentFrom+'" style="width:auto; height:50px;">';
+			$('#sentBy'+App.Player.currentCount).html(tmp);
+			
+			
+            //$('#sentBy'+App.Player.currentCount+'').text('Player '+data.sentFrom);
                 App.Player.currentCount++;
         	}
 	    },
@@ -268,21 +272,22 @@ jQuery(function($){
 			})
 		//	$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
 			$('#playersDropDown'+data.rowid).parent().html($('#playersDropDown'+data.rowid).val());
-			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="red">waiting for respond</font>');
+			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="orange">waiting for respond</font>');
 		//	$('#historyRow'+data.rowid+' tr:eq(0) td:eq(0)').html('');
 			
-			var h = $('#historyRow'+data.rowid).parent();
+			var h = $('#historyRow'+data.rowid);
 			h.find('td:eq(0)').css('cursor','default');
 			h.find('td:eq(0)').html('');
+			h.find('td:eq(1)').html('<b>Sent to</b><br><img src="'+App.Player.playerImages[data.recieverId]+'" alt="'+data.recieverId+'" style="width:auto; height:50px;">');
 			
-			$('#historyRow'+data.rowid).parent().remove();
+			$('#historyRow'+data.rowid).remove();
 			
 			if($('#downTable tr').length == 0){
 				$('#downTable').attr("class", "playersListNoBorder");
 			}
 			
 			$('#histTable').attr("class", "downTable");
-			$('#histTable').prepend(h.html());
+			$('#histTable').prepend(h);
 			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
 					
 		},
@@ -990,6 +995,7 @@ jQuery(function($){
         	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
+			rowsIds: [],
         	offerToPlayers: 0,
 			goals: [],
 			canMove: 0,
@@ -1023,7 +1029,7 @@ jQuery(function($){
 				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
 		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%; cursor:pointer;"><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:15%;"><b>Offer to</b><br><select id="playersDropDown'+App.Player.currentCount+'" class="playersDropDown"><option value="empty"></option></select></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:15%;"><b id="selectedPlayer'+App.Player.currentCount+'">Offer to</b><br><div id="my-icon-select'+App.Player.currentCount+'"></div></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:9%;"><img src="Pictures/arrow.png" alt="<->" style="width:100%; height:auto;"></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
@@ -1031,6 +1037,19 @@ jQuery(function($){
 			
 				//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
 
+				var iconSelect;
+				
+				 iconSelect = new IconSelect("my-icon-select"+App.Player.currentCount, 
+					{'selectedIconWidth':48,
+					'selectedIconHeight':48,
+					'selectedBoxPadding':1,
+					'iconsWidth':23,
+					'iconsHeight':23,
+					'boxIconSpace':1,
+					'vectoralIconNumber':4,
+					'horizontalIconNumber':4});
+
+				var icons = [];
 				
 				var k=0;
 				
@@ -1055,15 +1074,21 @@ jQuery(function($){
 					count++;
 					}
 				})
+				
 				for (var k =0; k<App.Player.offerToPlayers.length;k++) {
                     if (App.Player.offerToPlayers[k]!=App.Player.myid) {
-						    $('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     
+						    //$('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     							
+							icons.push({'iconFilePath':App.Player.playerImages[App.Player.offerToPlayers[k]], 'iconValue':App.Player.offerToPlayers[k]});
+							$('#selectedPlayer'+App.Player.currentCount).attr('class',''+App.Player.offerToPlayers[k]);
+	
                     }
                 }
+				iconSelect.refresh(icons);
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
 				$('#removeLine'+App.Player.currentCount).click( function(){
 					var id = this.id[this.id.length-1];//index 
 					$('#historyRow'+id).remove();
+					App.Player.currentCount--;
 					if($('#downTable tr').length == 0){
 						$('#downTable').attr("class", "playersListNoBorder");
 					}
@@ -1071,7 +1096,9 @@ jQuery(function($){
 				
 				$('#sendOffer'+App.Player.currentCount).click( function(){
 								var id = this.id[this.id.length-1];//index 
-								var player = $('#playersDropDown'+id+' option:selected').text();
+								//var player = $('#playersDropDown'+id+' option:selected').text();
+								var player = $('#selectedPlayer'+id).attr('class');
+								
 								var colorsToOffer = new Array();
 								var colorsToGet = new Array();
 								var i=0;
@@ -1291,13 +1318,37 @@ jQuery(function($){
     		/**
     		 * there is a player standing in the goal trail.
     		 */
-    		thereIsAWinner: function(data)
+    		/*thereIsAWinner: function(data)
     		{
 				App.firstphase=0;
     			var winner = '<gameOver> GAME IS OVER ! <br> WINNER IS PLAYER ' + data.playerId + '<gameOver>';
     			$('.gameMainContent').html(winner);
     			clearTimeout(App.timeout);
     			App.timeout = setTimeout(function(){App.$gameArea.html(App.$CTtemplateIntroScreen);}, 15000);
+    		},*/
+			thereIsAWinner: function(data)
+    		{
+				App.firstphase=0;
+				
+				var param = {playerId: data.playerId, time: 10};
+				//App.Player.countdownToIntroScreen(param);
+				clearTimeout(App.timeout);
+				var func = function(data)
+				{
+					var winner = '<gameOver> GAME IS OVER ! <br> WINNER IS PLAYER ' + data.playerId + 
+								'<br><br>back to intro screen in: '+ data.time +'. <gameOver>';
+					$('.gameMainContent').html(winner);
+					if(data.time>0)
+					{
+						var param = {playerId: data.playerId, time: data.time-1};
+						App.timeout = setTimeout(function(){func(param);}, 1000);
+					}
+					else
+						App.$gameArea.html(App.$CTtemplateIntroScreen);
+				}
+				var param = {playerId: data.playerId, time: 10};
+				func(param, param.time);
+				
     		},
             /**
              *  Click handler for the Player hitting a word in the word list.

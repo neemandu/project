@@ -13,6 +13,17 @@ h1
 	font-size:40px;
 }
 
+@font-face
+{
+font-family: myFirstFont;
+src: url('campus_relief.ttf');
+}
+gameOver
+{
+font-family:myFirstFont;
+font-size: 42px;
+}
+
 div.titleWrapper
 {
 	background-color:#AAAAAA;
