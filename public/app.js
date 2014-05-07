@@ -1030,9 +1030,11 @@ jQuery(function($){
 		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%; cursor:pointer;"><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:15%;"><b id="selectedPlayer'+App.Player.currentCount+'">Offer to</b><br><div id="my-icon-select'+App.Player.currentCount+'"></div></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				//$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:9%;"><img src="Pictures/arrow.png" alt="<->" style="width:100%; height:auto;"></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				//$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=15%;"><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
 			
 				//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
@@ -1051,9 +1053,16 @@ jQuery(function($){
 
 				var icons = [];
 				
-				var k=0;
+			//	var k=0;
+				for (var k =0; k<App.Player.chipsImages.length;k++){
+				$('#colorsToOffer'+ App.Player.currentCount).append('<td style="width:40px;">'+App.Player.chipsImages[k]+'</td><td align="center"><input align="center" type="number" min="1" style="width:30px;"></td>');
+				}
 				
-				$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
+				for(var k=0;k<App.Player.chipsImages.length;k++){
+				$('#colorsToGet'+ App.Player.currentCount).append('<td style="width:40px;">'+App.Player.chipsImages[k]+'</td><td align="center"><input align="center" type="number" min="1" style="width:30px;"></td>');
+				}
+				
+				/*$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
 				var count =0;
 				while(count<3&&k<App.Player.colors.length){
 					$(this).append('<td style="width:30px;">'+App.Player.chipsImages[k]+'</td><td><input type="number" min="1" style="width:30px;"></td>');
@@ -1074,7 +1083,7 @@ jQuery(function($){
 					count++;
 					}
 				})
-				
+				*/
 				for (var k =0; k<App.Player.offerToPlayers.length;k++) {
                     if (App.Player.offerToPlayers[k]!=App.Player.myid) {
 						    //$('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     							
@@ -1266,7 +1275,7 @@ jQuery(function($){
     		var playerCode ="";
     		//playerCode += '<table class="player" id="player' + id +'">';
     		playerCode +=	'<tr class="player" id="player' + id +'"> <td id="playerIMG">image </td>'+
-    			'<td class="playerID"> id:<br>' + id + '</td>'+
+    			//'<td class="playerID"> id:<br>' + id + '</td>'+
     			'<td class="playerChis" align="center">'+
     			'<table id="Chips">'+
     			'<tr>';
@@ -1328,7 +1337,7 @@ jQuery(function($){
     		},*/
 			thereIsAWinner: function(data)
     		{
-				App.firstphase=0;
+				App.firstphase=1;
 				
 				var param = {playerId: data.playerId, time: 10};
 				//App.Player.countdownToIntroScreen(param);
