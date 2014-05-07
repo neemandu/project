@@ -3,6 +3,17 @@
 	
  	"Action" : "joinGame",
 	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+	
 	"ID" : 5,
 	
  	"Global" : {
@@ -10,10 +21,6 @@
 		"ID" : 2,
 		
 		"RESEARCHER_NAME" : "Kobi",
-		
-		"playerList" : [0,1],
-		
-		"agentList" : [5],
 				
 		"Colors" : ["pink","grey","purple","green","yellow"],
 

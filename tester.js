@@ -38,24 +38,29 @@ exports.initGame = function(socket, data){
 }
 
 createConfig = function(conf){
-	var status = validator.validateConf(conf);
+	//var status = validator.validateConf(conf);
 	confID[conf.Global.ID] = conf;
-	return status;
+	return 200;
+//	return status;
 }
 
 runConfig = function(conf){
-	var status = 200;
-	var co = confID[conf.Global.ID];
+//	var status = 200;
+//	var co = confID[conf.Global.ID];
 	//@TODO
-	if(co === undefined){
-		return 500;
-	}
-	status = validator.validateRun(conf);
-	console.log('stst: '+status);
-	if(status === 200){
-		agx.runConfig(co);
-	}
-	return status;
+//	if(co === undefined){
+//		return 500;
+//	}
+	//status = validator.validateRun(conf);
+//	console.log('stst: '+status);
+	//if(status === 200){
+//		agx.runConfig(conf.confsToRun, co);
+	//}
+//	return status;
+if(conf.confsToRun.length > 0){
+	agx.runConfigurtion(conf.confsToRun, 0);
+}
+return 200;
 }
 doAction = function(socket, conf){
 console.log('agggggent');
@@ -71,4 +76,12 @@ console.log('agggggent');
 	else{
 		return co;
 	}
+}
+exports.getConf = function(id){
+	var co = confID[id];
+	//@TODO
+	if(co === undefined){
+		return 500;
+	}
+	return co;
 }

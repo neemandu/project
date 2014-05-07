@@ -1,5 +1,6 @@
 //importing loggers
 var log = require('./index');
+var tester = require('./tester');
 var net = require('net');
 var connectionLogger = log.connectionLogger;
 var gameLogger = log.gameLogger;
@@ -74,8 +75,10 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('movePlayer', movePlayer);
 }
 
-exports.runConfig = function(configuration){
-	conf = configuration;
+exports.runConfigurtion = function(confsToRun, i){
+	console.log('i: '+i);
+	conf = tester.getConf(confsToRun[i].confID);
+	console.log('conf.Global.ID: '+conf.Global.ID);
 	numOfColors = conf.Global.Colors.length;
 	//creating gameID
 	var game_id=Math.floor((Math.random()*1000)+1);
@@ -86,13 +89,14 @@ exports.runConfig = function(configuration){
 			
 	gameLogger.debug('Game #'+game_id+' was created');
 	if(gameSocket != undefined){
-	
-		var shouldStartGame = insertPlayersToRoom(game_id);
+		var shouldStartGame = insertPlayersToRoom(confsToRun[i], game_id);
 		
 		if(shouldStartGame){
 			var room = gameSocket.manager.rooms["/" + game_id];
 			room.gameId = game_id;
-			room.conf = conf;		
+			room.conf = conf;	
+			room.currentConf = i;
+			room.confsToRun = confsToRun;
 			room.currentGame = 0; //the current index of the game of the conf.Games array.
 			hostStartGame(room);
 		}
@@ -115,9 +119,9 @@ exports.runConfig = function(configuration){
  
  
 //joining the players to the room
-function insertPlayersToRoom(thisGameId) {
-	var playerList = conf.Global.playerList;
-	var agentList = conf.Global.agentList;
+function insertPlayersToRoom(co, thisGameId) {
+	var playerList = co.playerList;
+	var agentList = co.agentList;
 	console.log('Inserting Players Into The Room');
 	if(gameSocket != undefined){
 		var room = gameSocket.manager.rooms["/" + 0];
@@ -162,7 +166,7 @@ function hostStartGame(room) {
 	room.guiboard =room.conf.Global.boards[game.Board];
 	gameLogger.debug("board: "+room.guiboard);
 	room.board = createServerBoard(game);
-	room.agentsIDs = room.conf.Global.agentList;
+	//room.agentsIDs = room.conf.Global.agentList;
 	gameLogger.debug("board: "+room.guiboard);
 	gameLogger.debug('Server board was created.');
 //	
@@ -171,10 +175,10 @@ function hostStartGame(room) {
 	/**
 	 * create players data:
 	 */
-	for (var i = 0; i < room.conf.Global.playerList.length; i++)
+	for (var i = 0; i < room.confsToRun[room.currentConf].playerList.length; i++)
 	{ 
-		var p = findPlayer(game.players, room.conf.Global.playerList[i]);
-		var player = makePlayerAttributes(game, p);
+		var p = game.players[i];
+		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		/*
 		var socketId = room[i];
@@ -184,6 +188,7 @@ function hostStartGame(room) {
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
+		gameLogger.debug(player.name+' GUIid: '+room.playerList[i].GUIid);
 		gameLogger.debug(player.name+' id: '+room.playerList[i].id);
 		gameLogger.debug(player.name+' chips: '+room.playerList[i].chips);
 		gameLogger.debug(player.name+' locationX: '+room.playerList[i].location.x+' locationY: '+room.playerList[i].location.y);
@@ -191,15 +196,16 @@ function hostStartGame(room) {
 		gameLogger.debug(player.name+' basic_role: '+room.playerList[i].basic_role);
 		gameLogger.debug('****************************');
 	}
-	var l = room.conf.Global.playerList.length;
+	var l = room.confsToRun[room.currentConf].playerList.length;
 	//joining all agents.
-	for (var i = l; i < l + room.conf.Global.agentList.length; i++)
+	for (var i = l; i < l + room.confsToRun[room.currentConf].agentList.length; i++)
 	{ 
-		var p = findPlayer(game.agents, room.conf.Global.agentList[i-l]);
-		var player = makeAgentAttributes(game, p);
+		var p = game.agents[i-l];
+		var player = makeAgentAttributes(game, p, room.confsToRun[room.currentConf].agentsList[i]);
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
+		gameLogger.debug(player.name+' GUIid: '+room.playerList[i].GUIid);
 		gameLogger.debug(player.name+' id: '+room.playerList[i].id);
 		gameLogger.debug(player.name+' chips: '+room.playerList[i].chips);
 		gameLogger.debug(player.name+' locationX: '+room.playerList[i].location.x+' locationY: '+room.playerList[i].location.y);
@@ -217,7 +223,7 @@ function hostStartGame(room) {
 
 function findPlayer(pl, id) {
 	for(var i=0;i<pl.length; i++){
-		if(pl[i].id === id){
+		if(pl[i].GUIid === id){
 			return pl[i];
 		}
 	}
@@ -225,16 +231,17 @@ function findPlayer(pl, id) {
 function findPlayerInd(pl, id) {
 	console.log('findPlayerInd');
 	for(var i=0;i<pl.length; i++){
-		if(pl[i].id === id){
+		if(pl[i].GUIid === id){
 			console.log('findPlayerInd FOUND!');
 			console.log('index: '+i);
 			return i;
 		}
 	}
 }
-function makePlayerAttributes(game, player) {
+function makePlayerAttributes(game, player, id) {
 	var p = {};
-	p.id = player.id;
+	p.GUIid = player.id;
+	p.id = id;
 	p.chips = player.chips;
 	p.location = setLocation(player);
 	p.basic_role =  player.basic_role;
@@ -243,12 +250,12 @@ function makePlayerAttributes(game, player) {
 	p.agent = false;
 	return p;
 }
-function makeAgentAttributes(game, player) {
-	var p = makePlayerAttributes(game, player);
+function makeAgentAttributes(game, player, id) {
+	var p = makePlayerAttributes(game, player, id);
 	p.agent = true;
 	p.listening_port = player.listening_port;
 	p.IP = player.IP;
-	p.specialID = player.specialID;
+//	p.specialID = player.specialID;
 	return p;
 }
 /* *****************************
@@ -267,7 +274,9 @@ function sendOffer(data) {
 	var tmp =new Array();
 	//which room am i
 	var room = gameSocket.manager.rooms["/" + data.gameId];
-	if(room.playerList[data.recieverId] != undefined){	
+	var reciever = findPlayer(room.playerList, data.recieverId);
+	var sender = findPlayer(room.playerList, data.sentFrom);
+	if(p != undefined){	
 		//validating chips
 		data.answer = 'yes';
 		gameLogger.trace('sender Id: '+data.sentFrom);
@@ -280,10 +289,10 @@ function sendOffer(data) {
 			if(sum2 === undefined){
 				sum2 = 0;
 			}
-			gameLogger.trace('offer: '+sum1+'; Have: '+room.playerList[data.sentFrom].chips[i]+'want: '+sum2+'; Have: '+room.playerList[data.recieverId].chips[i]);
-			if(sum1 > room.playerList[data.sentFrom].chips[i]){
-				if(room.playerList[data.sentFrom].canSeeChips === 1){
-					if(sum2 > room.playerList[data.recieverId].chips[i]){
+			gameLogger.trace('offer: '+sum1+'; Have: '+sender.chips[i]+'want: '+sum2+'; Have: '+reciever.chips[i]);
+			if(sum1 > sender.chips[i]){
+				if(sender.canSeeChips === 1){
+					if(sum2 > reciever.chips[i]){
 						data.answer = 'no';
 						gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
 						break;
@@ -299,14 +308,14 @@ function sendOffer(data) {
 		data.answer = 'no';
 	}
 	if(data.answer === 'no'){
-		sendMsg(room, data.sentFrom, 'recieveMessage', data);
+		sendMsg(room, sender.id, sender.GUIid, 'recieveMessage', data);
 	//	this.emit('recieveMessage',data);
 	}
 	else{
-		sendMsg(room, data.sentFrom, 'addRowToHistory', data);
+		sendMsg(room,  sender.id, sender.GUIid, 'addRowToHistory', data);
 		//this.emit('addRowToHistory',data);
-		data.playerId = this.id;
-		sendMsg(room, data.recieverId, 'recieveMessage', data);
+		data.playerId = this.GUIid;
+		sendMsg(room, reciever.id, reciever.GUIid, 'recieveMessage', data);
 /*	
 	var socketId = room[''+data.recieverId];
 		var socket = io.sockets.sockets[socketId];
@@ -428,31 +437,34 @@ function movePlayer(data1){
 	
 	//check if player reached one of the goals
 	if(room != undefined){
+		var player = findPlayer(room.playerList, data1.playerId);
 		if(room.board[data1.x][data1.y] != undefined){
 			for(var i=0;i<room.Goals.length;i++){
 				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
 					room.gameOver = true;
-					updateWinnerChips(room, data1.x, data1.y, room.playerList[data1.playerId],conf.Games[room.currentGame].GameConditions);
+					
+					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 				}
 			}
 			
 			if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
-				room.playerList[data1.playerId].chips[data1.chip]--;
-				room.playerList[data1.playerId].score = setScore(room.playerList[data1.playerId].chips, room.conf.Games[room.currentGame].GameConditions.score);
+				player.chips[data1.chip]--;
+				player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
 				var data = {
 						playerId: data1.playerId,
 						x: data1.x,
 						y: data1.y,
 						chip: data1.chip,
-						score : room.playerList[data1.playerId].score
+						score : player.score
 				}
-				room.playerList[data1.playerId].moved = true;
-				room.playerList[data1.playerId].roundsNotMoving = 0;
+				player.moved = true;
+				player.roundsNotMoving = 0;
 				room.board[data1.x][data1.y] = 1;
 				room.board[data1.currX][data1.currY] = 0;
-				updateLocation(room, data1.playerId, data1.x, data1.y);
+				var ind = findPlayerInd(room.playerList, data1.playerId);
+				updateLocation(room, ind, data1.x, data1.y);
 				for(var i=0;i<room.playerList.length;i++){
-					sendMsg(room, i, 'movePlayer', data);
+					sendMsg(room, room.playerList[i].id ,room.playerList[i].GUIid , 'movePlayer', data);
 				}
 			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
@@ -484,10 +496,11 @@ function updateWinnerChips(room, x, y, player, gameConditions){
 
 function updateLocation(room, playerId, x, y){
 	console.log('player id: '+playerId);
-	room.playerList[playerId].location.x = x;
-	room.playerList[playerId].location.y = y;
-	console.log('new x: '+ room.playerList[playerId].location.x + '       new y: '+ room.playerList[playerId].location.y);
-	console.log('player id: '+room.playerList[playerId].id);
+	var p = findPlayer(room.playerList, playerId);
+	p.location.x = x;
+	p.location.y = y;
+	console.log('new x: '+ p.location.x + '       new y: '+ p.location.y);
+	console.log('player id: '+p.id);
 }
 /*
 function createChips(){
@@ -536,7 +549,7 @@ function playerRestart(data) {
 	// Emit the player's data back to the clients in the game room.
 	data.playerId = this.id;
 	for(var i=0;i<room.playerList.length;i++){
-		sendMsg(room, i, 'playerJoinedRoom', data);
+		sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid, 'playerJoinedRoom', data);
 	}
 	//io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 }
@@ -563,9 +576,8 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 	if(room.gameOver === false){
 		var round = game.rounds.rounds_defenitions[room.roundNumber];
 		console.log('phase name: '+round.phases_in_round[phaseIndex]);
-		gameLogger.debug('phase name: '+round.phases_in_round[phaseIndex]);
 		gameLogger.debug('roundNumber : '+room.roundNumber);
-		gameLogger.debug('phaseTime : '+game.phases[round.phases_in_round[phaseIndex]].name);
+		gameLogger.debug('phaseName : '+game.phases[round.phases_in_round[phaseIndex]].name);
 		gameLogger.debug('board : '+room.guiboard);
 		gameLogger.debug('players : '+room.playerList);
 		gameLogger.debug('phaseTime : '+game.phases[round.phases_in_round[phaseIndex]].time);
@@ -597,7 +609,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 
 				
 		for(var i=0; i<room.playerList.length; i++){
-			data.playerID = room.playerList[i].id;
+			data.playerID = room.playerList[i].GUIid;
 				
 			gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
@@ -619,7 +631,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			gameLogger.debug('   Goals '+data.Goals);
 			gameLogger.debug('***********************');
 			
-			sendMsg(room, i, 'beginFaze', data);
+			sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid, 'beginFaze', data);
 		}
 		var newPhaseIndex = phaseIndex;
 		newPhaseIndex++;
@@ -661,14 +673,15 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		}
 	}
 }
-function sendMsg(room, id, funcName, data){
-	var player = room.playerList[id];
+function sendMsg(room, id, GUIid, funcName, data){
+	var player = findPlayer(room.playerList, GUIid);
 	console.log('player.agent: '+player.agent);
 	console.log('funcName: '+funcName);
 	console.log('data: '+data);
 	if(player.agent === false){
+		console.log('GUIid' + GUIid);
 		console.log('id' + id);
-		var socketId = room[id];
+		var socketId = room[GUIid];
 		var socket = io.sockets.sockets[socketId];
 		console.log('socket' + socketId);
 		socket.emit(funcName, data);
@@ -703,7 +716,7 @@ function gameOver(room, game){
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
-		playerId : room.playerList[winner].id
+		playerId : room.playerList[winner].GUIid
 	}
 	gameLogger.debug('winner: '+room.playerList[winner].name);
 	gameLogger.debug('score: '+room.playerList[winner].score);
@@ -711,18 +724,24 @@ function gameOver(room, game){
 	gameLogger.debug('number of games'+conf.Games.length);
 	gameLogger.debug('currentGame: '+room.currentGame);
 	for(var i=0;i<room.playerList.length;i++){
-		sendMsg(room, i, 'Winner', data);
+		sendMsg(room, room.playerList[i].id ,room.playerList[i].GUIid ,'Winner', data);
 	}
+	//var self = this;
 	//io.sockets.in(room.gameId).emit('Winner', data);
-	if(room.currentGame < conf.Games.length-1){
+	if(room.currentGame < room.conf.Games.length-1){
 		room.currentGame++;
-		setTimeout(function(){ return hostStartGame(room);}, 5000);
+		setTimeout(function(){ return hostStartGame(room);}, 10000);
+	}
+	else if(room.currentConf < room.confsToRun.length-1){
+		//advancing to next conf.
+		room.currentConf++;
+		setTimeout(function(){ return exports.runConfigurtion(room.confsToRun, room.currentConf);}, 5000);
 	}
 	else{
 		gameSocket.manager.rooms["/" + room.gameId] = undefined;
 		gameLogger.debug('NO MORE GAMES');
 		gameIDs[room.gameId] = 0;
-		for(var i=0; i<room.agentsIDs.length; i++){
+		for(var i=0; i<room.confsToRun[room.currentConf].agentList.length; i++){
 			agents[room.agentsIDs[i]] = undefined;
 		}	
 	}
@@ -979,51 +998,57 @@ function createServerBoard(game){
  */
 function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
+	var p1 = findPlayer(room.playerList, data.player1.id);
+	var p2 = findPlayer(room.playerList, data.player2.id);
 	
-	for(var i=0;i<numOfColors;i++){
-		var sum1 = data.player1.colorsToAdd[i];
-		var sum2 = data.player2.colorsToAdd[i];
-		gameLogger.trace('sum1: '+sum1);
-		gameLogger.trace('sum2: '+sum2);
-		gameLogger.trace('before');
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] + +sum1;
-		gameLogger.trace('pl 1 chips['+i+']: '+room.playerList[data.player1.id].chips[i]);
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] - +sum1;
-		gameLogger.trace('pl 2 chips['+i+']: '+room.playerList[data.player2.id].chips[i]);
-		gameLogger.trace('after');
-		room.playerList[data.player1.id].chips[i] =+room.playerList[data.player1.id].chips[i] - +sum2;
-		gameLogger.trace('pl 1 chips['+i+']: '+room.playerList[data.player1.id].chips[i]);
-		room.playerList[data.player2.id].chips[i] =+room.playerList[data.player2.id].chips[i] + +sum2;
-		gameLogger.trace('pl 2 chips['+i+']: '+room.playerList[data.player2.id].chips[i]);
+	if(p1 != undefined && p2 != undefined){
+		for(var i=0;i<numOfColors;i++){
+			var sum1 = data.player1.colorsToAdd[i];
+			var sum2 = data.player2.colorsToAdd[i];
+			gameLogger.trace('sum1: '+sum1);
+			gameLogger.trace('sum2: '+sum2);
+			gameLogger.trace('before');
+			
+			p1.chips[i] =+p1.chips[i] + +sum1;
+			gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
+			p2.chips[i] =+p2.chips[i] - +sum1;
+			gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+			gameLogger.trace('after');
+			p1.chips[i] =+p1.chips[i] - +sum2;
+			gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
+			p2.chips[i] =+p2.chips[i] + +sum2;
+			gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+		}
+		
+		p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
+		p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
+		gameLogger.trace('pl SCORE: '+p1.score);
+		gameLogger.trace('p2 SCORE: '+p2.score);
+		data.player1.chips = p1.chips;
+		data.player2.chips = p2.chips;
+		data.player1.score = p1.score;
+		data.player2.score = p2.score;
+		
+		var data =
+		{
+				gameId:data.gameId,
+				player1:data.player1,
+				player2:data.player2
+		};
+		for(var i=0;i<room.playerList.length;i++){
+			sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', data);
+		}
+		//io.sockets.in(data.gameId).emit('updateChips', data );
 	}
-	
-	room.playerList[data.player1.id].score = setScore(room.playerList[data.player1.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
-	room.playerList[data.player2.id].score = setScore(room.playerList[data.player2.id].chips, room.conf.Games[room.currentGame].GameConditions.score);
-	gameLogger.trace('pl SCORE: '+room.playerList[data.player1.id].score);
-	gameLogger.trace('p2 SCORE: '+room.playerList[data.player2.id].score);
-	data.player1.chips = room.playerList[data.player1.id].chips;
-	data.player2.chips = room.playerList[data.player2.id].chips;
-	data.player1.score = room.playerList[data.player1.id].score;
-	data.player2.score = room.playerList[data.player2.id].score;
-	
-	var data =
-	{
-			gameId:data.gameId,
-			player1:data.player1,
-			player2:data.player2
-	};
-	for(var i=0;i<room.playerList.length;i++){
-		sendMsg(room, i, 'updateChips', data);
-	}
-	//io.sockets.in(data.gameId).emit('updateChips', data );
 }
 
 function rejectOffer(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var send ={
 			rowid : data.rowid
-	}
-	sendMsg(room, data.id, 'rejectOffer', send);
+	};
+	var p = findPlayer(room.playerList, data.id);
+	sendMsg(room, p.id, data.id, 'rejectOffer', send);
 //	var socketId = room[''+data.id];
 //	var socket = io.sockets.sockets[socketId];
 //	var send ={
