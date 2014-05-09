@@ -3,8 +3,9 @@ var agx = require('./agxgame');
 var validator = require('./Validator');
 var AgentHelper = require('./AgentHelper');
 
-var noType = 313;
-var illegalType = 314;
+var noType = 313+ ' - no \'Type\' attribute';
+var illegalType = 314+ ' - illegal \'Type\' attribute';
+var OK = 200+ ' - OK';
 
 exports.initGame = function(socket, data){
 	var del = "\r\n";
@@ -38,29 +39,29 @@ exports.initGame = function(socket, data){
 }
 
 createConfig = function(conf){
-	//var status = validator.validateConf(conf);
+	var status = validator.validateConf(conf);
 	confID[conf.Global.ID] = conf;
-	return 200;
-//	return status;
+	return status;
 }
 
 runConfig = function(conf){
-//	var status = 200;
+	var status = 200;
 //	var co = confID[conf.Global.ID];
 	//@TODO
 //	if(co === undefined){
 //		return 500;
 //	}
-	//status = validator.validateRun(conf);
-//	console.log('stst: '+status);
+	status = validator.validateRun(conf);
 	//if(status === 200){
 //		agx.runConfig(conf.confsToRun, co);
 	//}
 //	return status;
-if(conf.confsToRun.length > 0){
-	agx.runConfigurtion(conf.confsToRun, 0);
-}
-return 200;
+	if(status === OK){
+		if(conf.confsToRun.length > 0){
+			agx.runConfigurtion(conf.confsToRun, 0);
+		}
+	}
+	return status;
 }
 doAction = function(socket, conf){
 console.log('agggggent');
