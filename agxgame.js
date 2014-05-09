@@ -1066,6 +1066,9 @@ function rejectOffer(data){
 }
 
 exports.getPlayers = function(pl, al){
+	if(gameSocket === undefined){
+		return false;
+	}
 	var room = gameSocket.manager.rooms["/" + 0];	
 	for(var i=0;i<pl.length;i++){
 		if(pl[i] >= room.length){
