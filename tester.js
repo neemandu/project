@@ -39,21 +39,15 @@ exports.initGame = function(socket, data){
 }
 
 createConfig = function(conf){
-<<<<<<< HEAD
-	
-	//var status = validator.validateConf(conf);
-	confID[conf.Global.ID] = conf;
-	agx.ConfigurtionToDataBase(conf);
+
 	
 	
-	
-	return 200;
-//	return status;
-=======
+
 	var status = validator.validateConf(conf);
+	agx.ConfigurtionToDataBase(conf);
 	confID[conf.Global.ID] = conf;
 	return status;
->>>>>>> d232983f619f994e78934b4eada5285fe3878daa
+
 }
 
 runConfig = function(conf){
