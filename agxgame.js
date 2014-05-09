@@ -29,25 +29,22 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = true;
+var DATABASE = false;
+
+var async_function = function(val, callback){
+	process.nextTick(function(){
+		callback(val);
+	});
+};
 
 async = require("async");
 
 
 if (DATABASE){
-var presistance  = require('./Presistence');
-async.series([
-              
-              function(callback){
-            	  //presistance.syncDatabase();
-            	  callback();
-              },
-              function(callback){
-            	  presistance.addUser(1);
-              callback();
-              }
-          ]);
-};
+	var presistance  = require('./Presistence');
+	presistance.syncDatabase();
+}
+
 
 
 /**
@@ -75,7 +72,18 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('movePlayer', movePlayer);
 }
 
+exports.ConfigurtionToDataBase = function(conf){
+	if (DATABASE){
+		async.series([presistance.createLogs(conf),
+		              presistance.addBoard1(conf.Global.boards)]);
+		};
+}
+
+
 exports.runConfigurtion = function(confsToRun, i){
+
+
+
 	console.log('i: '+i);
 	conf = tester.getConf(confsToRun[i].confID);
 	console.log('conf.Global.ID: '+conf.Global.ID);
@@ -86,11 +94,11 @@ exports.runConfigurtion = function(confsToRun, i){
 		game_id=Math.floor((Math.random()*1000)+1);
 	}
 	gameIDs[game_id] = 1;//this game id is available.
-			
+
 	gameLogger.debug('Game #'+game_id+' was created');
 	if(gameSocket != undefined){
 		var shouldStartGame = insertPlayersToRoom(confsToRun[i], game_id);
-		
+
 		if(shouldStartGame){
 			var room = gameSocket.manager.rooms["/" + game_id];
 			room.gameId = game_id;
@@ -105,8 +113,8 @@ exports.runConfigurtion = function(confsToRun, i){
 		console.log('no player have said Hello to the Server yet...');
 		return false;
 	}
-	
-	
+
+
 }
 
 /* *******************************
@@ -115,9 +123,9 @@ exports.runConfigurtion = function(confsToRun, i){
  *                             *
  ******************************* */
 
- 
- 
- 
+
+
+
 //joining the players to the room
 function insertPlayersToRoom(co, thisGameId) {
 	var playerList = co.playerList;
@@ -155,7 +163,7 @@ function insertPlayersToRoom(co, thisGameId) {
 	}
 };
 function hostStartGame(room) {
-	
+
 	var game = room.conf.Games[room.currentGame];
 	gameLogger.debug("Starting game: " +room.conf.Games[room.currentGame].GAME_NAME);
 	room.gameOver = false;
@@ -169,7 +177,7 @@ function hostStartGame(room) {
 	//room.agentsIDs = room.conf.Global.agentList;
 	gameLogger.debug("board: "+room.guiboard);
 	gameLogger.debug('Server board was created.');
-//	
+
 	room.Goals = game.GameConditions.GoalCordinates;
 
 	/**
@@ -184,7 +192,7 @@ function hostStartGame(room) {
 		var socketId = room[i];
 		var socket = io.sockets.sockets[socketId];
 		player.socket = socket;
-		*/
+		 */
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
@@ -216,9 +224,9 @@ function hostStartGame(room) {
 	}
 	gameLogger.debug('###########################');
 	beginRounds(room, game);
-	
+
 	/*****************************************/
-	
+
 };
 
 function findPlayer(pl, id) {
@@ -269,7 +277,7 @@ function makeAgentAttributes(game, player, id) {
  */
 function sendOffer(data) {
 	gameLogger.trace('sendOffer');
-	
+
 	console.log('game id: '+data.gameId);
 	var tmp =new Array();
 	//which room am i
@@ -309,14 +317,14 @@ function sendOffer(data) {
 	}
 	if(data.answer === 'no'){
 		sendMsg(room, sender.id, sender.GUIid, 'recieveMessage', data);
-	//	this.emit('recieveMessage',data);
+		//	this.emit('recieveMessage',data);
 	}
 	else{
 		sendMsg(room,  sender.id, sender.GUIid, 'addRowToHistory', data);
 		//this.emit('addRowToHistory',data);
 		data.playerId = this.GUIid;
 		sendMsg(room, reciever.id, reciever.GUIid, 'recieveMessage', data);
-/*	
+		/*	
 	var socketId = room[''+data.recieverId];
 		var socket = io.sockets.sockets[socketId];
 		if(socket == null){
@@ -324,10 +332,10 @@ function sendOffer(data) {
 		}
 		else{
 			data.playerId = this.id;
-			
+
 			socket.emit('recieveMessage', data)
 		}
-		*/
+		 */
 	}
 }
 
@@ -348,7 +356,7 @@ function isSumOfOffersLegal(id,room, tmp){
 	for(var i=0;i<numOfColors;i++){
 		room.playerList[id].offer[i] =+room.playerList[id].offer[i] + +tmp[i]
 	}
-	
+
 	for(var i=0;i<numOfColors;i++){
 		console.log('offer['+i+']: '+ room.playerList[id].offer[i]);
 	}
@@ -396,7 +404,7 @@ function playerJoinGame(data) {
 
 			//join the current open room.
 			sock.join(currRoom.toString());
-			
+
 			data.playerId = room.length - 1;//this player is the last in the room.
 
 			console.log('Player ' + data.playerId + ' joined the game');
@@ -404,8 +412,8 @@ function playerJoinGame(data) {
 			// Emit an event notifying the clients that the player has joined the room.
 			sock.emit('playerJoinedRoom', data);
 //			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
-//				console.log('Room is full. Almost ready!');
-//				hostPrepareGame(data.gameId);
+//			console.log('Room is full. Almost ready!');
+//			hostPrepareGame(data.gameId);
 //			}
 		}
 	} else {
@@ -413,11 +421,11 @@ function playerJoinGame(data) {
 
 		//join the current open room.
 		sock.join(currRoom.toString());
-		
+
 		data.playerId = 0;//minus the host. this player is the last in the room.
 
 		console.log('Player ' + data.playerId + ' joined the game');
-		
+
 		// Emit an event notifying the clients that the player has joined the room.
 		sock.emit('playerJoinedRoom', data);
 	}
@@ -434,7 +442,7 @@ function movePlayer(data1){
 	console.log('y: '+data1.y);
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
-	
+
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
@@ -442,11 +450,11 @@ function movePlayer(data1){
 			for(var i=0;i<room.Goals.length;i++){
 				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
 					room.gameOver = true;
-					
+
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 				}
 			}
-			
+
 			if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
 				player.chips[data1.chip]--;
 				player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
@@ -466,7 +474,7 @@ function movePlayer(data1){
 				for(var i=0;i<room.playerList.length;i++){
 					sendMsg(room, room.playerList[i].id ,room.playerList[i].GUIid , 'movePlayer', data);
 				}
-			//	io.sockets.in(data.gameId).emit('movePlayer', data);
+				//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
 			if(room.gameOver){
 				gameLogger.debug('line 369' );
@@ -483,7 +491,7 @@ function updateWinnerChips(room, x, y, player, gameConditions){
 			player.score += gameConditions.score.onReachGoalPlayerView;
 		}
 		if(gameConditions.score.onReachGoalGoalView != undefined){
-		var stop = false;
+			var stop = false;
 			for(var i=0;i<room.playerList.length && !stop;i++){
 				if((room.playerList[i].location.x === x) && (room.playerList[i].location.y === y)){
 					room.playerList[i].score += gameConditions.score.onReachGoalGoalView;
@@ -512,13 +520,13 @@ function createChips(){
 	}
 	return chips;
 }
-*/
+ */
 function setLocation(p){
 	var location = {
 			x : p.locationX,
 			y : p.locationY
 	}
-	
+
 	return location;
 
 }
@@ -559,7 +567,7 @@ function playerRestart(data) {
  *      GAME LOGIC       *
  *                       *
  ************************* */
- function beginRounds(room, game){
+function beginRounds(room, game){
 	room.roundNumber = 0;
 	var numberOfTimesToRepeatRounds = 1;
 	//check if there should be a repetition on rounds.
@@ -584,33 +592,33 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		gameLogger.debug('Goals : '+room.Goals);
 		gameLogger.debug('colors : '+conf.Global.Colors);
 		gameLogger.debug('gameId : '+room.gameId);
-		
+
 		clearPlayersAttributes(room);
 		buildPlayersAttributs(round.phases_in_round[phaseIndex], round, room, game.roles, game.phases);
-		
+
 		console.log('finish building attributes');
 		console.log('room.playerList.length: '+room.playerList.length);
 		gameLogger.debug('finish building attributes');
 		gameLogger.debug('room.playerList.length: '+room.playerList.length);
-		
-		deleteFormerOffers(room);
-		
-		var data = {
-					cg : room.currentGame,
-					RoundNumber : room.roundNumber,
-					phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
-					board : room.guiboard,
-					players : room.playerList,
-					phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
-					Goals : room.Goals,
-					colors : conf.Global.Colors,
-					gameId : room.gameId
-				}
 
-				
+		deleteFormerOffers(room);
+
+		var data = {
+				cg : room.currentGame,
+				RoundNumber : room.roundNumber,
+				phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
+				board : room.guiboard,
+				players : room.playerList,
+				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
+				Goals : room.Goals,
+				colors : conf.Global.Colors,
+				gameId : room.gameId
+		}
+
+
 		for(var i=0; i<room.playerList.length; i++){
 			data.playerID = room.playerList[i].GUIid;
-				
+
 			gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
 			gameLogger.debug('   canMove '+room.playerList[i].canMove);
@@ -630,7 +638,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			gameLogger.debug('   phaseTime '+data.phaseTime);
 			gameLogger.debug('   Goals '+data.Goals);
 			gameLogger.debug('***********************');
-			
+
 			sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid, 'beginFaze', data);
 		}
 		var newPhaseIndex = phaseIndex;
@@ -691,20 +699,20 @@ function sendMsg(room, id, GUIid, funcName, data){
 		console.log('ip: '+player.IP);
 		var client = net.connect({port: player.listening_port},{host: player.IP},
 
-			function() { //'connect' listener
+				function() { //'connect' listener
 
-				console.log('client connected');
-				data = JSON.stringify(data);
-				client.write(data);
+			console.log('client connected');
+			data = JSON.stringify(data);
+			client.write(data);
 
-			});
-			
+		});
+
 		client.on('data', function(data) {
 			console.log(data.toString());
 			client.end();
 
 		});
-		
+
 		client.on('end', function() {
 			console.log('client disconnected');
 		});
@@ -716,7 +724,7 @@ function gameOver(room, game){
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
-		playerId : room.playerList[winner].GUIid
+			playerId : room.playerList[winner].GUIid
 	}
 	gameLogger.debug('winner: '+room.playerList[winner].name);
 	gameLogger.debug('score: '+room.playerList[winner].score);
@@ -787,7 +795,7 @@ function winnerIsMinPoints(room){
 function clearPlayersAttributes(room){
 	console.log('clearPlayersAttributes');	
 	gameLogger.debug('clearPlayersAttributes');
-	
+
 	for(var i=0;i<room.playerList.length;i++){
 		room.playerList[i].canOfferTo = new Array();
 		room.playerList[i].canMove = 0;
@@ -815,7 +823,7 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 			}
 		}
 	}
-		//going through all round's roles and additional_actions
+	//going through all round's roles and additional_actions
 	for(var i=0;i<round.players_roles.length;i++){
 		var index = findPlayerInd(room.playerList, round.players_roles[i].id);
 		if(round.players_roles[i].role != undefined){
@@ -841,7 +849,7 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 		}
 	}
 
-	
+
 	//create can_offer_to list as players IDs, not roles.
 	for(var i=0;i<room.playerList.length;i++){
 		for(var k=0; k < room.playerList[i].can_offer_to.length; k++){	
@@ -865,45 +873,45 @@ function buildPlayersAttributs(phaseName, round, room, gameRoles, phases){
 			gameLogger.debug(room.playerList[i].canOfferToList[k]);
 		}
 	}
-	
+
 }
 function checkActions(player, searchPlace){
 	console.log(' ');
 	console.log('***************************** ');
 	console.log('checkActions ');
-	
+
 	gameLogger.debug(' ');
 	gameLogger.debug('***************************** ');
 	gameLogger.debug('checkActions ');
 	for(var h in searchPlace){
-	//	gameLogger.debug('player: '+player.name);	
+		//	gameLogger.debug('player: '+player.name);	
 		//gameLogger.debug('att: '+h);		
 		//gameLogger.debug('val: '+searchPlace[h]);					
 		switch(h){
-			case 'canMove':
-				player.canMove = searchPlace[h];
-				break;
-			case 'canOffer':
-				player.canOffer = searchPlace[h];
-				break;
-			case 'canTransfer':
-				player.canTransfer = searchPlace[h];
-				break;
-			case 'canSeeChips':
-				player.canSeeChips = searchPlace[h];
-				break;
-			case 'canSeeLocations':
-				player.canSeeLocations = searchPlace[h];
-				break;
-			case 'num_of_offers_per_player':
-				player.num_of_offers_per_player = searchPlace[h];
-				break;
-			case 'total_num_of_offers':
-				player.total_num_of_offers = searchPlace[h];
-				break;
-			case 'canOfferTo':
-				player.can_offer_to = searchPlace[h];
-				break;
+		case 'canMove':
+			player.canMove = searchPlace[h];
+			break;
+		case 'canOffer':
+			player.canOffer = searchPlace[h];
+			break;
+		case 'canTransfer':
+			player.canTransfer = searchPlace[h];
+			break;
+		case 'canSeeChips':
+			player.canSeeChips = searchPlace[h];
+			break;
+		case 'canSeeLocations':
+			player.canSeeLocations = searchPlace[h];
+			break;
+		case 'num_of_offers_per_player':
+			player.num_of_offers_per_player = searchPlace[h];
+			break;
+		case 'total_num_of_offers':
+			player.total_num_of_offers = searchPlace[h];
+			break;
+		case 'canOfferTo':
+			player.can_offer_to = searchPlace[h];
+			break;
 		}
 	}
 }
@@ -914,7 +922,7 @@ function deleteFormerOffers(room){
 		for(var j=0;j<numOfColors;j++){
 			room.playerList[i].offer[j] = 0;
 		}
-		
+
 	}
 }
 function manhattanDistance(room, x, y){
@@ -981,7 +989,7 @@ function createServerBoard(game){
 	for(var i=0 ;i<board.length;i++){
 		newBoard[i] = new Array();
 	}
-	
+
 	for (var i=0; i<board.length; i++){
 		for(var j=0; j< board[i].length; j++){
 			newBoard[i][j] = 0;
@@ -1000,7 +1008,7 @@ function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var p1 = findPlayer(room.playerList, data.player1.id);
 	var p2 = findPlayer(room.playerList, data.player2.id);
-	
+
 	if(p1 != undefined && p2 != undefined){
 		for(var i=0;i<numOfColors;i++){
 			var sum1 = data.player1.colorsToAdd[i];
@@ -1008,7 +1016,7 @@ function updateChips(data){
 			gameLogger.trace('sum1: '+sum1);
 			gameLogger.trace('sum2: '+sum2);
 			gameLogger.trace('before');
-			
+
 			p1.chips[i] =+p1.chips[i] + +sum1;
 			gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
 			p2.chips[i] =+p2.chips[i] - +sum1;
@@ -1019,7 +1027,7 @@ function updateChips(data){
 			p2.chips[i] =+p2.chips[i] + +sum2;
 			gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
 		}
-		
+
 		p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
 		p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
 		gameLogger.trace('pl SCORE: '+p1.score);
@@ -1028,7 +1036,7 @@ function updateChips(data){
 		data.player2.chips = p2.chips;
 		data.player1.score = p1.score;
 		data.player2.score = p2.score;
-		
+
 		var data =
 		{
 				gameId:data.gameId,
@@ -1052,7 +1060,7 @@ function rejectOffer(data){
 //	var socketId = room[''+data.id];
 //	var socket = io.sockets.sockets[socketId];
 //	var send ={
-//			rowid : data.rowid
+//	rowid : data.rowid
 //	}
 //	socket.emit('rejectOffer',send);
 }
@@ -1061,13 +1069,13 @@ exports.getPlayers = function(pl, al){
 	var room = gameSocket.manager.rooms["/" + 0];	
 	for(var i=0;i<pl.length;i++){
 		if(pl[i] >= room.length){
-		console.log('inside!!!!!!!1');
+			console.log('inside!!!!!!!1');
 			return false;
 		}
 	}
 	for(var i=0;i<al.length;i++){
 		if(agents[al[i]] === undefined){
-		console.log('inside!!!!!!!1');
+			console.log('inside!!!!!!!1');
 			return false;
 		}
 	}
@@ -1075,9 +1083,9 @@ exports.getPlayers = function(pl, al){
 }
 
 exports.sendOffer = function(data){
-	
+
 }
-// @param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
+//@param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
 function moveUp(data){
 	data.x = room.playerList[data.playerId].locationX;
 	data.y = room.playerList[data.playerId].locationY - 1;
@@ -1089,9 +1097,9 @@ function moveDown(data){
 	data.chip = room.guiboard[x][y];
 }
 function moveLeft(data){
-			data.x = room.playerList[data.playerId].locationX - 1;
-			data.y = room.playerList[data.playerId].locationY;
-			data.chip = room.guiboard[x][y];
+	data.x = room.playerList[data.playerId].locationX - 1;
+	data.y = room.playerList[data.playerId].locationY;
+	data.chip = room.guiboard[x][y];
 }
 
 function moveRight(data){
@@ -1117,17 +1125,17 @@ exports.move = function(data){
 				else if(data.right === true){
 					moveRight(data);
 				}
-				
+
 				var newData = {
-					gameId : data.gameId,
-					playerId : data.playerId,
-					currX : p.locationX,
-					currY : p.locationY,
-					x : data.x,
-					y : data.y,
-					chip : data.chip					
+						gameId : data.gameId,
+						playerId : data.playerId,
+						currX : p.locationX,
+						currY : p.locationY,
+						x : data.x,
+						y : data.y,
+						chip : data.chip					
 				}
-				
+
 				movePlayer(newData);
 			}
 		}
@@ -1149,7 +1157,7 @@ exports.joinGame = function(data){
 	}
 }
 exports.rejectOffer = function(data){
-	
+
 }
 
 exports.doesSpecialIDExist = function(id){
@@ -1160,5 +1168,5 @@ exports.doesSpecialIDExist = function(id){
 	else{
 		return false;
 	}
- }
+}
 

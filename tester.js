@@ -38,8 +38,13 @@ exports.initGame = function(socket, data){
 }
 
 createConfig = function(conf){
+	
 	//var status = validator.validateConf(conf);
 	confID[conf.Global.ID] = conf;
+	agx.ConfigurtionToDataBase(conf);
+	
+	
+	
 	return 200;
 //	return status;
 }

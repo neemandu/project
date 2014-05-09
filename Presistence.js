@@ -98,18 +98,8 @@ var Game = sequelize.define('Games', {
 		        ["createdAt",this.getDataValue('createdAt')],
 		        ["updatedAt",this.getDataValue('updatedAt')]];
 	}}
-	}) 
+	}); 
 
-	"roles" : {
-		"proposer" : {
-			"canOfferTo" : ["responder"]
-		},
-		"responder" : {
-			"canSeeChips" : 1,
-			"canSeeLocations" : 1,
-			"canTransfer" : 1
-
-		},
 
 
 //		var Phase = sequelize.define('Phase', {
@@ -268,6 +258,7 @@ var Game = sequelize.define('Games', {
 
 
 					createLogs : function(conf){
+						console.log(conf['Logs']);
 						for (var i=0; i< conf['Logs'].length; i++){
 							var logfile = conf['Logs'][i];
 							logfileList[i] = csv.createCsvFileWriter("logs\\"+logfile.Name,{'separator': ','});

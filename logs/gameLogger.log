@@ -2067,3 +2067,5 @@
 [2014-04-07 14:51:54.740] [DEBUG] gameLogger - ***********************
 [2014-04-07 14:51:54.743] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3
 [2014-04-07 15:12:31.066] [DEBUG] gameLogger - Creating game: Game_1
+[2014-05-09 14:11:05.173] [DEBUG] gameLogger - Game #311 was created
+[2014-05-09 14:28:27.991] [DEBUG] gameLogger - Game #884 was created
