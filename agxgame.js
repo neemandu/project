@@ -1222,13 +1222,16 @@ exports.getPlayers = function(pl, al){
 	var room = gameSocket.manager.rooms["/" + 0];	
 	for(var i=0;i<pl.length;i++){
 		if(pl[i] >= room.length){
-			console.log('inside!!!!!!!1');
+			
+			console.log('inside!!!!!!!1  pl: '+pl[i]);
+			console.log('inside!!!!!!!1  i: '+i);
+			console.log('inside!!!!!!!1  lengtth: '+room.length);
 			return false;
 		}
 	}
 	for(var i=0;i<al.length;i++){
 		if(agents[al[i]] === undefined){
-			console.log('inside!!!!!!!1');
+			console.log('inside!!!!!!!2');
 			return false;
 		}
 	}
