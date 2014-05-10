@@ -29,7 +29,7 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = false;
+var DATABASE = true;
 
 var async_function = function(val, callback){
 	process.nextTick(function(){
@@ -75,7 +75,9 @@ exports.initGame = function(sio, socket){
 exports.ConfigurtionToDataBase = function(conf){
 	if (DATABASE){
 		async.series([presistance.createLogs(conf),
-		              presistance.addBoard1(conf.Global.boards)]);
+		              presistance.addBoard1(conf.Global.boards),
+		              presistance.addGames(conf)
+		              ]);
 		};
 }
 
