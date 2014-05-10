@@ -445,27 +445,35 @@ function movePlayer(data1){
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
 
+		
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
+		
+		var emptyChips = [];
+		//for those that cant see chips
+		for(var i=0; i<player.chips.length; i++){
+			emptyChips[i] = -1;
+		}
 		if(room.board[data1.x][data1.y] != undefined){
 			for(var i=0;i<room.Goals.length;i++){
 				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
 					room.gameOver = true;
-
+					
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 				}
 			}
-
+			
 			if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
 				player.chips[data1.chip]--;
 				player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
+				var player1 = JSON.parse(JSON.stringify(player));
 				var data = {
 						playerId: data1.playerId,
 						x: data1.x,
 						y: data1.y,
 						chip: data1.chip,
-						score : player.score
+						score : player1.score
 				}
 				player.moved = true;
 				player.roundsNotMoving = 0;
@@ -474,9 +482,33 @@ function movePlayer(data1){
 				var ind = findPlayerInd(room.playerList, data1.playerId);
 				updateLocation(room, ind, data1.x, data1.y);
 				for(var i=0;i<room.playerList.length;i++){
+					if(i != player.GUIid){
+						if((room.playerList[i].canSeeChips === 0)
+							&& (room.playerList[i].canSeeLocations === 0)){
+							data.x = -1;
+							data.y = -1;
+							data.chips = emptyChips;
+							data.score = 0;
+						}
+						else if(room.playerList[i].canSeeLocations === 0){
+							data.x = -1;
+							data.y = -1;
+						}
+						else if(room.playerList[i].canSeeChips === 0){
+							data.chips = emptyChips;
+							data.score = 0;
+						}
+						else{
+							data.chips = JSON.parse(JSON.stringify(player.chips));
+						}
+					}
+					else{
+						data.chips = JSON.parse(JSON.stringify(player.chips));
+						data.score = player.score;
+					}
 					sendMsg(room, room.playerList[i].id ,room.playerList[i].GUIid , 'movePlayer', data);
 				}
-				//	io.sockets.in(data.gameId).emit('movePlayer', data);
+			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
 			if(room.gameOver){
 				gameLogger.debug('line 369' );
@@ -485,7 +517,6 @@ function movePlayer(data1){
 		}
 	}
 }
-
 
 function updateWinnerChips(room, x, y, player, gameConditions){
 	if(gameConditions.score != undefined){
@@ -583,6 +614,8 @@ function beginRounds(room, game){
 
 
 function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
+	room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
+		gameLogger.debug('phaseIndex: '+phaseIndex);
 	if(room.gameOver === false){
 		var round = game.rounds.rounds_defenitions[room.roundNumber];
 		console.log('phase name: '+round.phases_in_round[phaseIndex]);
@@ -594,33 +627,45 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 		gameLogger.debug('Goals : '+room.Goals);
 		gameLogger.debug('colors : '+conf.Global.Colors);
 		gameLogger.debug('gameId : '+room.gameId);
-
+		
 		clearPlayersAttributes(room);
 		buildPlayersAttributs(round.phases_in_round[phaseIndex], round, room, game.roles, game.phases);
-
+		
 		console.log('finish building attributes');
 		console.log('room.playerList.length: '+room.playerList.length);
 		gameLogger.debug('finish building attributes');
 		gameLogger.debug('room.playerList.length: '+room.playerList.length);
-
+		
 		deleteFormerOffers(room);
-
+		
 		var data = {
-				cg : room.currentGame,
-				RoundNumber : room.roundNumber,
-				phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
-				board : room.guiboard,
-				players : room.playerList,
-				phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
-				Goals : room.Goals,
-				colors : conf.Global.Colors,
-				gameId : room.gameId
-		}
+					cg : room.currentGame,
+					RoundNumber : room.roundNumber,
+					phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
+					board : room.guiboard,
+					phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
+					Goals : room.Goals,
+					colors : conf.Global.Colors,
+					gameId : room.gameId
+				}
 
-
+				
 		for(var i=0; i<room.playerList.length; i++){
+			room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
 			data.playerID = room.playerList[i].GUIid;
-
+			if((room.playerList[i].canSeeChips === 0)
+				&& (room.playerList[i].canSeeLocations === 0)){
+				data.players = playersWithoutChipsAndLocations(room, i);
+			}
+			else if(room.playerList[i].canSeeLocations === 0){
+				data.players = playersWithoutLocations(room, i);
+			}
+			else if(room.playerList[i].canSeeChips === 0){
+				data.players = playersWithoutChips(room, i);
+			}
+			else{
+				data.players = room.playerList;
+			}
 			gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
 			gameLogger.debug('   canMove '+room.playerList[i].canMove);
@@ -640,7 +685,7 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			gameLogger.debug('   phaseTime '+data.phaseTime);
 			gameLogger.debug('   Goals '+data.Goals);
 			gameLogger.debug('***********************');
-
+			
 			sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid, 'beginFaze', data);
 		}
 		var newPhaseIndex = phaseIndex;
@@ -650,6 +695,59 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 			setTimeout(function(){ return beginphase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
 		}
 		else{
+			setTimeout(function(){ return nextRound(room, numberOfTimesToRepeatRounds, game);}, game.phases[round.phases_in_round[phaseIndex]].time);
+		}
+	}
+}
+
+function playersWithoutChipsAndLocations(room, self){
+	for(var i=0; i< room.playerListCopy.length; i++){
+		if(i != self){
+			room.playerListCopy[i].location.x = -1;
+			room.playerListCopy[i].location.y = -1;	
+			room.playerListCopy[i].score = 0;
+			for(var j=0 ; j<room.playerListCopy[i].chips.length; j++){
+				room.playerListCopy[i].chips[j] = -1;
+			}	
+		}
+	}
+	return room.playerListCopy;
+}
+
+function playersWithoutLocations(room, self){
+	for(var i=0; i< room.playerListCopy.length; i++){
+		if(i != self){
+			room.playerListCopy[i].location.x = -1;
+			room.playerListCopy[i].location.y = -1;		
+		}
+		else{
+			room.playerListCopy[i].location.x = room.playerList[i].location.x;
+			room.playerListCopy[i].location.y = room.playerList[i].location.y;		
+		}
+	}
+	return room.playerListCopy;
+}
+
+function playersWithoutChips(room, self){
+	for(var i=0; i< room.playerListCopy.length; i++){
+		if(i != self){
+			for(var j=0 ; j<room.playerList[i].chips.length; j++){
+				room.playerListCopy[i].chips[j] = -1;
+			}
+			room.playerListCopy[i].score = 0;
+		}
+		else{
+			for(var j=0 ; j<room.playerList[i].chips.length; j++){
+				room.playerListCopy[i].chips[j] = room.playerList[i].chips[j];
+			}
+			room.playerListCopy[i].score = room.playerList[i].score;
+		}
+	}
+	return room.playerListCopy;
+}
+
+
+function nextRound(room, numberOfTimesToRepeatRounds, game){
 			gameLogger.debug('Round #'+room.roundNumber+'no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!');
 			room.roundNumber++;
 			//if numOfRoundsStandStill feature exist
@@ -680,9 +778,9 @@ function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 					gameOver(room, game);
 				}
 			}
-		}
-	}
 }
+
+
 function sendMsg(room, id, GUIid, funcName, data){
 	var player = findPlayer(room.playerList, GUIid);
 	console.log('player.agent: '+player.agent);
@@ -1001,6 +1099,7 @@ function createServerBoard(game){
 }
 
 
+
 /**
  * this function update the rest of the players with the current transaction
  * @param player1 the reciever player
@@ -1010,7 +1109,7 @@ function updateChips(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var p1 = findPlayer(room.playerList, data.player1.id);
 	var p2 = findPlayer(room.playerList, data.player2.id);
-
+	
 	if(p1 != undefined && p2 != undefined){
 		for(var i=0;i<numOfColors;i++){
 			var sum1 = data.player1.colorsToAdd[i];
@@ -1018,7 +1117,7 @@ function updateChips(data){
 			gameLogger.trace('sum1: '+sum1);
 			gameLogger.trace('sum2: '+sum2);
 			gameLogger.trace('before');
-
+			
 			p1.chips[i] =+p1.chips[i] + +sum1;
 			gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
 			p2.chips[i] =+p2.chips[i] - +sum1;
@@ -1029,7 +1128,7 @@ function updateChips(data){
 			p2.chips[i] =+p2.chips[i] + +sum2;
 			gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
 		}
-
+		
 		p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
 		p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
 		gameLogger.trace('pl SCORE: '+p1.score);
@@ -1038,19 +1137,70 @@ function updateChips(data){
 		data.player2.chips = p2.chips;
 		data.player1.score = p1.score;
 		data.player2.score = p2.score;
-
-		var data =
-		{
-				gameId:data.gameId,
-				player1:data.player1,
-				player2:data.player2
-		};
+		
+		//for those that cant see chips.
+		var emptyChips = [];
+		for(var i=0; i<p1.chips.length; i++){
+				emptyChips[i] = -1;
+		}
+		
+		var cantSeeChipsData = {
+			player1 : JSON.parse(JSON.stringify(data.player1)),
+			player2 : JSON.parse(JSON.stringify(data.player2))
+		}
+		cantSeeChipsData.player1.chips = emptyChips,
+		cantSeeChipsData.player2.chips = emptyChips,
+		cantSeeChipsData.player1.score = 0;
+		cantSeeChipsData.player2.score = 0;
+		
+		var p1cantSeeChipsData = {
+			player1 : JSON.parse(JSON.stringify(data.player1)),
+			player2 : JSON.parse(JSON.stringify(data.player2)),
+		}
+		p1cantSeeChipsData.player1.chips = p1.chips;
+		p1cantSeeChipsData.player2.chips = emptyChips;
+		p1cantSeeChipsData.player1.score = p1.score;
+		p1cantSeeChipsData.player2.score = 0;
+		
+		var p2cantSeeChipsData = {
+			player1 : JSON.parse(JSON.stringify(data.player1)),
+			player2 : JSON.parse(JSON.stringify(data.player2)),
+		}
+		p2cantSeeChipsData.player1.chips = emptyChips;
+		p2cantSeeChipsData.player2.chips = p2.chips;
+		p2cantSeeChipsData.player1.score = 0;
+		p2cantSeeChipsData.player2.score = p2.score;
+		
 		for(var i=0;i<room.playerList.length;i++){
-			sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', data);
+			if(i == p1.id){
+				if(p1.canSeeChips === 0){
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
+				}
+				else{
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', data);
+				}
+			}
+			else if(i == p2.id){
+				if(p2.canSeeChips === 0){
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
+				}
+				else{
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', data);
+				}
+			}
+			else{
+				if(room.playerList[i].canSeeChips === 0){
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
+				}
+				else{
+					sendMsg(room, room.playerList[i].id, room.playerList[i].GUIid , 'updateChips', data);
+				}
+			}
 		}
 		//io.sockets.in(data.gameId).emit('updateChips', data );
 	}
 }
+
 
 function rejectOffer(data){
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
