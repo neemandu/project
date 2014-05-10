@@ -29,7 +29,7 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = true;
+var DATABASE = false;
 
 var async_function = function(val, callback){
 	process.nextTick(function(){
