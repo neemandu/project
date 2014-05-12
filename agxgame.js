@@ -615,7 +615,7 @@ function beginRounds(room, game){
 
 function beginphase(numberOfTimesToRepeatRounds, room, game, phaseIndex){
 	room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
-		gameLogger.debug('phaseIndex: '+phaseIndex);
+	gameLogger.debug('phaseIndex: '+phaseIndex);
 	if(room.gameOver === false){
 		var round = game.rounds.rounds_defenitions[room.roundNumber];
 		console.log('phase name: '+round.phases_in_round[phaseIndex]);
@@ -750,6 +750,7 @@ function playersWithoutChips(room, self){
 function nextRound(room, numberOfTimesToRepeatRounds, game){
 			gameLogger.debug('Round #'+room.roundNumber+'no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!');
 			room.roundNumber++;
+			var round = game.rounds.rounds_defenitions[room.roundNumber];
 			//if numOfRoundsStandStill feature exist
 			if(game.GameConditions.endConditions.numOfRoundsStandStill != undefined){
 				var rr = game.GameConditions.endConditions.numOfRoundsStandStill;
@@ -772,7 +773,7 @@ function nextRound(room, numberOfTimesToRepeatRounds, game){
 			}
 			if(room.gameOver === false){
 				if((numberOfTimesToRepeatRounds === -1) || (room.roundNumber < game.rounds.rounds_defenitions.length)){
-					setTimeout(function(){ return beginphase(numberOfTimesToRepeatRounds, room, game, 0);}, game.phases[round.phases_in_round[phaseIndex]].time);
+					beginphase(numberOfTimesToRepeatRounds, room, game, 0);
 				}
 				else{
 					gameOver(room, game);
