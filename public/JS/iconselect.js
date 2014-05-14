@@ -15,27 +15,30 @@
  *
  */
 
-IconSelect.DEFAULT = {};
-IconSelect.DEFAULT.SELECTED_ICON_WIDTH = 48;
-IconSelect.DEFAULT.SELECTED_ICON_HEIGHT = 48;
-IconSelect.DEFAULT.SELECTED_BOX_PADDING = 1;
-IconSelect.DEFAULT.SELECTED_BOX_PADDING_RIGHT = 12;
-IconSelect.DEFAULT.ICONS_WIDTH = 32;
-IconSelect.DEFAULT.ICONS_HEIGHT = 32;
-IconSelect.DEFAULT.BOX_ICON_SPACE = 1;
-IconSelect.DEFAULT.HORIZONTAL_ICON_NUMBER = 3;
-IconSelect.DEFAULT.VECTORAL_ICON_NUMBER = 3;
 
-IconSelect.COMPONENT_ICON_FILE_PATH = "Pictures/smallArrow.png";
 
 function IconSelect($$elementID, $$parameters) {
     
+	IconSelect.DEFAULT = {};
+
+
+	var COMPONENT_ICON_FILE_PATH = "Pictures/smallArrow.png";
+	
     var _icons = [];
     var _selectedIndex = -1;
     var _boxScroll;
     
-    var _default = IconSelect.DEFAULT;
-
+    var _default = {};
+	_default.SELECTED_ICON_WIDTH = 48;
+	_default.SELECTED_ICON_HEIGHT = 48;
+	_default.SELECTED_BOX_PADDING = 1;
+	_default.SELECTED_BOX_PADDING_RIGHT = 12;
+	_default.ICONS_WIDTH = 32;
+	_default.ICONS_HEIGHT = 32;
+	_default.BOX_ICON_SPACE = 1;
+	_default.HORIZONTAL_ICON_NUMBER = 3;
+	_default.VECTORAL_ICON_NUMBER = 3;
+	
     function _init() {
         
         //parametreler boş gelirse
@@ -91,7 +94,7 @@ function IconSelect($$elementID, $$parameters) {
         var horizontalIconNumber = Math.round(($icons.length) / $$parameters.vectoralIconNumber);
         
         _View.boxElement.style.height = (($$parameters.iconsHeight + 2) * horizontalIconNumber) + 
-                ((horizontalIconNumber + 1) * $$parameters.boxIconSpace);
+                ((horizontalIconNumber + 1) * $$parameters.boxIconSpace)+'px';
         this.setSelectedIndex(0);
         
     };
@@ -214,7 +217,7 @@ function IconSelect($$elementID, $$parameters) {
         componentIconElement.setAttribute('class', 'component-icon');
         
         var componentIconImgElement = document.createElement('img');
-        componentIconImgElement.setAttribute('src', IconSelect.COMPONENT_ICON_FILE_PATH );
+        componentIconImgElement.setAttribute('src', COMPONENT_ICON_FILE_PATH );
         componentIconElement.appendChild(componentIconImgElement);
         
         _View.boxScrollElement = document.createElement('div');
@@ -228,23 +231,23 @@ function IconSelect($$elementID, $$parameters) {
         
         _View.selectedIconImgElement.setAttribute('width', $parameters.selectedIconWidth);
         _View.selectedIconImgElement.setAttribute('height', $parameters.selectedIconHeight);
-        selectedIconElement.style.width = $parameters.selectedIconWidth;
-        selectedIconElement.style.height = $parameters.selectedIconHeight;
-        selectedBoxElement.style.width = $parameters.selectedIconWidth + $parameters.selectedBoxPadding + $parameters.selectedBoxPaddingRight;
-        selectedBoxElement.style.height = $parameters.selectedIconHeight + ($parameters.selectedBoxPadding * 2);
-        selectedIconElement.style.top = $parameters.selectedBoxPadding;
-        selectedIconElement.style.left = $parameters.selectedBoxPadding;
-        componentIconElement.style.bottom = 4 + $parameters.selectedBoxPadding;
+        selectedIconElement.style.width = $parameters.selectedIconWidth+'px';
+        selectedIconElement.style.height = $parameters.selectedIconHeight+'px';
+        selectedBoxElement.style.width = $parameters.selectedIconWidth + $parameters.selectedBoxPadding + $parameters.selectedBoxPaddingRight+'px';
+        selectedBoxElement.style.height = $parameters.selectedIconHeight + ($parameters.selectedBoxPadding * 2)+'px';
+        selectedIconElement.style.top = $parameters.selectedBoxPadding+'px';
+        selectedIconElement.style.left = $parameters.selectedBoxPadding+'px';
+        componentIconElement.style.bottom = 4 + $parameters.selectedBoxPadding+'px';
         
-        _View.boxScrollElement.style.left = parseInt(selectedBoxElement.style.width) + 1;
+        _View.boxScrollElement.style.left = parseInt(selectedBoxElement.style.width) + 1+'px';
         
         _View.boxScrollElement.style.width = (($parameters.iconsWidth + 2) * $parameters.vectoralIconNumber) + 
-                (($parameters.vectoralIconNumber + 1) * $parameters.boxIconSpace);
+                (($parameters.vectoralIconNumber + 1) * $parameters.boxIconSpace)+'px';
         _View.boxScrollElement.style.height = (($parameters.iconsHeight + 2) * $parameters.horizontalIconNumber) + 
-                (($parameters.horizontalIconNumber + 1) * $parameters.boxIconSpace);
+                (($parameters.horizontalIconNumber + 1) * $parameters.boxIconSpace)+'px';
          
-        _View.boxElement.style.left = _View.boxScrollElement.style.left;
-        _View.boxElement.style.width = _View.boxScrollElement.style.width;
+        _View.boxElement.style.left = _View.boxScrollElement.style.left+'px';
+        _View.boxElement.style.width = _View.boxScrollElement.style.width+'px';
         
         _View.iconSelectElement.appendChild(selectedBoxElement);
         selectedBoxElement.appendChild(selectedIconElement);
@@ -259,7 +262,7 @@ function IconSelect($$elementID, $$parameters) {
         results['selectedIconImgElement'] = _View.selectedIconImgElement;
         results['componentIconElement'] = componentIconElement;
         results['componentIconImgElement'] = componentIconImgElement;
-        
+		//alert($(".selected-box").html());
         return results;
         
         
@@ -277,17 +280,17 @@ function IconSelect($$elementID, $$parameters) {
         
         var iconElement = document.createElement('div');
         iconElement.setAttribute('class', 'icon');
-        iconElement.style.width = $parameters.iconsWidth;
-        iconElement.style.height = $parameters.iconsHeight;
-        iconElement.style.marginLeft = $parameters.boxIconSpace;
-        iconElement.style.marginTop = $parameters.boxIconSpace;
+        iconElement.style.width = $parameters.iconsWidth+'px';
+        iconElement.style.height = $parameters.iconsHeight+'px';
+        iconElement.style.marginLeft = $parameters.boxIconSpace+'px';
+        iconElement.style.marginTop = $parameters.boxIconSpace+'px';
         
         var iconImgElement = document.createElement('img');
         iconImgElement.setAttribute('src', $iconFilePath);
         iconImgElement.setAttribute('icon-value', $iconValue);
         iconImgElement.setAttribute('icon-index', $index);
-        iconImgElement.setAttribute('width', $parameters.iconsWidth);
-        iconImgElement.setAttribute('height', $parameters.iconsHeight);
+        iconImgElement.setAttribute('width', $parameters.iconsWidth+'px');
+        iconImgElement.setAttribute('height', $parameters.iconsHeight+'px');
         
         iconElement.appendChild(iconImgElement);
         _View.boxElement.appendChild(iconElement);

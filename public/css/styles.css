@@ -267,7 +267,23 @@ table.downTable
 	border-bottom-width:1px;
 	border-bottom-color:#AAAAAA;
 	
+}
+.downTable tr
+{
+	height:80px;
 }	
+
+.downTable tr tr
+{
+	height:auto;
+}	
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
 .downTable tr:last-child td
 {
 	border-bottom:none;
@@ -407,9 +423,9 @@ td.inputTable
 *	style of the offers' squares  ================================================
 */
 .chipsNum{
-	width:30px;
+	width:100%;
 	background-color:white;
-	height:20px;
+	height:auto;
 	background-color: transparent;
 }	
 td.purpleOfferSquare
@@ -535,3 +551,5 @@ td.colorAmount
 		background-image:url('../Pictures/plus_add_green.png');
 		background-size:100% 100%;
 }
+
+

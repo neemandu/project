@@ -14,12 +14,26 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
 
     <link href="css/styles.css" rel="stylesheet">
-	
-	
-	<link rel="stylesheet" type="text/css" href="css/iconselect.css" >
-    
+	<link href="css/iconselect.css" rel="stylesheet">    
 	
 </head>
+<script id="iconScript">
+ 
+ var currCount= {};
+    iconSelectFunc = function(id,icons) {
+            currCount[id] = new IconSelect('my-icon-select'+id, 
+                {'selectedIconWidth':50,
+                'selectedIconHeight':50,
+                'selectedBoxPadding':1,
+                'iconsWidth':23,
+                'iconsHeight':23,
+                'boxIconSpace':1,
+                'vectoralIconNumber':4,
+                'horizontalIconNumber':4});
+				currCount[id].refresh(icons);
+        };
+
+</script>
 <body>
 	
 

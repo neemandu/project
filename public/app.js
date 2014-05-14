@@ -355,7 +355,9 @@ jQuery(function($){
         }
 
     };
-
+	
+	var currCount1 ={};
+	
     var App = {
     	/**
     	 * keeps the names of colors for every possible color on the board
@@ -995,6 +997,7 @@ jQuery(function($){
         	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
+			currentCountArr: 0,
 			rowsIds: [],
         	offerToPlayers: 0,
 			goals: [],
@@ -1028,38 +1031,26 @@ jQuery(function($){
 				$('#downTable').attr("class", "downTable");
 				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
 		//$('#downTable').append('<tr><td class="makeGetOffer"><table id="historyRow'+App.Player.currentCount+'" class="historyRow"><tr></tr></table></td></tr>');		
-				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:5%; cursor:pointer;"><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:15%;"><b id="selectedPlayer'+App.Player.currentCount+'">Offer to</b><br><div id="my-icon-select'+App.Player.currentCount+'"></div></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:4%; padding-left:10px; cursor:pointer;"><br><img id="removeLine'+ App.Player.currentCount+'" src="Pictures/minus.png" alt="" style="width:100%; height:auto;"></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width:10%;"><b id="selectedPlayer'+App.Player.currentCount+'">Offer to</b><br><div id="my-icon-select'+App.Player.currentCount+'"></div></td>');
 				//$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'"></table></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:9%;"><img src="Pictures/arrow.png" alt="<->" style="width:100%; height:auto;"></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=36%;"><b>Give</b><table id="colorsToOffer'+ App.Player.currentCount+'" style="width:100%;"><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:6%;"><br><img src="Pictures/arrow.png" alt="<->" style="padding=2px; width:100%; height:auto;"></td>');
 				//$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr><tr></tr></table></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=28%; align: center;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'"></table></td>');
-				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=15%;"><div><button id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center"  style="width=36%;"><b>Get</b><table id="colorsToGet'+ App.Player.currentCount+'" style="width:100%;"><tr></tr></table></td>');
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=8%;"><br><div style="padding:5px; width=100%;"><button style="width:100%;" id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
 			
 				//var colors = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare");
 
-				var iconSelect;
-				
-				 iconSelect = new IconSelect("my-icon-select"+App.Player.currentCount, 
-					{'selectedIconWidth':48,
-					'selectedIconHeight':48,
-					'selectedBoxPadding':1,
-					'iconsWidth':23,
-					'iconsHeight':23,
-					'boxIconSpace':1,
-					'vectoralIconNumber':4,
-					'horizontalIconNumber':4});
-
-				var icons = [];
+				 
 				
 			//	var k=0;
 				for (var k =0; k<App.Player.chipsImages.length;k++){
-				$('#colorsToOffer'+ App.Player.currentCount).append('<td style="width:40px;">'+App.Player.chipsImages[k]+'</td><td align="center"><input align="center" type="number" min="1" style="width:30px;"></td>');
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').append('<td style="width:calc(100% / 12);">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="center" type="number" min="1" style="width:100%; height:auto;"></td>');
 				}
 				
 				for(var k=0;k<App.Player.chipsImages.length;k++){
-				$('#colorsToGet'+ App.Player.currentCount).append('<td style="width:40px;">'+App.Player.chipsImages[k]+'</td><td align="center"><input align="center" type="number" min="1" style="width:30px;"></td>');
+				$('#colorsToGet'+ App.Player.currentCount+' tr').append('<td style="width:calc(100% / 12);">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="center" type="number" min="1" style="width:100%; height:auto;"></td>');
 				}
 				
 				/*$('#colorsToOffer'+ App.Player.currentCount+' tr').each(function(){
@@ -1084,15 +1075,21 @@ jQuery(function($){
 					}
 				})
 				*/
+					
+				var icons = [];
 				for (var k =0; k<App.Player.offerToPlayers.length;k++) {
                     if (App.Player.offerToPlayers[k]!=App.Player.myid) {
 						    //$('#playersDropDown'+App.Player.currentCount).append('<option value="'+k+'">'+App.Player.offerToPlayers[k]+'</option>');     							
 							icons.push({'iconFilePath':App.Player.playerImages[App.Player.offerToPlayers[k]], 'iconValue':App.Player.offerToPlayers[k]});
-							$('#selectedPlayer'+App.Player.currentCount).attr('class',''+App.Player.offerToPlayers[k]);
+						//	$('#selectedPlayer'+App.Player.currentCount).attr('class',''+App.Player.offerToPlayers[k]);
 	
                     }
                 }
-				iconSelect.refresh(icons);
+				iconSelectFunc(App.Player.currentCount,icons);
+				//currCount[App.Player.currentCount].refresh(icons);
+				
+					
+				
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
 				$('#removeLine'+App.Player.currentCount).click( function(){
 					var id = this.id[this.id.length-1];//index 
@@ -1106,8 +1103,7 @@ jQuery(function($){
 				$('#sendOffer'+App.Player.currentCount).click( function(){
 								var id = this.id[this.id.length-1];//index 
 								//var player = $('#playersDropDown'+id+' option:selected').text();
-								var player = $('#selectedPlayer'+id).attr('class');
-								
+								var player = currCount[id].getSelectedValue();
 								var colorsToOffer = new Array();
 								var colorsToGet = new Array();
 								var i=0;
@@ -1281,11 +1277,18 @@ jQuery(function($){
     			'<tr>';
     			for(var i=0; i<data.players[id].chips.length; i++)
 				{
-    				if(i==3){
-    					playerCode += '</tr><tr>';
+					
+					if(App.Player.chipsImages[i] === -1){
+						playerCode += '<td style="width:20px;">'+App.Player.chipsImages[i]+'</td><td class="colorAmount">?</td>';
 						}
 					
+    				/*if(i==3){
+    					playerCode += '</tr><tr>';
+						}
+					*/
+					else{
     				playerCode += '<td style="width:20px;">'+App.Player.chipsImages[i]+'</td><td class="colorAmount">' +data.players[id].chips[i]+ '</td>';	
+					}
 				}
     			playerCode += '</tr></table></td> <td class="playerScore"> score:<br>'+ 0 +' </td> </tr>';//</table>';
 		
@@ -1298,7 +1301,13 @@ jQuery(function($){
     		updateScore: function(k,score)
     		{
 				App.players[k].score = score;
-    			$('#player'+k+' td:last').html('score:<br> '+score);
+				if(score === -1)
+					$('#player'+k+' td:last').html('score:<br> ?');
+				else
+					$('#player'+k+' td:last').html('score:<br> '+score);
+					
+				/*App.players[k].score = score;
+    			$('#player'+k+' td:last').html('score:<br> '+score);*/
     		},
     		
     		/**
@@ -1469,7 +1478,7 @@ jQuery(function($){
                             .addClass('btn')
                             .addClass('btnGameOver')
                     );
-            }
+            },
         },
 
 
