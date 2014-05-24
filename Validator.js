@@ -24,7 +24,9 @@ var nonExistingConfID = 318 + ' - one of the conf\'s id does not exist';
 var missingConfIDInRunConfig = 319 + ' - conf id tag does not exist in runConfig';
 var missingPlayerListInRunConfig = 320 + ' - PlayerList tag does not exist in runConfig';
 var missingAgentListInRunConfig = 321 + ' - agentList tag does not exist in runConfig';
-
+var idNotInList = 322 + ' - player is not in the players/agents list, player #';
+var AutomaticChipSwitchMissing = 323 + ' - AutomaticChipSwitch attribute is missing';
+var validateRun = 324 + ' - validate runConfig fail. reason: ';
 
 //agents status codes
 var illegalAgentActionValue = 400 + ' - illegal action value in agent\'s JSON.';
@@ -102,6 +104,10 @@ try{
 		if(conf.Games[i].players === undefined){
 			return false;
 		}
+		if(conf.Games[i].AutomaticChipSwitch === undefined){
+			return false;
+		}
+		
 	}
 	return true;
 }catch(e){
@@ -135,6 +141,7 @@ assertPhasesTab = function(conf){
 						}
 						else{
 							var foundId = false;
+							//search id in players and agents
 							for(var f=0;f<conf.Games[i].players.length; f++){
 								if(conf.Games[i].players[f].id === phase.players_roles[j].id){
 									foundId = true;
@@ -142,7 +149,15 @@ assertPhasesTab = function(conf){
 								}
 							}
 							if(!foundId){
-								return false;
+								for(var f=0;f<conf.Games[i].agents.length; f++){
+									if(conf.Games[i].agents[f].id === phase.players_roles[j].id){
+										foundId = true;
+										break;
+									}
+								}
+								if(!foundId){
+									return false;
+								}
 							}
 						}
 						//validating roles
@@ -153,24 +168,25 @@ assertPhasesTab = function(conf){
 						}
 						//validating additional actions
 						for(var action in phase.players_roles[j].additional_actions){
-							if((typeof(action.canMove) != 'Number') && (typeof(phase.actions.canMove) != 'null')){
-								return false;
-							}
-							if((typeof(action.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
-								return false;
-							}
-							if((typeof(action.canSeeChips) != 'Number') && (typeof(phase.actions.canSeeChips) != 'null')){
-								return false;
-							}
-							if((typeof(action.canSeeLocations) != 'Number') && (typeof(phase.actions.canSeeLocations) != 'null')){
-								return false;
-							}
-							if((typeof(action.canTransfer) != 'Number') && (typeof(phase.actions.canTransfer) != 'null')){
-								return false;
-							}
-							if((typeof(action.canOfferTo) != 'Object') && (typeof(phase.actions.canTransfer) != 'null')){
-								return false;
-							}
+							switch(action){
+								case 'canMove':
+								case 'canOffer':
+								case 'canTransfer':
+								case 'canSeeChips':
+								case 'canSeeLocations':
+								case 'num_of_offers_per_player':
+								case 'total_num_of_offers':
+									console.log('action: '+action+'  typeof(action)'+typeof(action));
+									if((typeof(action) != 'Number') && (typeof(action) != 'null')){
+										return false;
+									}
+									break;
+								case 'canOfferTo':
+									if((typeof(action) != 'Object') && (typeof(action) != 'null')){
+										return false;
+									}
+									break;
+								}
 						}
 					}
 				}
@@ -335,6 +351,7 @@ try{
 
 
 exports.validateRun = function(conf){
+//try{
 	//check confsToRun exist
 	if(conf.confsToRun === undefined){
 		return noConfsToRunTag;
@@ -357,8 +374,96 @@ exports.validateRun = function(conf){
 		if(!agx.getPlayers(conf.confsToRun[i].playerList, conf.confsToRun[i].agentList)){
 			return playerNumber;
 		}
-	}
+		var co = tester.getConf(conf.confsToRun[i].confID);
+		var playerNumber = checkAllPlayersExist(co);
+		if(playerNumber !== -1){
+			return playerNumber;
+		}
+	/*	var playerNumber = checkIdsInRoundsNPhases(co, conf.confsToRun[i]);
+		if(playerNumber !== -1){
+			return idNotInList + playerNumber;
+		}
+*/	}
 	return OK;
+/*}catch(e){
+	return validateRun + e;
+}*/
+}
+
+checkAllPlayersExist = function(conf){
+	var pl = new Array();
+	var al = new Array();
+	for(var i=0; i<conf.Games.length; i++){
+		for(var j=0; j<conf.Games[i].players.length; j++){
+			pl.push(conf.Games[i].players[j].id);
+		}
+		for(var j=0; j<conf.Games[i].agents.length; j++){
+			al.push(conf.Games[i].agents[j].id);
+		}
+	}
+	if(!agx.getPlayers(pl, al)){
+			return playerNumber;
+		}
+	return -1;
+}
+
+checkIdsInRoundsNPhases = function(conf, runConfig){
+try{
+	console.log('checkIdsInRoundsNPhases');
+	for(var i = 0 ;i<conf.Games.length; i++){
+		var foundId = false;
+		var playerNumber = -1;
+		//check rounds
+		for(var j = 0 ;j<conf.Games[i].rounds.rounds_defenitions.length; j++){
+			for(var c = 0 ;c<conf.Games[i].rounds.rounds_defenitions[j].players_roles.length; c++){
+				for(var f=0;f<runConfig.playerList.length && !foundId; f++){
+					console.log('runConfig.playerList[f]: '+runConfig.playerList[f]);
+					console.log('conf.Games[i].rounds.rounds_defenitions[j].players_roles[c].id: '+conf.Games[i].rounds.rounds_defenitions[j].players_roles[c].id);
+					if(runConfig.playerList[f] === conf.Games[i].rounds.rounds_defenitions[j].players_roles[c].id){
+						foundId = true;
+					}
+				}
+				if(!foundId){
+					for(var f=0;f<runConfig.agentList.length && !foundId; f++){
+						if(runConfig.agentList[f] === conf.Games[i].rounds.rounds_defenitions[j].players_roles[c].id){
+							foundId = true;
+						}
+					}
+					if(!foundId){
+						playerNumber = conf.Games[i].rounds.rounds_defenitions[j].players_roles[c].id;
+						return playerNumber + 'round     i: ' +i+ '   j: ' +j+ '    c: ' +c;
+					}
+				}
+			}
+		}
+		//check phases
+		for(var phase in conf.Games[i].phases){
+		console.log('Board  ' + conf.Games[i].Board);
+		console.log('phase.name  ' + phase.name);
+			for(var c = 0 ;c<phase.players_roles.length; c++){
+				for(var f=0;f<runConfig.playerList.length && !foundId; f++){
+					if(runConfig.playerList[f] === phase.players_roles[c].id){
+						foundId = true;
+					}
+				}
+				if(!foundId){
+					for(var f=0;f<runConfig.agentList.length && !foundId; f++){
+						if(runConfig.agentList[f] === phase.players_roles[c].id){
+							foundId = true;
+						}
+					}
+					if(!foundId){
+						playerNumber = phase.players_roles[c].id;
+						return playerNumber + 'phase     : ' +phase.name+ '   players_roles: ' +c;
+					}
+				}
+			}
+		}
+	}
+	return playerNumber;
+}catch(e){
+	return playerNumber +' reason: ' + e;
+}
 }
 
 exports.agent = function(data){
