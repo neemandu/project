@@ -502,12 +502,12 @@ try{
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
-		
+		/*
 		var emptyChips = [];
 		//for those that cant see chips
 		for(var i=0; i<player.chips.length; i++){
 			emptyChips[i] = -1;
-		}
+		}*/
 		if(room.board[data1.x][data1.y] != undefined){
 			for(var i=0;i<room.Goals.length;i++){
 				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
@@ -521,50 +521,44 @@ try{
 				player.chips[data1.chip]--;
 				player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
 				var player1 = JSON.parse(JSON.stringify(player));
-				var data = {
-						playerId: data1.playerId,
-						x: data1.x,
-						y: data1.y,
-						chip: data1.chip,
-						score : player1.score
-				}
+				
 				player.moved = true;
 				player.roundsNotMoving = 0;
 				room.board[data1.x][data1.y] = 1;
 				room.board[data1.currX][data1.currY] = 0;
 				var ind = findPlayerInd(room.playerList, data1.playerId);
+				var data;
 				updateLocation(room, ind, data1.x, data1.y);
 				for(var i=0;i<room.playerList.length;i++){
+					data = {
+							playerId: data1.playerId,
+							x: data1.x,
+							y: data1.y,
+							chip: data1.chip,
+							score : player1.score
+					}
 					if(i != player.GUIid){
 						if((room.playerList[i].canSeeChips === 0)
 							&& (room.playerList[i].canSeeLocations === 0)){
 							data.x = -1;
 							data.y = -1;
-							data.chips = emptyChips;
-							data.score = 0;
+							data.chip = -1;
+							data.score = -1;
 						}
 						else if(room.playerList[i].canSeeLocations === 0){
 							data.x = -1;
 							data.y = -1;
 						}
 						else if(room.playerList[i].canSeeChips === 0){
-							data.chips = emptyChips;
-							data.score = 0;
+							data.chip = -1;
+							data.score = -1;
 						}
-						else{
-							data.chips = JSON.parse(JSON.stringify(player.chips));
-						}
-					}
-					else{
-						data.chips = JSON.parse(JSON.stringify(player.chips));
-						data.score = player.score;
 					}
 					sendMsg(room, room.playerList[i].id ,room.playerList[i].GUIid , 'movePlayer', data);
 				}
 			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
 			if(room.gameOver){
-				gameLogger.debug('line 369' );
 				gameOver(room, room.conf.Games[room.currentGame]);
 			}
 		}
@@ -610,17 +604,8 @@ try{
 		error('updateLocation '+e);
 	}
 }
-/*
-function createChips(){
-	var chips = new Array();	
-	for(var i=0; i<numOfColors;i++){	 
-		var numchips = Math.floor(Math.random()*numOfChips);
-		console.log('chips color: '+colorArray[i]+' amount: '+numchips);
-		chips[i] = numchips;
-	}
-	return chips;
-}
- */
+
+
 function setLocation(p){
 try{
 	var location = {
@@ -802,7 +787,7 @@ try{
 		if(i != self){
 			room.playerListCopy[i].location.x = -1;
 			room.playerListCopy[i].location.y = -1;	
-			room.playerListCopy[i].score = 0;
+			room.playerListCopy[i].score = -1;
 			for(var j=0 ; j<room.playerListCopy[i].chips.length; j++){
 				room.playerListCopy[i].chips[j] = -1;
 			}	
@@ -841,7 +826,7 @@ try{
 			for(var j=0 ; j<room.playerList[i].chips.length; j++){
 				room.playerListCopy[i].chips[j] = -1;
 			}
-			room.playerListCopy[i].score = 0;
+			room.playerListCopy[i].score = -1;
 		}
 		else{
 			for(var j=0 ; j<room.playerList[i].chips.length; j++){
@@ -1321,8 +1306,8 @@ try{
 			}
 			cantSeeChipsData.player1.chips = emptyChips,
 			cantSeeChipsData.player2.chips = emptyChips,
-			cantSeeChipsData.player1.score = 0;
-			cantSeeChipsData.player2.score = 0;
+			cantSeeChipsData.player1.score = -1;
+			cantSeeChipsData.player2.score = -1;
 			
 			var p1cantSeeChipsData = {
 				player1 : JSON.parse(JSON.stringify(data.player1)),
@@ -1331,7 +1316,7 @@ try{
 			p1cantSeeChipsData.player1.chips = p1.chips;
 			p1cantSeeChipsData.player2.chips = emptyChips;
 			p1cantSeeChipsData.player1.score = p1.score;
-			p1cantSeeChipsData.player2.score = 0;
+			p1cantSeeChipsData.player2.score = -1;
 			
 			var p2cantSeeChipsData = {
 				player1 : JSON.parse(JSON.stringify(data.player1)),
@@ -1339,7 +1324,7 @@ try{
 			}
 			p2cantSeeChipsData.player1.chips = emptyChips;
 			p2cantSeeChipsData.player2.chips = p2.chips;
-			p2cantSeeChipsData.player1.score = 0;
+			p2cantSeeChipsData.player1.score = -1;
 			p2cantSeeChipsData.player2.score = p2.score;
 			
 			for(var i=0;i<room.playerList.length;i++){
