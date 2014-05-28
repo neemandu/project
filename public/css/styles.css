@@ -12,7 +12,22 @@ h1
 	color:orange;
 	font-size:40px;
 }
+.inputChips
+{
+	
+/*	background-size:auto 100%;
+	background-repeat:no-repeat;*/
+	border:none;
+	padding-left:15px;
+	padding-top:15px;
+	height:50px;
+	width:100%;
+	
+}
 
+.inputChips:focus{
+    outline: 0;
+}
 @font-face
 {
 font-family: myFirstFont;
@@ -270,7 +285,7 @@ table.downTable
 }
 .downTable tr
 {
-	height:80px;
+
 }	
 
 .downTable tr tr
@@ -371,6 +386,7 @@ input::-webkit-inner-spin-button {
 	height:250px;
 	display: block;
 	overflow-y: scroll;
+	
 }
 
 .playersDropDown
@@ -542,14 +558,26 @@ td.colorAmount
 	background-color:white;
 }
 
-.operations
+.operationTrans
 {		cursor: pointer;
 		cursor: hand;
-		width: 25px;
-		height: 25px;
+		width: 90px;
+		height: 40px;
 		text-align:left;
-		background-image:url('../Pictures/plus_add_green.png');
+		background-image:url('../Pictures/transferButton.png');
 		background-size:100% 100%;
+		display: inline-block;
+}
+
+.operationOffer
+{		cursor: pointer;
+		cursor: hand;
+		width: 90px;
+		height: 40px;
+		text-align:left;
+		background-image:url('../Pictures/offerButton.png');
+		background-size:100% 100%;
+		display: inline-block;
 }
 
 
