@@ -81,6 +81,11 @@ var testerIO = net.createServer(function (c)
     	c.write(res);
     	c.pipe(c);
     });
+	
+	c.on('error', function(err) {
+			console.log('client disconnected');
+		});
+	
     c.on('end', function ()
     {
         console.log('nodeServer disconnected');

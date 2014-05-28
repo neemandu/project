@@ -4,7 +4,7 @@ var tester = require('./tester');
 
 //status codes
 //conf status codes
-var OK = 200 + ' - OK';
+var OK = 200;
 var playerNumber = 301 + ' - illegal player number in playerList';
 var missingPlayerDef = 302 + ' - one of the players in one of the rounds is not configured.';
 var identicalPlayersNames = 303 + ' - two or more players have the same name';
@@ -35,6 +35,15 @@ var illegalMoveValues = 402 + ' - illegal move value in agent\'s JSON.';
 var illegalSendOfferValues = 403 + ' - illegal send offer value in agent\'s JSON.';
 var illegalRejectOfferValues = 404 + ' - illegal reject offer value in agent\'s JSON.';
 var agentAlreadyExist = 405 + ' - specialID already exist - should choose a different one.';
+var agentDoesNotExist = 406 + ' - agentspecialID does not exist.';
+var noPortSpecified = 407 + ' - listening_port attribute does not exist.';
+var noIDSpecified = 408 + ' - ID attribute does not exist.';
+var noIPSpecified = 409 + ' - IP attribute does not exist.';
+var badIp = 410 + ' - bad IP address.';
+var agentDoesNotExist = 411 + ' - wrong agent id.';
+var gameIdDoesNotExist = 412 + ' - wrong game id.';
+
+
 
 
 exports.validateConf = function(conf){
@@ -64,9 +73,6 @@ exports.validateConf = function(conf){
 	}
 	if(!validatePhasesDef(conf)){
 		return invalidPhase;
-	}
-	if(!validateAgentsSpecialID(conf)){
-		return agentAlreadyExist;
 	}
 	return 200;
 }
@@ -338,7 +344,7 @@ try{
 		for(var j=0;j<conf.Games[i].agents.length;j++){
 			var id = conf.Games[i].agents[j].id;
 			console.log('id: '+id);
-			if(agx.doesSpecialIDExist(id)){
+			if(!agx.doesSpecialIDExist(id)){
 				return false;
 			}
 		}
@@ -351,7 +357,7 @@ try{
 
 
 exports.validateRun = function(conf){
-//try{
+try{
 	//check confsToRun exist
 	if(conf.confsToRun === undefined){
 		return noConfsToRunTag;
@@ -375,19 +381,19 @@ exports.validateRun = function(conf){
 			return playerNumber;
 		}
 		var co = tester.getConf(conf.confsToRun[i].confID);
-		var playerNumber = checkAllPlayersExist(co);
-		if(playerNumber !== -1){
+	/*	var playerNumberrr = checkAllPlayersExist(co);
+		if(playerNumberrr !== -1){
 			return playerNumber;
 		}
-	/*	var playerNumber = checkIdsInRoundsNPhases(co, conf.confsToRun[i]);
+		var playerNumber = checkIdsInRoundsNPhases(co, conf.confsToRun[i]);
 		if(playerNumber !== -1){
 			return idNotInList + playerNumber;
 		}
 */	}
 	return OK;
-/*}catch(e){
+}catch(e){
 	return validateRun + e;
-}*/
+}
 }
 
 checkAllPlayersExist = function(conf){
@@ -403,7 +409,7 @@ checkAllPlayersExist = function(conf){
 	}
 	if(!agx.getPlayers(pl, al)){
 			return playerNumber;
-		}
+	}
 	return -1;
 }
 
@@ -475,7 +481,6 @@ exports.agent = function(data){
 		case "moveDown" :
 		case "moveLeft" :
 		case "moveRight" :
-			console.log("yohana said it will work");
 			return movePlayer(data);
 			break;
 		case "sendOffer" :
@@ -484,23 +489,62 @@ exports.agent = function(data){
 		case "rejectOffer" :
 			return rejectOffer(data);
 			break;
+		case "acceptOffer" :
+			return acceptOffer(data);
+			break;
+		case "transferChips" :
+			return transferChips(data);
+			break;
 		default : 
 			return illegalAgentActionValue;
 	}
 }
 
+
 joinGame = function(data){
 	try{
-	
+		if(data.ID === undefined){
+			return noIDSpecified;;
+		}
+		if(data.listening_port === undefined){
+			return noPortSpecified;;
+		}
+		if(data.IP === undefined){
+			return noIPSpecified;
+		}
+		else{
+			if(!ValidateIPaddress(data.IP)){
+				return badIp;
+			}
+		}
 		return OK;
 	}catch(e){
 		return illegalJoinValues;
 	}
-}
+}  
+
+function ValidateIPaddress(ip)  
+ {  
+	 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;  
+	 if(ip.match(ipformat)){  
+		return true;  
+	 }  
+	 else {  
+		console.log("You have entered an invalid IP address!");  
+		return false;  
+	 }  
+ } 
 
 movePlayer = function(data){
 	try{
 	
+		if(!agx.checkGameIdExist(data.gameId)){
+			return gameIdDoesNotExist;
+		}
+		if(!agx.checkAgentExist(data.gameId, data.ID)){
+			return agentDoesNotExist;
+		}
+		
 		return OK;
 	}catch(e){
 		return illegalMoveValues;

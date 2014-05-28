@@ -5,7 +5,7 @@ var AgentHelper = require('./AgentHelper');
 
 var noType = 313+ ' - no \'Type\' attribute';
 var illegalType = 314+ ' - illegal \'Type\' attribute';
-var OK = 200+ ' - OK';
+var OK = 200;
 
 exports.initGame = function(socket, data){
 	var del = "\r\n";
@@ -40,7 +40,7 @@ exports.initGame = function(socket, data){
 
 createConfig = function(conf){
 
-	
+	console.log('createConfig');
 	
 
 	var status = validator.validateConf(conf);
@@ -51,6 +51,7 @@ createConfig = function(conf){
 }
 
 runConfig = function(conf){
+	console.log('runConfig');
 	var status = 200;
 //	var co = confID[conf.Global.ID];
 	//@TODO
@@ -62,7 +63,10 @@ runConfig = function(conf){
 //		agx.runConfig(conf.confsToRun, co);
 	//}
 //	return status;
+
+	console.log('status: '+status);
 	if(status === OK){
+		console.log('status is OK!!!');
 		if(conf.confsToRun.length > 0){
 			agx.runConfigurtion(conf.confsToRun, 0);
 		}
@@ -70,13 +74,13 @@ runConfig = function(conf){
 	return status;
 }
 doAction = function(socket, conf){
-console.log('agggggent');
+console.log('validating agent...');
 	var status = 200;
 	var co = validator.agent(conf);
 	console.log(co);
 	//@TODO
 	if(co === 200){
-		console.log('agggggent');
+		console.log('agent validation is fine!');
 		status = AgentHelper.doAction(socket, conf);
 		return status;
 	}
