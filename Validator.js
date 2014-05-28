@@ -272,7 +272,7 @@ try{
 }
 validateColors = function(conf){
 try{
-	return conf.Global.Colors.length < 6
+	return conf.Global.Colors.length <= 6
 }catch(e){
 	return false;
 	}

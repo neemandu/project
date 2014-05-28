@@ -1278,9 +1278,10 @@ try{
 function updateChips(data){
 try{
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
-	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
-		var p1 = findPlayer(room.playerList, data.player1.id);
+	var p1 = findPlayer(room.playerList, data.player1.id);
 		var p2 = findPlayer(room.playerList, data.player2.id);
+	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
+		
 		
 		if(p1 != undefined && p2 != undefined){
 			for(var i=0;i<numOfColors;i++){
