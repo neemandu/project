@@ -335,6 +335,7 @@ try{
 	var sender = findPlayer(room.playerList, data.sentFrom);
 	if(reciever != undefined){	
 		//validating chips
+		data.action = "Offer";
 		data.answer = 'yes';
 		gameLogger.trace('sender Id: '+data.sentFrom);
 		for(var i=0;i<numOfColors;i++){
@@ -373,6 +374,7 @@ try{
 		data.answer = 'no';
 	}
 	if(data.answer === 'no'){
+		data.action = "IllegalOffer";
 		sendMsg(room, sender.id, sender.GUIid, 'recieveMessage', data);
 		//	this.emit('recieveMessage',data);
 	}
@@ -381,6 +383,7 @@ try{
 		//this.emit('addRowToHistory',data);
 		data.playerId = this.GUIid;
 		data.offer = true;
+		
 		sendMsg(room, reciever.id, reciever.GUIid, 'recieveMessage', data);
 	}
 	}
@@ -547,6 +550,7 @@ try{
 				updateLocation(room, ind, data1.x, data1.y);
 				for(var i=0;i<room.playerList.length;i++){
 					data = {
+							action : "Move",
 							playerId: data1.playerId,
 							x: data1.x,
 							y: data1.y,
@@ -727,6 +731,7 @@ try{
 		deleteFormerOffers(room);
 		
 		var data = {
+					action : "BeginPhase",
 					automaticChipSwitch	: room.conf.Games[room.currentGame].AutomaticChipSwitch,
 					cg : room.currentGame,
 					RoundNumber : room.roundNumber,
@@ -930,6 +935,10 @@ try{
 			console.log(data.toString());
 			client.end();
 
+		});
+		
+		client.on('error', function(err) {
+			console.log('client disconnected');
 		});
 
 		client.on('end', function() {
@@ -1279,9 +1288,9 @@ function updateChips(data){
 try{
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var p1 = findPlayer(room.playerList, data.player1.id);
-		var p2 = findPlayer(room.playerList, data.player2.id);
+	var p2 = findPlayer(room.playerList, data.player2.id);
+	data.action = "AcceptOffer";
 	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
-		
 		
 		if(p1 != undefined && p2 != undefined){
 			for(var i=0;i<numOfColors;i++){
@@ -1311,6 +1320,7 @@ try{
 			data.player1.score = p1.score;
 			data.player2.score = p2.score;
 			
+			
 			//for those that cant see chips.
 			var emptyChips = [];
 			for(var i=0; i<p1.chips.length; i++){
@@ -1325,6 +1335,7 @@ try{
 			cantSeeChipsData.player2.chips = emptyChips,
 			cantSeeChipsData.player1.score = -1;
 			cantSeeChipsData.player2.score = -1;
+			cantSeeChipsData.action = "AcceptOffer";
 			
 			var p1cantSeeChipsData = {
 				player1 : JSON.parse(JSON.stringify(data.player1)),
@@ -1334,6 +1345,7 @@ try{
 			p1cantSeeChipsData.player2.chips = emptyChips;
 			p1cantSeeChipsData.player1.score = p1.score;
 			p1cantSeeChipsData.player2.score = -1;
+			p1cantSeeChipsData.action = "AcceptOffer";
 			
 			var p2cantSeeChipsData = {
 				player1 : JSON.parse(JSON.stringify(data.player1)),
@@ -1343,6 +1355,7 @@ try{
 			p2cantSeeChipsData.player2.chips = p2.chips;
 			p2cantSeeChipsData.player1.score = -1;
 			p2cantSeeChipsData.player2.score = p2.score;
+			p2cantSeeChipsData.action = "AcceptOffer";
 			
 			for(var i=0;i<room.playerList.length;i++){
 				if(i == p1.id){
@@ -1387,6 +1400,7 @@ function rejectOffer(data){
 try{
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var send ={
+			action : "RejectOffer",
 			accepted : false,
 			id : data.id
 	};
@@ -1436,8 +1450,8 @@ exports.sendOffer = function(data){
 //@param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
 function moveUp(data, p,room){
 try{
-	data.x = p.location.x;
-	data.y = p.location.y - 1;
+	data.x = p.location.x - 1;
+	data.y = p.location.y;
 	console.log('data.x  '+data.x+'   data.y  '+data.y);
 	data.chip = room.guiboard[data.x][data.y];
 	}catch(e){
@@ -1446,8 +1460,8 @@ try{
 }
 function moveDown(data, p, room){
 try{
-	data.x = p.location.x;
-	data.y = p.location.y + +1;
+	data.x = p.location.x + +1;
+	data.y = p.location.y;
 	data.chip = room.guiboard[data.x][data.y];
 	}catch(e){
 		error('moveDown '+e);
@@ -1455,8 +1469,8 @@ try{
 }
 function moveLeft(data, p,room){
 try{
-	data.x = p.location.x - 1;
-	data.y = p.location.y;
+	data.x = p.location.x;
+	data.y = p.location.y - 1;
 	data.chip = room.guiboard[data.x][data.y];
 	}catch(e){
 		error('moveLet '+e);
@@ -1465,8 +1479,8 @@ try{
 
 function moveRight(data, p,room){
 try{
-	data.x = p.location.x + 1;
-	data.y = p.location.y;
+	data.x = p.location.x;
+	data.y = p.location.y + +1;
 	console.log('data.x  '+data.x+'   data.y  '+data.y);
 	data.chip = room.guiboard[data.x][data.y];
 	}catch(e){

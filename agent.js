@@ -70,9 +70,8 @@ var rejectData = {
 	
 	};
 	
-
+write(joinData);
 	
-var i=1;
 var testerIO = net.createServer(function (c)
 { //'connection' listener
 	console.log('Java client connected to this nodeServer');
@@ -83,14 +82,29 @@ var testerIO = net.createServer(function (c)
 		
     	//c.write(res);
     	//c.pipe(c);
-		if(i === 3){
-			write(moveData);
+		switch (conf.action) {
+			case 'BeginPhase':
+				BeginPhase(data);
+				break;
+			case 'Move':
+				Move(data);
+				break;
+			case 'Offer':
+				Offer(data);
+				break;
+			case 'IllegalOffer':
+				IllegalOffer(data);
+				break;
+			case 'RejectOffer':
+				RejectOffer(data);
+				break;
+			case 'AcceptOffer':
+				AcceptOffer(data);
+				break;
+			default :
+				error(data);
 		}
-		gameId = conf.gameId;
-		console.log(gameId);
-		moveData.gameId = conf.gameId;
-		console.log(moveData.gameId);
-		i++;
+		
     });
 	c.on('error', function(err) {
 			console.log('client disconnected');
@@ -105,17 +119,35 @@ testerIO.listen(6060, function ()
 { //'listening' listener
     console.log('nodeServer listening port:6060');
 });
-
-write(joinData);
-
+function error(da){
+	console.log('error');
+}
+function BeginPhase(da){
+	console.log('BeginPhase');
+}
+function Move(da){
+	console.log('Move');
+}
+function Offer(da){
+	console.log('Offer');
+}
+function RejectOffer(da){
+	console.log('RejectOffer');
+}
+function AcceptOffer(da){
+	console.log('AcceptOffer');
+}
+function IllegalOffer(da){
+	console.log('IllegalOffer');
+}
 function write(da){
-var client = net.connect({port: 7070},{host: '127.0.0.1'},
-
+	var client = net.connect({port: 7070},{host: '127.0.0.1'},
 	function() { //'connect' listener
 
 			console.log('client connected');
 			var data = JSON.stringify(da);
 			client.write(data);
+			
 
 		});
 
