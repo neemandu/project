@@ -135,7 +135,29 @@ function BeginPhase(da){
 	
 	
 	};
-	write(moveDownData);
+	
+	var offerData = {
+	"Type" : "Agent",
+	
+ 	"Action" : "sendOffer",
+	
+	"ID" : 7,
+	
+	"gameId" : gameId,
+	
+	"JcolorsToGet" : "[0, 0, 0, 0, 0]",
+	"JcolorsToOffer" : "[1, 0, 1, 0, 1]",
+	"recieverId" : 1,
+	"sentFrom" : 2, 
+	"offerId" : 20,
+	"answer" : "yes"
+	
+	
+	};
+	
+	
+	
+	write(offerData);
 }
 //someone has moved
 function Move(da){
@@ -158,6 +180,8 @@ function Offer(da){
 	"gameId" : gameId
 	
 	};
+	
+	
 	var JcolorsToGet = JSON.parse(da.JcolorsToGet);
 	var JcolorsToOffer = JSON.parse(da.JcolorsToOffer);
 	var player1 = {id: da.sentFrom, colorsToAdd: JcolorsToGet,offerId: da.offerId};

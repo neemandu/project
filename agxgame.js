@@ -1456,7 +1456,7 @@ try{
 }
 
 exports.sendOffer = function(data){
-
+	sendOffer(data);
 }
 //@param data {gameId:int ,playerId : int, x: int , y : int , currX: int , currY: int , chip : int}
 function moveUp(data, p,room){
