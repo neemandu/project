@@ -149,14 +149,37 @@ function Offer(da){
 	
  	"Action" : "rejectOffer",
 	
-	"ID" : 0,
+	"ID" : 7,
 	
-	"offerID" : da.offerId,
+	"sentFrom" : da.sentFrom,
+	
+	"offerId" : da.offerId,
 	
 	"gameId" : gameId
 	
 	};
-	write(rejectData);
+	var JcolorsToGet = JSON.parse(da.JcolorsToGet);
+	var JcolorsToOffer = JSON.parse(da.JcolorsToOffer);
+	var player1 = {id: da.sentFrom, colorsToAdd: JcolorsToGet,offerId: da.offerId};
+	var player2 = {id: da.recieverId, colorsToAdd: JcolorsToOffer};
+	
+	var acceptData = {
+	"Type" : "Agent",
+	
+ 	"Action" : "acceptOffer",
+	
+	"ID" : 7,
+	
+	"player1" : player1,
+	
+	"player2" : player2,
+
+			
+	"gameId" : gameId
+	
+	};
+	
+	write(acceptData);
 }
 //someone has rejected my offer
 function RejectOffer(da){

@@ -57,6 +57,9 @@ exports.doAction = function(sock, data){
 		case "rejectOffer" :
 			return rejectOffer(data);
 			break;
+		case "acceptOffer" :
+			return acceptOffer(data);
+			break;
 	}
 }
 
@@ -80,4 +83,10 @@ function rejectOffer(data){
 	console.log('rejectOffer');
 	data.agent = true;
 	return agx.rejectOffer(data);
+}
+
+function acceptOffer(data){
+	console.log('acceptOffer');
+	data.agent = true;
+	return agx.acceptOffer(data);
 }

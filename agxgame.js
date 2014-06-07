@@ -960,7 +960,7 @@ try{
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
-			action : room.gameover,
+			action : 'gameOver',
 			playerId : room.playerList[winner].GUIid
 	}
 	gameLogger.debug('winner: '+room.playerList[winner].name);
@@ -1291,9 +1291,12 @@ try{
  */
 function updateChips(data){
 try{
+	
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var p1 = findPlayer(room.playerList, data.player1.id);
 	var p2 = findPlayer(room.playerList, data.player2.id);
+	gameLogger.log('p1.id '+p1.id);
+	gameLogger.log('p2.id '+p2.id);
 	data.action = "AcceptOffer";
 	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
 		
@@ -1403,14 +1406,17 @@ try{
 
 function rejectOffer(data){
 try{
+	gameLogger.log('rejectOffer function');
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	var send ={
 			action : "RejectOffer",
 			accepted : false,
-			id : data.id
+			id : data.ID,
+			offerId : data.offerId
 	};
-	var p = findPlayer(room.playerList, data.id);
-	sendMsg(room, p.externalId, data.id, 'rejectOffer', send);
+	var p = findPlayer(room.playerList, data.sentFrom);
+	gameLogger.log('rejectOffer function');
+	sendMsg(room, p.externalId, p.id, 'rejectOffer', send);
 }catch(e){
 		error('rejectOffer '+e);
 	}
@@ -1547,8 +1553,16 @@ exports.joinGame = function(data){
 	}
 }
 exports.rejectOffer = function(data){
+	gameLogger.log('agx.reject');
 	rejectOffer(data);
 }
+
+exports.acceptOffer = function(data){
+	gameLogger.log('agx.acceptOffer');
+	updateChips(data);
+}
+
+
 
 exports.doesSpecialIDExist = function(id){
 	if(agents[id] != undefined){

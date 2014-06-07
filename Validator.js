@@ -34,14 +34,15 @@ var illegalJoinValues = 401 + ' - illegal join value in agent\'s JSON.';
 var illegalMoveValues = 402 + ' - illegal move value in agent\'s JSON.';
 var illegalSendOfferValues = 403 + ' - illegal send offer value in agent\'s JSON.';
 var illegalRejectOfferValues = 404 + ' - illegal reject offer value in agent\'s JSON.';
-var agentAlreadyExist = 405 + ' - specialID already exist - should choose a different one.';
-var agentDoesNotExist = 406 + ' - agentspecialID does not exist.';
-var noPortSpecified = 407 + ' - listening_port attribute does not exist.';
-var noIDSpecified = 408 + ' - ID attribute does not exist.';
-var noIPSpecified = 409 + ' - IP attribute does not exist.';
-var badIp = 410 + ' - bad IP address.';
-var agentDoesNotExist = 411 + ' - wrong agent id.';
-var gameIdDoesNotExist = 412 + ' - wrong game id.';
+var illegalAcceptOfferValues = 405 + ' - illegal accept offer value in agent\'s JSON.';
+var agentAlreadyExist = 406 + ' - specialID already exist - should choose a different one.';
+var agentDoesNotExist = 407 + ' - agentspecialID does not exist.';
+var noPortSpecified = 408 + ' - listening_port attribute does not exist.';
+var noIDSpecified = 409 + ' - ID attribute does not exist.';
+var noIPSpecified = 410 + ' - IP attribute does not exist.';
+var badIp = 411 + ' - bad IP address.';
+var agentDoesNotExist = 412 + ' - wrong agent id.';
+var gameIdDoesNotExist = 413 + ' - wrong game id.';
 
 
 
@@ -554,6 +555,12 @@ movePlayer = function(data){
 sendOffer = function(data){
 	try{
 	
+		if(!agx.checkGameIdExist(data.gameId)){
+			return gameIdDoesNotExist;
+		}
+		if(!agx.checkAgentExist(data.gameId, data.ID)){
+			return agentDoesNotExist;
+		}
 		return OK;
 	}catch(e){
 		return illegalSendOfferValues;
@@ -563,8 +570,29 @@ sendOffer = function(data){
 rejectOffer = function(data){
 	try{
 	
+		if(!agx.checkGameIdExist(data.gameId)){
+			return gameIdDoesNotExist;
+		}
+		if(!agx.checkAgentExist(data.gameId, data.ID)){
+			return agentDoesNotExist;
+		}
 		return OK;
 	}catch(e){
 		return illegalRejectOfferValues;
+	}
+}
+
+acceptOffer = function(data){
+	try{
+	
+		if(!agx.checkGameIdExist(data.gameId)){
+			return gameIdDoesNotExist;
+		}
+		if(!agx.checkAgentExist(data.gameId, data.ID)){
+			return agentDoesNotExist;
+		}
+		return OK;
+	}catch(e){
+		return illegalAcceptOfferValues;
 	}
 }
