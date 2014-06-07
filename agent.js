@@ -14,10 +14,11 @@ var joinData = {
 	"IP" : '127.0.0.1'
 	};
 
-var moveData = {
+
+var moveUpData = {
 	"Type" : "Agent",
 	
- 	"Action" : "moveDown",
+ 	"Action" : "moveUp",
 	
 	"ID" : 7,
 	
@@ -25,7 +26,6 @@ var moveData = {
 	
 	
 	};
-	
 var offerData = {
 	"Type" : "Agent",
 	
@@ -57,18 +57,7 @@ var acceptData = {
 
 	};
 	
-var rejectData = {
-	"Type" : "Agent",
-	
- 	"Action" : "rejectOffer",
-	
-	"ID" : 0,
-	
-	"offerID" : 2,
-	
-	"gameId" : gameId
-	
-	};
+
 	
 write(joinData);
 	
@@ -84,25 +73,28 @@ var testerIO = net.createServer(function (c)
     	//c.pipe(c);
 		switch (conf.action) {
 			case 'BeginPhase':
-				BeginPhase(data);
+				BeginPhase(conf);
 				break;
 			case 'Move':
-				Move(data);
+				Move(conf);
 				break;
 			case 'Offer':
-				Offer(data);
+				Offer(conf);
 				break;
 			case 'IllegalOffer':
-				IllegalOffer(data);
+				IllegalOffer(conf);
 				break;
 			case 'RejectOffer':
-				RejectOffer(data);
+				RejectOffer(conf);
 				break;
 			case 'AcceptOffer':
-				AcceptOffer(data);
+				AcceptOffer(conf);
+				break;
+			case 'gameOver':
+				gameOver(conf);
 				break;
 			default :
-				error(data);
+				error(conf);
 		}
 		
     });
@@ -119,33 +111,73 @@ testerIO.listen(6060, function ()
 { //'listening' listener
     console.log('nodeServer listening port:6060');
 });
+//unexpected data from server
 function error(da){
 	console.log('error');
 }
+//gameOver
+function gameOver(da){
+	console.log('gameOver');
+}
+//a new phase has begun
 function BeginPhase(da){
 	console.log('BeginPhase');
+	gameId = da.gameId;
+	console.log('gameId: ' +gameId);
+	var moveDownData = {
+	"Type" : "Agent",
+	
+ 	"Action" : "moveUp",
+	
+	"ID" : 7,
+	
+	"gameId" : gameId
+	
+	
+	};
+	write(moveDownData);
 }
+//someone has moved
 function Move(da){
 	console.log('Move');
 }
+//someone made me an offer
 function Offer(da){
 	console.log('Offer');
+	var rejectData = {
+	"Type" : "Agent",
+	
+ 	"Action" : "rejectOffer",
+	
+	"ID" : 0,
+	
+	"offerID" : da.offerId,
+	
+	"gameId" : gameId
+	
+	};
+	write(rejectData);
 }
+//someone has rejected my offer
 function RejectOffer(da){
 	console.log('RejectOffer');
 }
+//someone has accepted my offer
 function AcceptOffer(da){
 	console.log('AcceptOffer');
 }
+//I made an illegal offer
 function IllegalOffer(da){
 	console.log('IllegalOffer');
 }
+//write to server
 function write(da){
 	var client = net.connect({port: 7070},{host: '127.0.0.1'},
 	function() { //'connect' listener
 
 			console.log('client connected');
 			var data = JSON.stringify(da);
+			data.gameId = gameId;
 			client.write(data);
 			
 
