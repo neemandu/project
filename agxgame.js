@@ -67,6 +67,7 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('playerJoinGame', playerJoinGame);
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendOffer', sendOffer);
+	gameSocket.on('transferChips', transferChips);
 	gameSocket.on('updateChips', updateChips);
 	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
@@ -563,7 +564,7 @@ try{
 					if(i != player.GUIid){
 						if((room.playerList[i].canSeeChips === 0)
 							&& (room.playerList[i].canSeeLocations === 0)){
-							data.x = -1;
+							data.x = -1; 
 							data.y = -1;
 							data.chip = -1;
 							data.score = -1;
@@ -748,6 +749,7 @@ try{
 
 				
 		for(var i=0; i<room.playerList.length; i++){
+			data.internalId = room.playerList[i].id;
 			room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
 			data.playerID = room.playerList[i].GUIid;
 			if((room.playerList[i].canSeeChips === 0)
@@ -1279,6 +1281,115 @@ try{
 	return newBoard;
 	}catch(e){
 		error('createServerBoard '+e);
+	}
+}
+
+
+
+/**
+ * this function update the rest of the players with the current transaction
+ * @param player1 the reciever player
+ * @param player2 the sender player
+ */
+function transferChips(data){
+try{
+	
+	var room = gameSocket.manager.rooms["/" + data.gameId];	
+	var p1 = findPlayer(room.playerList, data.player1.id);
+	var p2 = findPlayer(room.playerList, data.player2.id);
+	gameLogger.log('p1.id '+p1.id);
+	gameLogger.log('p2.id '+p2.id);
+	data.action = "AcceptOffer";	
+		if(p1 != undefined && p2 != undefined){
+			for(var i=0;i<numOfColors;i++){
+				var sum1 = data.player1.colorsToAdd[i];
+				gameLogger.trace('sum1: '+sum1);
+				gameLogger.trace('before');
+				
+				p1.chips[i] =+p1.chips[i] + +sum1;
+				gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
+				p2.chips[i] =+p2.chips[i] - +sum1;
+				gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+				
+			}
+			
+			p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			gameLogger.trace('pl SCORE: '+p1.score);
+			gameLogger.trace('p2 SCORE: '+p2.score);
+			data.player1.chips = p1.chips;
+			data.player2.chips = p2.chips;
+			data.player1.score = p1.score;
+			data.player2.score = p2.score;
+			
+			
+			//for those that cant see chips.
+			var emptyChips = [];
+			for(var i=0; i<p1.chips.length; i++){
+					emptyChips[i] = -1;
+			}
+			
+			var cantSeeChipsData = {
+				player1 : JSON.parse(JSON.stringify(data.player1)),
+				player2 : JSON.parse(JSON.stringify(data.player2))
+			}
+			cantSeeChipsData.player1.chips = emptyChips,
+			cantSeeChipsData.player2.chips = emptyChips,
+			cantSeeChipsData.player1.score = -1;
+			cantSeeChipsData.player2.score = -1;
+			cantSeeChipsData.action = "AcceptOffer";
+			
+			var p1cantSeeChipsData = {
+				player1 : JSON.parse(JSON.stringify(data.player1)),
+				player2 : JSON.parse(JSON.stringify(data.player2)),
+			}
+			p1cantSeeChipsData.player1.chips = p1.chips;
+			p1cantSeeChipsData.player2.chips = emptyChips;
+			p1cantSeeChipsData.player1.score = p1.score;
+			p1cantSeeChipsData.player2.score = -1;
+			p1cantSeeChipsData.action = "AcceptOffer";
+			
+			var p2cantSeeChipsData = {
+				player1 : JSON.parse(JSON.stringify(data.player1)),
+				player2 : JSON.parse(JSON.stringify(data.player2)),
+			}
+			p2cantSeeChipsData.player1.chips = emptyChips;
+			p2cantSeeChipsData.player2.chips = p2.chips;
+			p2cantSeeChipsData.player1.score = -1;
+			p2cantSeeChipsData.player2.score = p2.score;
+			p2cantSeeChipsData.action = "AcceptOffer";
+			
+			for(var i=0;i<room.playerList.length;i++){
+				if(i == p1.id){
+					if(p1.canSeeChips === 0){
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
+					}
+					else{
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+					}
+				}
+				else if(i == p2.id){
+					if(p2.canSeeChips === 0){
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
+					}
+					else{
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+					}
+				}
+				else{
+					if(room.playerList[i].canSeeChips === 0){
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
+					}
+					else{
+						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+					}
+				}
+			}
+			//io.sockets.in(data.gameId).emit('updateChips', data );
+		}
+ 
+	}catch(e){
+		error('transferChips '+e);
 	}
 }
 

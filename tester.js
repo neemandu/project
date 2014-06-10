@@ -3,20 +3,40 @@ var agx = require('./agxgame');
 var validator = require('./Validator');
 var AgentHelper = require('./AgentHelper');
 
+var log = require('./index');
+var gameLogger = log.gameLogger;
+
 var noType = 313+ ' - no \'Type\' attribute';
 var illegalType = 314+ ' - illegal \'Type\' attribute';
 var OK = 200;
 
-exports.initGame = function(socket, data){
+exports.initGame = function(data){
 	var del = "\r\n";
 	var res = "";
 	console.log('tester Server!!!!!');
-	try{
-		var conf = JSON.parse(data);
-	}
-	catch(e){
-	return "Bad conf file. "+e+del;
-	}
+//	try{
+	//	gameLogger.log('*************************************');
+	//	gameLogger.log(data.toString().slice(0, -4));
+	//	gameLogger.log('*************************************');
+	//	gameLogger.log('********START - initGame********');
+	//	var re = /\0/g;
+		//var str = data.toString().replace(re, "");
+		/*var o = JSON.parse(str);
+		var s = data.toString().slice(0,-4);
+		for(var i=0; i<s.length; i++){
+			
+			gameLogger.log(data.toString().charCodeAt(i));
+		}
+		
+		gameLogger.log('*********');
+		console.log('*********');*/
+	//	gameLogger.log(JSON.stringify(data.toString()));
+		var conf = data;
+	//	gameLogger.log('*********END  -   initGame********');
+//	}
+//	catch(e){
+	//	return "Bad conf file. "+e+del;
+	//}
 	console.log('configuration file received');
 	if(conf.Type === undefined){
 		return noType;

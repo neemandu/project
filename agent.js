@@ -1,6 +1,312 @@
+var conf = {
+	"Type" : "createConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					},
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				],
+			"agents" : [
+					
+			]
+		}
+	]		
+};
+
+
+
+
 var net = require('net');
 
+
+
+
+
 var gameId;
+
+var internalId;
+
+var offers = new Array();
+
+
 
 var joinData = {
 	"Type" : "Agent",
@@ -26,16 +332,7 @@ var moveUpData = {
 	
 	
 	};
-var offerData = {
-	"Type" : "Agent",
-	
- 	"Action" : "joinGame",
-	
-	"ID" : 0,
-	
-	"gameId" : gameId
-	};
-	
+
 var transferData = {
 	"Type" : "Agent",
 	
@@ -58,8 +355,8 @@ var acceptData = {
 	};
 	
 
-	
-write(joinData);
+write(conf);
+//write(joinData);
 	
 var testerIO = net.createServer(function (c)
 { //'connection' listener
@@ -122,17 +419,18 @@ function gameOver(da){
 //a new phase has begun
 function BeginPhase(da){
 	console.log('BeginPhase');
+	internalId = da.internalId;
 	gameId = da.gameId;
 	console.log('gameId: ' +gameId);
+	console.log('internalId: ' +internalId);
 	var moveDownData = {
-	"Type" : "Agent",
-	
- 	"Action" : "moveUp",
-	
-	"ID" : 7,
-	
-	"gameId" : gameId
-	
+		"Type" : "Agent",
+		
+		"Action" : "moveUp",
+		
+		"ID" : 7,
+		
+		"gameId" : gameId
 	
 	};
 	
@@ -154,8 +452,6 @@ function BeginPhase(da){
 	
 	
 	};
-	
-	
 	
 	write(offerData);
 }

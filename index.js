@@ -69,17 +69,37 @@ io.sockets.on('connection', function (socket) {
     //console.log('client connected');
     agx.initGame(io, socket);
 });
-
+var i =0;
 var net = require('net');
+var buffer = '';
 var testerIO = net.createServer(function (c)
 { //'connection' listener
 	console.log('Java client connected to this nodeServer');
     c.on('data', function (data)
     {
-    	var res = tester.initGame(c,data);
-    	console.log('res: '+res);
-    	c.write(res);
-    	c.pipe(c);
+		i++;
+	
+		buffer += data.toString();
+		
+   
+    	gameLogger.log('buffer: '+buffer);
+		
+		try{
+			var s = JSON.parse(buffer);	
+			var res = tester.initGame(s);
+			console.log(res);
+			c.write(res);
+			c.pipe(c);
+			console.log('data finished: '+i);
+			
+		}
+		catch(e){
+	
+			console.log('data not finished: '+i);
+		//	c.write('data not finished: '+i+'\r\n');
+		//	c.pipe(c);
+		}	
+		//c.pipe(c);
     });
 	
 	c.on('error', function(err) {
@@ -88,7 +108,9 @@ var testerIO = net.createServer(function (c)
 	
     c.on('end', function ()
     {
-        console.log('nodeServer disconnected');
+		buffer ='';
+		console.log('nodeServer disconnected');
+
     });
 });
 testerIO.listen(7070, function ()
