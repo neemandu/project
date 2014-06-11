@@ -2,7 +2,8 @@
 <html lang="en">
 
 <script type="text/javascript" src="JS/myMethods.js" ></script>
-<script type="text/javascript" src="JS/iconselect.js"></script>        
+<script type="text/javascript" src="JS/iconselect.js"></script> 
+<script type="text/javascript" src="JS/playerselect.js"></script>        
 <script type="text/javascript" src="JS/iscroll.js"></script>
 <head>
     <meta charset="utf-8"/>
@@ -15,11 +16,14 @@
 
     <link href="css/styles.css" rel="stylesheet">
 	<link href="css/iconselect.css" rel="stylesheet">    
+	<link href="css/playerselect.css" rel="stylesheet">    
+	
 	
 </head>
 <script id="iconScript">
  
  var currCount= {};
+ var playerCount= {};
     iconSelectFunc = function(id,icons) {
             currCount[id] = new IconSelect('my-icon-select'+id, 
                 {'selectedIconWidth':50,
@@ -31,6 +35,22 @@
                 'vectoralIconNumber':4,
                 'horizontalIconNumber':4});
 				currCount[id].refresh(icons);
+        };
+	playerSelectFunc = function(id,icons,ind) {
+            playerCount[id] = new PlayerSelect('player-icon-select'+id, 
+                {'iconslength':icons.length,
+				'selectedIconWidth':40,
+                'selectedIconHeight':40,
+                'selectedBoxPadding':1,
+                'iconsWidth':23,
+                'iconsHeight':23,
+                'boxIconSpace':1,
+                'vectoralIconNumber':4,
+                'horizontalIconNumber':4});
+				
+				playerCount[id].refresh(icons);
+				playerCount[id].setSelectedIndex(ind);
+				
         };
 
 </script>

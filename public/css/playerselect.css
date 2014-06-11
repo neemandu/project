@@ -1,0 +1,125 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 28, 2013, 7:09:35 AM
+    Author     : bugraozden
+*/
+
+.player-select{
+	height:auto;
+	width:45px;
+	
+ }
+
+ .player-select .selected-box {
+     position: relative;
+	 z-index:2;
+     margin: 0px;
+     padding: 0px;
+    /* border: 1px solid #999999;*/
+	 height:auto;
+	 width:100%;
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+
+ }
+
+ .player-select .selected-box:hover {
+
+     position: relative;
+	 z-index:2;
+     margin: 0px;
+     padding: 0px;
+   /*  border: 1px solid #000000;
+     background-color: #FFFFFF;*/
+	height:auto;
+	 width:100%;
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+
+ }
+
+ .player-select .selected-player {
+
+     position: absolute;
+     margin: 0px;
+     padding: 0px;
+     top:5px;
+     left:5px;
+	 height:auto;
+	 width:100%;
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+
+ }
+
+ 
+ .player-select .component-player{
+     position: absolute;
+	 bottom:0px;
+     right:4px;
+ }
+
+ .player-select .box {
+
+     position: absolute;
+     top:0px;
+     left:71px;
+     margin: 0px;
+     padding: 0px;
+     border: 1px solid #EEEEEE;
+     background-color: #EEEEEE;
+	
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+     
+     
+     overflow:auto;
+     /*
+     -webkit-overflow-scrolling: touch;
+     */
+
+ }
+
+ .player-select .icon {
+     position: relative;
+     margin: 5px 0px 0px 5px;
+     padding: 0px;
+     border: 1px solid #CCCCCC;
+     background-color: #FFFFFF;
+
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+
+     overflow:hidden;
+     float: left;
+ }
+
+ .player-select .icon:hover {
+     border: 1px solid #000000;
+ }
+
+ .player-select .icon.selected {
+     position: relative;
+     margin: 5px 0px 0px 5px;
+     padding: 0px;
+     border: 1px solid #EEEEEE;
+     background-color: #EEEEEE;
+
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+     border-radius: 3px;
+
+     overflow:hidden;
+     float: left;
+	 position: relative;
+	 z-index:1;
+ }
