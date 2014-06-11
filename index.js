@@ -54,8 +54,8 @@ app.configure(function() {
     app.use(express.static(path.join(__dirname,'public')));
 });
 
-// Create a Node.js based http server on port 8080
-var server = require('http').createServer(app).listen(8080);
+// Create a Node.js based http server on port 8010
+var server = require('http').createServer(app).listen(8010);
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
@@ -113,9 +113,9 @@ var testerIO = net.createServer(function (c)
 
     });
 });
-testerIO.listen(7070, function ()
+testerIO.listen(8011, function ()
 { //'listening' listener
-    console.log('nodeServer listening port:7070');
+    console.log('nodeServer listening port:8011');
 });
 
 
