@@ -8,6 +8,9 @@ var winnersLogger = log.winnerLogger;
 var offersLogger = log.offersLogger;
 var transactionLogger = log.transactionLogger;
 
+var gameCounter= 0;
+
+var numOfUsers = 0;
 var url = log.url;
 var gameIDs = new Array();
 //initializing gameIDs array.
@@ -29,7 +32,7 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = false;
+var DATABASE = true;
 
 var async_function = function(val, callback){
 	process.nextTick(function(){
@@ -39,9 +42,9 @@ var async_function = function(val, callback){
 
 async = require("async");
 
+var presistance  = require('./Presistence');
 
 if (DATABASE){
-	var presistance  = require('./Presistence');
 	presistance.syncDatabase();
 }
 
@@ -75,10 +78,18 @@ exports.initGame = function(sio, socket){
 
 exports.ConfigurtionToDataBase = function(conf){
 	if (DATABASE){
-		async.series([presistance.createLogs(conf),
-		              presistance.addBoard1(conf.Global.boards),
-		              presistance.addGames(conf)
-		              ]);
+		async.series([function(callback){ 
+						presistance.createLogs(conf);
+						callback();
+					 },
+					 function(callback){ 
+						 presistance.addBoard1(conf.Global.boards);
+							callback();
+					},
+					 function(callback){ 
+							presistance.addGames(conf)
+							callback();
+					}]);
 		};
 }
 
@@ -108,6 +119,9 @@ exports.runConfigurtion = function(confsToRun, i){
 			room.conf = JSON.parse(JSON.stringify(conf));	
 			room.currentConf = i;
 			room.confsToRun = JSON.parse(JSON.stringify(confsToRun));
+			
+			presistance.addNewGame(gameCounter++, room.conf);
+			
 			room.currentGame = 0; //the current index of the game of the conf.Games array.
 			hostStartGame(room);
 		}
@@ -299,6 +313,9 @@ try{
 	p.name = player.name;
 	p.score = setScore(p.chips, game.GameConditions.score);
 	p.agent = false;
+	
+	presistance.addPlayer(p);
+	
 	return p;
 	}
 	catch(e){
@@ -502,7 +519,11 @@ try{
 		// Emit an event notifying the clients that the player has joined the room.
 		sock.emit('playerJoinedRoom', data);
 	}
+	presistance.addUser(numOfUsers++);
 	}
+	
+	
+	
 	catch(e){
 		error('playerJoinGame '+e);
 	}

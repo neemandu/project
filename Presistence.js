@@ -10,7 +10,7 @@ var async = require("async");
 var Sequelize = require('sequelize')
 , sequelize = new Sequelize('colortrails', 'project', 'ColorTrails', {
 	dialect: "mysql",
-	port:    3306, 
+	port:    8013, 
 })
 
 sequelize
@@ -65,49 +65,105 @@ var Board = sequelize.define('Boards', {
 Board.hasMany(Block);
 Block.belongsTo(Board);
 
-Configuration = sequelize.define('Configurations', {
-	Conf_Id: {type: Sequelize.INTEGER, primaryKey: true},
-	Researcher_name: Sequelize.STRING},
-	{getterMethods: {getConfiguration: function () {
-		return [["Configurations"],["Conf_name",this.getDataValue('Conf_name')],["Researcher_name",this.getDataValue('Researcher_name')]
-		,["createdAt",this.getDataValue('createdAt')],["updatedAt",this.getDataValue('updatedAt')]];
-	}}
-	});
-
-
-var Game = sequelize.define('Games', {
-	Game_name : {type: Sequelize.STRING, primaryKey: true},	
+var Configuration = sequelize.define('Configurations', {
+	Conf_name : {type: Sequelize.STRING, primaryKey: true},	
 	//Conf_id : {type: Sequelize.INTEGER, primaryKey: true},
 	Board_id : { type: Sequelize.STRING , primaryKey: true},
 	//numberOfTimesToRepeatRounds : {type: Sequelize.INTEGER, primaryKey: true},
 	Game_goal : Sequelize.ENUM('max_points','min_points','reach_goal')},
-	{getterMethods: {getGame: function () {
-		return [["Games"],["Game_name",this.getDataValue('Game_name')],["Board_id",this.getDataValue('Board_id')],
-		        ["Game_goal",this.getDataValue('Game_goal')],["createdAt",this.getDataValue('createdAt')],
+	{getterMethods: {getConfiguration: function () {
+		return [["Configurations"],
+		        ["Conf_name",this.getDataValue('Conf_name')],
+		        ["Board_id",this.getDataValue('Board_id')],
+		        ["Game_goal",this.getDataValue('Game_goal')],
+		        ["createdAt",this.getDataValue('createdAt')],
 		        ["updatedAt",this.getDataValue('updatedAt')]];
 	}}
 	}); 
 
 
+var Game = sequelize.define('Games', {
+	Game_id : {type: Sequelize.INTEGER, primaryKey: true},
+	Conf : Sequelize.STRING},
+	{getterMethods: {getGame: function () {
+		return [["Games"],
+		        ["Game_id",this.getDataValue('Game_id')],
+		        ["Conf",this.getDataValue('Conf')],
+		        ["createdAt",this.getDataValue('createdAt')],
+		        ["updatedAt",this.getDataValue('updatedAt')]];
+	}}
+	}); 
+
+//Configuration.hasMany(Game);
+//Game.belongsTo(Configuration);
 
 var Phase = sequelize.define('Phases', {
 	Name : {type: Sequelize.STRING, primaryKey: true},
 	GameID : {type: Sequelize.STRING , primaryKey: true},
 	Duration : Sequelize.INTEGER},	
-//	CanMove : Sequelize.BOOLEAN,
-//	CanOffer :  Sequelize.BOOLEAN,
-//	CanTransfer : Sequelize.BOOLEAN},
 	{getterMethods: {getPhase: function () {
 		return [["Phases"],["Name",this.getDataValue('Name')],
 		        ["GameID",this.getDataValue('GameID')],
 		        ["Duration",this.getDataValue('Duration')],
-//		        ["CanMove",this.getDataValue('CanMove')],
-//		        ["CanOffer",this.getDataValue('CanOffer')],
-//		        ["CanTransfer",this.getDataValue('CanTransfer')],
 		        ["createdAt",this.getDataValue('createdAt')],
 		        ["updatedAt",this.getDataValue('updatedAt')]];
 	}}
 	}) ;
+
+var Player = sequelize.define('Players', {
+	Id : {type: Sequelize.STRING, primaryKey: true},
+	//Name : {type: Sequelize.STRING , primaryKey: true},
+	LocationX : {type: Sequelize.STRING, primaryKey: true},
+	LocationY : {type: Sequelize.STRING, primaryKey: true},
+	Score :  Sequelize.INTEGER  ,
+	Chips1 : Sequelize.INTEGER  ,
+	Chips2 : Sequelize.INTEGER  ,
+	Chips3 : Sequelize.INTEGER  ,
+	Chips4 : Sequelize.INTEGER  ,
+	Chips5 : Sequelize.INTEGER  ,
+	Chips6 : Sequelize.INTEGER  }, 
+	{getterMethods: {getPlayer: function () {
+		return [["Players"],
+		        ["Id",this.getDataValue('Id')],
+		        ["LocationX",this.getDataValue('LocationX')],
+		        ["LocationY",this.getDataValue('LocationY')],
+		        ["Chips1",this.getDataValue('Chips1')],
+		        ["Chips2",this.getDataValue('Chips2')],
+		        ["Chips3",this.getDataValue('Chips3')],
+		        ["Chips4",this.getDataValue('Chips4')],
+		        ["Chips5",this.getDataValue('Chips5')],
+		        ["Chips6",this.getDataValue('Chips6')],
+		        ];
+	}}
+	}) ;
+
+
+var Role = sequelize.define('Roles', {
+	RoundNumber : {type: Sequelize.INTEGER, primaryKey: true},
+	RoleName : {type: Sequelize.STRING, primaryKey: true},
+	GameID : {type: Sequelize.STRING , primaryKey: true},
+	PlayerID : {type:  Sequelize.STRING , primaryKey: true },
+	PhaseName : {type: Sequelize.STRING, primaryKey: true},
+	CanSeeChips : Sequelize.BOOLEAN  ,
+	CanSeeLocations : Sequelize.BOOLEAN,
+	CanTransfer : Sequelize.BOOLEAN,
+	CanMove : Sequelize.BOOLEAN }, 
+	{getterMethods: {getRole: function () {
+		return [["Roles"],
+		        ["RoundNumber",this.getDataValue('RoundNumber')],
+		        ["RoleName",this.getDataValue('RoleName')],
+		        ["GameID",this.getDataValue('GameID')],
+		        ["PlayerID",this.getDataValue('PlayerID')],
+		        ["PhaseName",this.getDataValue('PhaseName')],
+		        ["CanSeeChips",this.getDataValue('CanSeeChips')],
+		        ["CanSeeLocations",this.getDataValue('CanSeeLocations')],
+		        ["CanTransfer",this.getDataValue('CanTransfer')],
+		        ["CanMove",this.getDataValue('CanMove')],
+		        ["createdAt",this.getDataValue('createdAt')],
+		        ["updatedAt",this.getDataValue('updatedAt')]];
+	}}
+	}) ;
+
 
 
 
@@ -232,8 +288,8 @@ module.exports = {
 
 			addUser : function(userId){
 				var user1 = User.create({
-					id: userId,
-					score: 0
+					Id: userId,
+					Score: 0
 				}).complete(function(err,user1) {
 					if (!!err) {
 						console.log('The instance has not been saved:', err)
@@ -247,7 +303,57 @@ module.exports = {
 
 			},
 
+			addNewGame : function(gameID,conf){
 
+
+				//console.log("-----------------------______________________________-");
+				//console.log(gameID+" " +game);
+				async.each(conf.Games, function(item, callback){
+					var game1 = Game.create({
+						Game_id : gameID,
+						Conf : item.GAME_NAME,
+						//Game_goal : goal,
+						//Board_id : board
+					}).complete(function(err,game1) {
+						if (!!err) {
+							console.log('The instance has not been saved:', err)
+						} else {
+							addToCSV(game1.getGame,'createGames');
+						}})
+				});
+
+
+
+			},
+
+
+			addPlayer : function(player){
+
+
+				//console.log("-----------------------______________________________-");
+				//console.log(gameID+" " +game);
+
+				var player1 = Player.create({
+					Id : player.externalId,
+					LocationX :player.location.x,
+					LocationY : player.location.y,
+					Score : player.score,
+					Chips1 : player.chips[0]  ,
+					Chips2 : player.chips[1]  ,
+					Chips3 : player.chips[2]  ,
+					Chips4 : player.chips[3]  ,
+					Chips5 : player.chips[4]  ,
+					Chips6 : player.chips[5]  ,
+				}).complete(function(err,player1) {
+					if (!!err) {
+						console.log('The instance has not been saved:', err)
+					} else {
+						addToCSV(player1.getPlayer,'createPlayers');
+					}});
+
+
+
+			},
 			//var reader = csv.createCsvFileReader('logs/data.csv', { columnsFromHeader: true });
 			//var writer = new csv.CsvWriter('logs/data.csv');
 
@@ -330,23 +436,27 @@ module.exports = {
 							Number_of_rows: boards[item1].length,
 							Number_of_cols: boards[item1][0].length
 						}).complete(function(err, board1){
-							addToCSV(board1.getBoard,'createBoards');
-							for(var i = 0; i < boards[item1].length; i++) {
-								for(var j = 0; j < boards[item1][i].length; j++) {
-									chainer.add(Block.create({
-										Row : j,
-										Col : i,
-										Color : boards[item1][i][j],
-										BoardId : item1
-									}).complete(function(err, block1){
-										//console.log(err);
-										addToCSV(block1.getBlock,'createBlocks');
-									})
+							if (!!err) {
+								console.log('The instance has not been saved:', err)
+							} else {
+								console.log( "board error:" + err);
+								addToCSV(board1.getBoard,'createBoards');
+								for(var i = 0; i < boards[item1].length; i++) {
+									for(var j = 0; j < boards[item1][i].length; j++) {
+										chainer.add(Block.create({
+											Row : j,
+											Col : i,
+											Color : boards[item1][i][j],
+											BoardId : item1
+										}).complete(function(err, block1){
+											//console.log(err);
+											addToCSV(block1.getBlock,'createBlocks');
+										})
 
-									)
+										)
+									}
 								}
-							}
-						}));
+							}}));
 
 						callback();
 					},function(err){
@@ -364,37 +474,36 @@ module.exports = {
 				});
 			},
 
-			addConfiguration : function(conf){
-				var conf1 = Configuration.create({
-					Conf_Id: conf.Global.ID,
-					Researcher_name: conf.Global.RESEARCHER_NAME,
-				}).complete(function(err,conf1) {
-					if (!!err) {
-						console.log('The instance has not been saved:', err)
-					} else {
-						//console.log(user1.getUser);
-						//console.log(logfileList);
-						addToCSV(conf1.getConfiguration,'createConfigurations');
-					}});
+//			addConfiguration : function(conf){
+//			var conf1 = Configuration.create({
+//			Conf_Id: conf.Global.ID,
+//			Researcher_name: conf.Global.RESEARCHER_NAME,
+//			}).complete(function(err,conf1) {
+//			if (!!err) {
+//			console.log('The instance has not been saved:', err)
+//			} else {
+//			//console.log(user1.getUser);
+//			//console.log(logfileList);
+//			addToCSV(conf1.getConfiguration,'createConfigurations');
+//			}});
 
 
-			},
+//			},
 
 			addGames : function(conf){
 				//console.log("inside!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
 				//console.log(conf.Games.length);
 				async.each(conf.Games, function(item, callback){
-					var game1 = Game.create({
-						Game_name : item.GAME_NAME,	
-						//Conf_id : conf.Global.ID,
+					var conf1 = Configuration.create({
+						Conf_name : item.GAME_NAME,	
 						Board_id : item.Board,
 						Game_goal : item.GameConditions.gameGoal,
-					}).complete(function(err,game1) {
+					}).complete(function(err,conf1) {
 						if (!!err) {
 							console.log('The instance has not been saved:', err)
 						} else {
 							//console.log(item);
-							addToCSV(game1.getGame,'createGames');
+							addToCSV(conf1.getConfiguration,'createConfiguration');
 							var p = Object.keys(item.phases);
 							for ( var j=0 ; j<p.length ; j++){
 								var phase1 = Phase.create({
@@ -405,8 +514,23 @@ module.exports = {
 									addToCSV(phase1.getGame,'createPhases');
 								})
 							}
+//							console.log( item.roles);
+//							console.log( Object.keys(item.roles));
+//							var r = Object.keys(item.roles);
+//							for ( var k=0 ; k<r.length ; k++){
+//							var role1 = Role.create({
+//							Name :  r[k],
+//							GameID : item.GAME_NAME,
+//							CanSeeChips : (item.roles[r[k]].canSeeChips == 1),
+//							CanSeeLocations : (item.roles[r[k]].CanSeeLocations == 1),
+//							CanTransfer : (item.roles[r[k]].CanTransfer == 1),
+//							CanMove : (item.roles[r[k]].CanMove == 1) 	
+//							}).complete(function(err,role1) {
+//							addToCSV(role1.getGame,'createRoles');
+//							})
+//							}
 						}})});
-				
+
 
 
 

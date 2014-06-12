@@ -14718,3 +14718,23 @@
 [2014-06-11 11:54:49.910] [room14rljEiG8IYxv5jRIj23,9YgAGye584_GdNMSIj24,sE3TUcymRVG0-G7MIj22] gameLogger - 
 [2014-06-11 11:54:49.912] [room14rljEiG8IYxv5jRIj23,9YgAGye584_GdNMSIj24,sE3TUcymRVG0-G7MIj22] gameLogger - 
 [2014-06-11 11:54:49.913] [room14rljEiG8IYxv5jRIj23,9YgAGye584_GdNMSIj24,sE3TUcymRVG0-G7MIj22] gameLogger - 
+[2014-06-12 20:03:33.048] [buffer: GET / HTTP/1.1
+Host: hdm-13.ise.bgu.ac.il:8014
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,he;q=0.6
+Cookie: wm-ueug="091525d5-478f-de49-a8ee-da2f71796d2d"
+
+] gameLogger - 
+[2014-06-12 20:03:49.768] [buffer: GET / HTTP/1.1
+Host: hdm-13.ise.bgu.ac.il:8014
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,he;q=0.6
+Cookie: wm-ueug="091525d5-478f-de49-a8ee-da2f71796d2d"
+
+] gameLogger - 
