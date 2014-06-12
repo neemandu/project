@@ -67,6 +67,7 @@ exports.initGame = function(sio, socket){
 //	gameSocket.on('hostCountdownFinished', hostStartGame);
 
 	// Player Events
+	gameSocket.on('disconnect', playerDisconnect);
 	gameSocket.on('playerJoinGame', playerJoinGame);
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendOffer', sendOffer);
@@ -143,7 +144,16 @@ exports.runConfigurtion = function(confsToRun, i){
  *                             *
  ******************************* */
 
-
+function playerDisconnect(){
+	var rooms = io.sockets.manager.roomClients[gameSocket.id];
+       for(var room in rooms) {
+		   room.gameOver = true;
+		   if(room.playerList != null){
+			   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');
+			   socket.leave(room);
+		   }
+       }
+}
 
 
 //joining the players to the room
@@ -189,7 +199,7 @@ try{
 };
 function hostStartGame(room) {
 try{
-	var game = room.conf.Games[room.currentGame];
+	var game = JSON.parse(JSON.stringify(room.conf.Games[room.currentGame]));
 	gameLogger.debug("Starting game: " +room.conf.Games[room.currentGame].GAME_NAME);
 	room.gameOver = false;
 	room.haveWinner = false;
@@ -204,7 +214,6 @@ try{
 	gameLogger.debug('Server board was created.');
 
 	room.Goals = game.GameConditions.GoalCordinates;
-
 	/**
 	 * create players data:
 	 */
@@ -214,11 +223,7 @@ try{
 		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		player.socketId = room[i];
-		/*
-		var socketId = room[i];
-		var socket = io.sockets.sockets[socketId];
-		player.socket = socket;
-		 */
+		
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
@@ -250,6 +255,7 @@ try{
 		gameLogger.debug('is agent: '+room.playerList[i].agent);
 		gameLogger.debug('****************************');
 	}
+	checkIfPlayersAreGoals(room);
 	gameLogger.debug('###########################');
 	beginRounds(room, game);
 
@@ -259,6 +265,32 @@ try{
 		error('hostStartGame '+e);
 	}
 };
+
+
+function checkIfPlayersAreGoals(pl, id) {
+try{
+	var ans;
+	for(var i=0;i<room.playerList.length; i++){
+		ans = false;
+		for(var j=0; j<room.Goals.length && !ans; j++){
+			if((room.playerList[i].location.x === room.Goals[j][0])
+			&& (room.playerList[i].location.y === room.Goals[j][1])){
+				room.playerList[i].goal = true;
+				room.playerList[i].goalIndex = j;
+				ans = true;
+			}
+		}
+		if(!ans){
+			room.playerList[i].goal = false;
+			room.playerList[i].goalIndex = -1;
+		}
+	}
+}
+	catch(e){
+		error('findPlayer '+e);
+	}
+}
+
 
 function findPlayer(pl, id) {
 try{
@@ -604,7 +636,7 @@ try{
 			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			}
 			if(room.gameOver){
-				gameOver(room, room.conf.Games[room.currentGame]);
+				gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
 			}
 		}
 	}
@@ -642,6 +674,10 @@ try{
 	var p = findPlayer(room.playerList, playerId);
 	p.location.x = x;
 	p.location.y = y;
+	if(p.goal){
+		room.Goals[p.goalIndex][0] = x;
+		room.Goals[p.goalIndex][1] = y;		
+	}
 	console.log('new x: '+ p.location.x + '       new y: '+ p.location.y);
 	console.log('player id: '+p.id);
 	}
@@ -906,7 +942,7 @@ try{
 							gameLogger.debug('player #'+i+'has not moved for '+rr+'round. the game is over');
 							stop = true;
 							room.gameOver = true;
-							gameOver(room, game);
+							gameOver(room, game, 'gameOver');
 						}
 					}
 					else{
@@ -920,7 +956,7 @@ try{
 					beginphase(numberOfTimesToRepeatRounds, room, game, 0);
 				}
 				else{
-					gameOver(room, game);
+					gameOver(room, game, 'gameOver');
 				}
 			}
 			}
@@ -977,12 +1013,13 @@ try{
 		error('sendMsg '+e);
 	}
 }
-function gameOver(room, game){
+function gameOver(room, game, reason){
 try{
 	gameLogger.debug('room 0'+gameSocket.manager.rooms["/" + 0]);
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
+			reasonForEndingTheGame : reason,
 			action : 'gameOver',
 			playerId : room.playerList[winner].GUIid
 	}
@@ -1396,6 +1433,7 @@ try{
 					else{
 						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
 					}
+					sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'recieveTransaction', data);
 				}
 				else{
 					if(room.playerList[i].canSeeChips === 0){
