@@ -33,6 +33,7 @@ jQuery(function($){
             IO.socket.on('newWordData', IO.onNewWordData);
             IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
             IO.socket.on('recieveMessage', IO.recieveMessage );
+			IO.socket.on('recieveTransaction', IO.recieveTransaction );
             IO.socket.on('gameOver', IO.gameOver);
             IO.socket.on('GameStarted', IO.GameStarted );
             IO.socket.on('addPlayers', App.Player.addPlayers);
@@ -118,7 +119,34 @@ jQuery(function($){
         gameOver : function(data) {
             App[App.myRole].endGame(data);
         },
-        
+		
+		
+        recieveTransaction : function(data){
+				
+				var cur =  App.Player.currentCount;
+				$('#histTable').attr("class", "downTable");
+				$('#histTable').prepend('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
+				var calc;
+				calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.04;
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:'+calc+'px;  height:100%;cursor:pointer;"></td>');
+				 calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.1;
+				$('#historyRow'+App.Player.currentCount).append('<td id="sentBy'+ App.Player.currentCount+'" align="center"  style="width:'+calc+'px;"></td>');
+				 calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.78;
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" cellpadding="0" colspan="3" style="width:'+calc+'px; height:100%"><b>Amount Of</b><table id="colorsToSend'+ App.Player.currentCount+'"><tr style="width:100%; height:auto;"></tr></table></td>');
+				 calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.08;
+				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=width:'+calc+'px;  height:100%;"><br><div style="padding:5px; width=100%;"><font color="green">Delivered</font></div></td>');
+				
+				for (var k =0; k<App.Player.chipsImages.length;k++){
+					if(JSON.parse(data.JcolorsToSend)[k]!= undefined && JSON.parse(data.JcolorsToSend)[k]!=0){
+						$('#colorsToSend'+ App.Player.currentCount+' tr').append('<td style="height:50%;">'+App.Player.chipsImages[k]+'</td><td style="height:50%;">'+JSON.parse(data.JcolorsToSend)[k]+'</td>');						
+					}
+				}
+				var tmp = '<b>Sent from</b><br><img src="'+App.Player.playerImages[data.player1.id]+'" alt="'+data.player1.id+'" style="width:auto; height:50px;">';
+				$('#sentBy'+App.Player.currentCount).html(tmp);
+				
+				App.Player.currentCount++;
+		},
+		
         recieveMessage : function(data) {
 		
 		$('#downTable').attr("class", "downTable");
@@ -151,7 +179,7 @@ jQuery(function($){
 						var params;
 						//alert(data.JcolorsToGet);
 						var JcolorsToGet = JSON.parse(data.JcolorsToGet);
-						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet,rowid: data.rowid,score: App.players[data.sentFrom].score};
+						var player1 = {id: data.sentFrom, colorsToAdd: JcolorsToGet,offerId: data.offerId,score: App.players[data.sentFrom].score};
 						
 						var JcolorsToOffer = JSON.parse(data.JcolorsToOffer);
 						var player2 = {id: App.Player.myid, colorsToAdd: JcolorsToOffer,score: App.players[data.sentFrom].score};
@@ -164,7 +192,7 @@ jQuery(function($){
 						}
 						IO.socket.emit('updateChips',d);
 						
-						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="green">you accepted</font>');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<div><font color="green">you accepted</font></div>');
 					
 					
 					
@@ -194,14 +222,14 @@ jQuery(function($){
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
 						//p++;
-						var player1 = {id :p, gameId : App.gameId, rowid :  data.rowid};	
+						var player1 = {sentFrom :p, gameId : App.gameId, offerId :  data.offerId};	
 						IO.socket.emit('rejectOffer',player1);
 					//	$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
-						$(this).parent().parent().attr('id','offerStatus'+id).html('<font color="red">you rejected</font>');
+						$(this).parent().parent().attr('id','offerStatus'+id).html('<div><font color="red">you rejected</font></div>');
 					
 					//	$('#histTable').prepend($('#historyRow'+id).parent().parent().parent().html());
 					//	$('#historyRow'+id).parent().parent().remove();
-						
+												
 						var h = $('#historyRow'+id);
 						$('#historyRow'+id).remove();
 						
@@ -270,18 +298,14 @@ jQuery(function($){
         	}
 	    },
 		
-	    addRowToHistory : function (data){
-			var row = $('#sendOffer'+data.rowid);
+		addTransferToHistory :  function (data){
+			var row = $('#sendOffer'+data.offerId);
 			//changing to history row style
-			$('#colorsToGet'+data.rowid+' tr:eq(0) td').each(function(){
+			$('#colorsToSend'+data.offerId+' tr:eq(0) td').each(function(){
 				$(this).css('width','auto');
 				$(this).css('height','100%');
 			});
-			$('#colorsToOffer'+data.rowid+' tr:eq(0) td').each(function(){
-				$(this).css('width','auto');
-				$(this).css('height','100%');
-			});
-			$('#colorsToGet'+data.rowid).find('input:not([inputname])').each(function(){
+			$('#colorsToSend'+data.offerId).find('input:not([inputname])').each(function(){
 					if($(this).val()==0 || $(this).val()== undefined){
 						$(this).parent().prev().remove();
 						$(this).parent().remove();
@@ -291,27 +315,18 @@ jQuery(function($){
 					$(this).parent().html($(this).val());
 					}
 			})
-			$('#colorsToOffer'+data.rowid).find('input:not([inputname])').each(function(){
-					if($(this).val()==0 || $(this).val()== undefined){
-						$(this).parent().prev().remove();
-						$(this).parent().remove();
-					}
-					else{
-					$(this).parent().attr('class','chipsNum');
-					$(this).parent().html($(this).val());
-					}
-			})
-		//	$('#historyRow'+data.rowid+' tr:first td:first').html('made an offer to:');
-		//	$('#playersDropDown'+data.rowid).parent().html($('#playersDropDown'+data.rowid).val());
-			$('#sendOffer'+data.rowid).parent().attr('id','sendOffer'+data.rowid).html('<font color="orange">waiting for respond</font>');
-		//	$('#historyRow'+data.rowid+' tr:eq(0) td:eq(0)').html('');
+
+		//	$('#historyRow'+data.offerId+' tr:first td:first').html('made an offer to:');
+		//	$('#playersDropDown'+data.offerId).parent().html($('#playersDropDown'+data.offerId).val());
+			$('#sendOffer'+data.offerId).parent().attr('id','sendOffer'+data.offerId).html('<font color="green">Sent</font>');
+		//	$('#historyRow'+data.offerId+' tr:eq(0) td:eq(0)').html('');
 			
-			var h = $('#historyRow'+data.rowid);
+			var h = $('#historyRow'+data.offerId);
 			h.find('td:eq(0)').css('cursor','default');
 			h.find('td:eq(0)').html('');
 			h.find('td:eq(1)').html('<b>Sent to</b><br><img src="'+App.Player.playerImages[data.recieverId]+'" alt="'+data.recieverId+'" style="width:auto; height:50px;">');
 			
-			$('#historyRow'+data.rowid).remove();
+			$('#historyRow'+data.offerId).remove();
 			
 			if($('#downTable tr').length == 0){
 				$('#downTable').attr("class", "playersListNoBorder");
@@ -319,46 +334,92 @@ jQuery(function($){
 			
 			$('#histTable').attr("class", "downTable");
 			$('#histTable').prepend(h);
-			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.rowid+'" class="historyRow">'+h+'</tabble></td></tr>');
+			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.offerId+'" class="historyRow">'+h+'</tabble></td></tr>');
+		
+		},
+	    addRowToHistory : function (data){
+			var row = $('#sendOffer'+data.offerId);
+			//changing to history row style
+			$('#colorsToGet'+data.offerId+' tr:eq(0) td').each(function(){
+				$(this).css('width','auto');
+				$(this).css('height','100%');
+			});
+			$('#colorsToOffer'+data.offerId+' tr:eq(0) td').each(function(){
+				$(this).css('width','auto');
+				$(this).css('height','100%');
+			});
+			$('#colorsToGet'+data.offerId).find('input:not([inputname])').each(function(){
+					if($(this).val()==0 || $(this).val()== undefined){
+						$(this).parent().prev().remove();
+						$(this).parent().remove();
+					}
+					else{
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+					}
+			})
+			$('#colorsToOffer'+data.offerId).find('input:not([inputname])').each(function(){
+					if($(this).val()==0 || $(this).val()== undefined){
+						$(this).parent().prev().remove();
+						$(this).parent().remove();
+					}
+					else{
+					$(this).parent().attr('class','chipsNum');
+					$(this).parent().html($(this).val());
+					}
+			})
+		//	$('#historyRow'+data.offerId+' tr:first td:first').html('made an offer to:');
+		//	$('#playersDropDown'+data.offerId).parent().html($('#playersDropDown'+data.offerId).val());
+			$('#sendOffer'+data.offerId).parent().attr('id','sendOffer'+data.offerId).html('<font color="orange">waiting for respond</font>');
+		//	$('#historyRow'+data.offerId+' tr:eq(0) td:eq(0)').html('');
+			
+			var h = $('#historyRow'+data.offerId);
+			h.find('td:eq(0)').css('cursor','default');
+			h.find('td:eq(0)').html('');
+			h.find('td:eq(1)').html('<b>Sent to</b><br><img src="'+App.Player.playerImages[data.recieverId]+'" alt="'+data.recieverId+'" style="width:auto; height:50px;">');
+			
+			$('#historyRow'+data.offerId).remove();
+			
+			if($('#downTable tr').length == 0){
+				$('#downTable').attr("class", "playersListNoBorder");
+			}
+			
+			$('#histTable').attr("class", "downTable");
+			$('#histTable').prepend(h);
+			//$('#histTable').prepend('<tr><td class="makeGetOffer"><table id="historyRow'+data.offerId+'" class="historyRow">'+h+'</tabble></td></tr>');
 					
 		},
 		
 		rejectOffer : function(data) {
-			$('#sendOffer'+data.rowid).parent().html('<font color="red">rejected</font>');
+			$('#sendOffer'+data.offerId).parent().html('<font color="red">rejected</font>');
 		},
 	    /**
 	     *  the server calls this function to update the state of chips within players
 	     */
 	    updateChips: function(data)
 	    {
-		
 	    //	alert(data.player1.id);
 		//	alert(App.Player.myid);
-		//	alert($('#sendOffer'+data.player1.rowid).parent());
+		//	alert($('#sendOffer'+data.player1.offerId).parent());
 			if(data.player1.id === App.Player.myid){
-				$('#sendOffer'+data.player1.rowid).parent().html('<font color="green">accepted</font>');
+				$('#sendOffer'+data.player1.offerId).parent().html('<font color="green">accepted</font>');
 			}
-	    	
-	    	App.Player.addChips(data.player1);
-	    	App.Player.addChips(data.player2);
-
+	    	if(data.player1.chips != undefined){
+				App.Player.addChips(data.player1);
+			}
+			
+			if(data.player2.chips != undefined){
+				App.Player.addChips(data.player2);
+			}
+			
 	    	App.Player.updateScore(data.player1.id,data.player1.score);
 	    	App.Player.updateScore(data.player2.id,data.player2.score);
 	    },
 	
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
-			var r;
-			var c;
-			if(data.chip<3){
-				r=0;
-				c= data.chip*2+1;
-			}
-			else{
-				r=1;
-				c = (data.chip-3)*2+1;
-			}
-			$('#player'+data.playerId).find('#Chips tr:eq('+r+') td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
+			var c = data.chip*2 +1;
+			$('#player'+data.playerId).find('#Chips tr:eq(0) td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
 			
 			
 			
@@ -735,7 +796,6 @@ jQuery(function($){
 								var tdColor =  App.rgb2hex($(this).css('background-color'));
 								var index = App.Player.colors.indexOf(tdColor);
 								var chipsOfColor = App.Player.Chips[App.Player.myid][index];	
-								
 								if(chipsOfColor>0/* && hasOtherPlayer == false*/){
 									IO.socket.emit('movePlayer',{gameId:App.gameId ,playerId : App.Player.myid, x: data.row , y : data.col , currX: App.Player.locations[App.Player.myid][0] , currY: App.Player.locations[App.Player.myid][1] , chip : index});
 									}
@@ -1124,7 +1184,6 @@ jQuery(function($){
 								//var player = $('#playersDropDown'+id+' option:selected').text();
 								var player = currCount[id].getSelectedValue();
 								var colorsToSend = new Array();
-								var colorsToGet = new Array();
 								var i=0;
 								$('#colorsToSend'+id+' tr').each(function(){
 										$(this).find('td').each(function(){
@@ -1134,6 +1193,8 @@ jQuery(function($){
 												}
 										})
 								})
+								
+								
 								
 								/**
 								 * validate transfer values:
@@ -1152,22 +1213,42 @@ jQuery(function($){
 									//should be in server ?!
 								/***************************/
 								
-								var JcolorsToSend = JSON.stringify(colorsToGet); 
 								
+	
+								var JcolorsToSend = JSON.stringify(colorsToSend); 
+								var playerSentFrom ={
+									id : App.Player.myid,
+									colorsToAdd : JcolorsToSend,
+								};
+								var player2send ={
+									id : player,
+									
+								};
 								var data = {
 										JcolorsToSend : JcolorsToSend,
 										msg : 'hello',
 										recieverId : player,
+										player2 : player2send, 			//to send
+										player1 : playerSentFrom, //sent from
+										gameId : App.gameId,
+										offerId : id,
+								};
+								
+					/*
+								var data = {
+										JcolorsToGet : JcolorsToGet,
+										msg : 'hello',
+										recieverId : player,
 										sentFrom : App.Player.myid,
 										gameId : App.gameId,
-										rowid : id,
+										offerId : id,
 								};
+						*/		
 								//historyCount++;
-								IO.socket.emit('trasferChips', data);
+								IO.addTransferToHistory(data);
+								IO.socket.emit('transferChips', data);
 
 				});
-				
-					
 				
 		//		for(var j=0;j<=App.Player.currentCount;j++){            
 				$('#removeLine'+App.Player.currentCount).click( function(){
@@ -1179,8 +1260,10 @@ jQuery(function($){
 					}
 				})
 				
+				
 				App.Player.currentCount++;
 			},
+			
 			onAddOfferClick : function(){
 //				alert($('#downTable').html());
 				$('#downTable').attr("class", "downTable");
@@ -1287,7 +1370,7 @@ jQuery(function($){
 										recieverId : player,
 										sentFrom : App.Player.myid,
 										gameId : App.gameId,
-										rowid : id,
+										offerId : id,
 								};
 								//historyCount++;
 								IO.socket.emit('sendOffer', data);
