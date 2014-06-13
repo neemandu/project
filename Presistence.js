@@ -8,7 +8,7 @@ var async = require("async");
 
 
 var Sequelize = require('sequelize')
-, sequelize = new Sequelize('colortrails', 'project', 'ColorTrails', {
+, sequelize = new Sequelize('colortrails', 'project', 'color', {
 	dialect: "mysql",
 	port:    8013, 
 })

@@ -1,0 +1,2 @@
+UPDATE mysql.user SET Password=PASSWORD('colortrails') WHERE User='root';
+FLUSH PRIVILEGES;

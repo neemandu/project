@@ -14738,3 +14738,5150 @@ Accept-Language: en-US,en;q=0.8,he;q=0.6
 Cookie: wm-ueug="091525d5-478f-de49-a8ee-da2f71796d2d"
 
 ] gameLogger - 
+[2014-06-13 11:39:36.173] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"r] gameLogger - 
+[2014-06-13 11:39:36.202] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 5,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 60000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 30000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					},
+					{
+						"id" : 1,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 2,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 5,
+						"listening_port" : 6060,
+						"IP" : "127.0.0.1",
+						"name": "agent1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 11:39:58.451] [buffer: {
+	"Type" : "createConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+		] gameLogger - 
+[2014-06-13 11:39:58.475] [buffer: {
+	"Type" : "createConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 5,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 60000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 30000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					},
+					{
+						"id" : 1,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 2,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 5,
+						"listening_port" : 6060,
+						"IP" : "127.0.0.1",
+						"name": "agent1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 11:41:03.079] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [6,7,8],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"r] gameLogger - 
+[2014-06-13 11:41:03.103] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [6,7,8],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 5,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 60000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 30000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					},
+					{
+						"id" : 1,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 2,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 5,
+						"listening_port" : 6060,
+						"IP" : "127.0.0.1",
+						"name": "agent1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 11:41:13.649] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"r] gameLogger - 
+[2014-06-13 11:41:13.675] [buffer: {
+	"Type" : "runConfig",
+
+ 	"Action" : "joinGame",
+
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+
+			"playerList" : [0,1,2],
+
+			"agentList" : []				
+		}
+	],
+
+	"ID" : 5,
+
+ 	"Global" : {
+
+		"ID" : 2,
+
+		"RESEARCHER_NAME" : "Kobi",
+
+		"Colors" : ["pink","grey","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"AutomaticChipSwitch" : 1,
+			
+			"Board" : "board_1",
+
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 5,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 5,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 60000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 30000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 5,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					},
+					{
+						"id" : 1,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 2,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 5,
+						"listening_port" : 6060,
+						"IP" : "127.0.0.1",
+						"name": "agent1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 11:41:13.853] [DEBUG] gameLogger - Game #651 was created
+[2014-06-13 11:41:13.856] [DEBUG] gameLogger - player #0 was added to room #651
+[2014-06-13 11:41:13.857] [DEBUG] gameLogger - player #1 was added to room #651
+[2014-06-13 11:41:13.858] [DEBUG] gameLogger - player #2 was added to room #651
+[2014-06-13 11:41:13.862] [DEBUG] gameLogger - Starting game: Game_1
+[2014-06-13 11:41:13.863] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:13.865] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:13.866] [DEBUG] gameLogger - Server board was created.
+[2014-06-13 11:41:13.868] [DEBUG] gameLogger - player1 GUIid: 0
+[2014-06-13 11:41:13.869] [DEBUG] gameLogger - player1 id: 0
+[2014-06-13 11:41:13.870] [DEBUG] gameLogger - player1 externalId: 0
+[2014-06-13 11:41:13.871] [DEBUG] gameLogger - player1 chips: 5,1,5,1,5
+[2014-06-13 11:41:13.872] [DEBUG] gameLogger - player1 locationX: 5 locationY: 4
+[2014-06-13 11:41:13.873] [DEBUG] gameLogger - player1 score: 85
+[2014-06-13 11:41:13.874] [DEBUG] gameLogger - player1 basic_role: customer
+[2014-06-13 11:41:13.874] [DEBUG] gameLogger - ****************************
+[2014-06-13 11:41:13.876] [DEBUG] gameLogger - player2 GUIid: 1
+[2014-06-13 11:41:13.877] [DEBUG] gameLogger - player2 id: 1
+[2014-06-13 11:41:13.877] [DEBUG] gameLogger - player2 externalId: 1
+[2014-06-13 11:41:13.878] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-06-13 11:41:13.879] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-06-13 11:41:13.881] [DEBUG] gameLogger - player2 score: 115
+[2014-06-13 11:41:13.881] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-06-13 11:41:13.882] [DEBUG] gameLogger - ****************************
+[2014-06-13 11:41:13.883] [DEBUG] gameLogger - player3 GUIid: 2
+[2014-06-13 11:41:13.884] [DEBUG] gameLogger - player3 id: 2
+[2014-06-13 11:41:13.885] [DEBUG] gameLogger - player3 externalId: 2
+[2014-06-13 11:41:13.886] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-06-13 11:41:13.886] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-06-13 11:41:13.887] [DEBUG] gameLogger - player3 score: 100
+[2014-06-13 11:41:13.888] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-06-13 11:41:13.889] [DEBUG] gameLogger - ****************************
+[2014-06-13 11:41:13.890] [DEBUG] gameLogger - ###########################
+[2014-06-13 11:41:13.891] [DEBUG] gameLogger - numberOfTimesToRepeatRounds: 1
+[2014-06-13 11:41:13.892] [DEBUG] gameLogger - guiboard: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:13.894] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 11:41:13.896] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 11:41:13.897] [DEBUG] gameLogger - phaseName : strategy
+[2014-06-13 11:41:13.898] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:13.899] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:41:13.900] [DEBUG] gameLogger - phaseTime : 5000
+[2014-06-13 11:41:13.901] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:41:13.902] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:41:13.903] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:41:13.904] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:41:13.906] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:41:13.909] [DEBUG] gameLogger -  
+[2014-06-13 11:41:13.910] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:13.910] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:13.912] [DEBUG] gameLogger -  
+[2014-06-13 11:41:13.913] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:13.914] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:13.924] [DEBUG] gameLogger -  
+[2014-06-13 11:41:13.970] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:13.971] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:13.974] [DEBUG] gameLogger -  
+[2014-06-13 11:41:13.975] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:13.977] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:13.982] [DEBUG] gameLogger -  
+[2014-06-13 11:41:13.984] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:13.985] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:13.992] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:41:13.993] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:41:13.994] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:13.995] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:41:13.997] [DEBUG] gameLogger -    canMove 1
+[2014-06-13 11:41:13.999] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:14.000] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:14.001] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:14.002] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:14.002] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:14.003] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:14.004] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:14.005] [DEBUG] gameLogger - 
+[2014-06-13 11:41:14.006] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:14.007] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:41:14.007] [DEBUG] gameLogger -    phaseName strategy
+[2014-06-13 11:41:14.008] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:14.010] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:14.011] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 11:41:14.012] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:14.012] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:14.016] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:14.018] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:14.021] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:41:14.022] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:41:14.024] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:14.025] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:14.026] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:14.027] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:14.028] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:14.029] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:14.030] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:14.032] [DEBUG] gameLogger - 
+[2014-06-13 11:41:14.032] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:14.033] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:41:14.034] [DEBUG] gameLogger -    phaseName strategy
+[2014-06-13 11:41:14.035] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:14.036] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:14.037] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 11:41:14.038] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:14.039] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:14.042] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:14.046] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:14.047] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:41:14.047] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:41:14.048] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:14.049] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:14.050] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:14.051] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:14.051] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:14.052] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:14.053] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:14.054] [DEBUG] gameLogger - 
+[2014-06-13 11:41:14.054] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:14.055] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:41:14.056] [DEBUG] gameLogger -    phaseName strategy
+[2014-06-13 11:41:14.057] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:14.058] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:14.071] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 11:41:14.071] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:14.072] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:14.076] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:14.079] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 3
+[2014-06-13 11:41:19.084] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 11:41:19.086] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 11:41:19.087] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 11:41:19.088] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:19.090] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:41:19.091] [DEBUG] gameLogger - phaseTime : 60000
+[2014-06-13 11:41:19.093] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:41:19.094] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:41:19.095] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:41:19.096] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:41:19.098] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:41:19.100] [DEBUG] gameLogger -  
+[2014-06-13 11:41:19.101] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:19.102] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:19.105] [DEBUG] gameLogger -  
+[2014-06-13 11:41:19.106] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:19.107] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:19.109] [DEBUG] gameLogger -  
+[2014-06-13 11:41:19.110] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:19.110] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:19.114] [DEBUG] gameLogger -  
+[2014-06-13 11:41:19.115] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:19.116] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:19.119] [DEBUG] gameLogger -  
+[2014-06-13 11:41:19.120] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:41:19.121] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:41:19.124] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:41:19.125] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:41:19.126] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.127] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:41:19.128] [DEBUG] gameLogger -    canMove 1
+[2014-06-13 11:41:19.129] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:19.130] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:19.130] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:19.131] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:19.132] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:19.133] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:19.133] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:19.134] [DEBUG] gameLogger - 
+[2014-06-13 11:41:19.135] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:19.135] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:41:19.136] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:41:19.137] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:19.139] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:19.140] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:41:19.141] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:19.142] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.144] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:19.146] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.147] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:41:19.148] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:41:19.148] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:19.149] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:19.150] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:19.151] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:19.151] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:19.152] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:19.153] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:19.154] [DEBUG] gameLogger - 
+[2014-06-13 11:41:19.154] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:19.155] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:41:19.156] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:41:19.157] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:19.158] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:19.159] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:41:19.164] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:19.164] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.167] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:19.169] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.170] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:41:19.170] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:41:19.171] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:41:19.172] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:41:19.173] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:41:19.175] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:41:19.176] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:41:19.177] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:41:19.178] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:41:19.178] [DEBUG] gameLogger - 
+[2014-06-13 11:41:19.179] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:41:19.180] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:41:19.181] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:41:19.182] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:41:19.183] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:41:19.185] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:41:19.185] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:41:19.186] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:41:19.190] [roomzqhymIry1HNsOMngOPWG,qVnMqDKzW2xdvMY0OPWH,uE4rJs2v5rM0LXXcOPWI] gameLogger - 
+[2014-06-13 11:41:19.192] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3
+[2014-06-13 11:42:19.198] [DEBUG] gameLogger - phaseIndex: 2
+[2014-06-13 11:42:19.200] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 11:42:19.206] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 11:42:19.207] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:19.208] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:42:19.210] [DEBUG] gameLogger - phaseTime : 30000
+[2014-06-13 11:42:19.212] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:42:19.213] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:42:19.214] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:42:19.216] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:42:19.217] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:42:19.221] [DEBUG] gameLogger -  
+[2014-06-13 11:42:19.221] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:19.226] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:19.232] [DEBUG] gameLogger -  
+[2014-06-13 11:42:19.234] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:19.235] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:19.241] [DEBUG] gameLogger -  
+[2014-06-13 11:42:19.245] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:19.249] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:19.255] [DEBUG] gameLogger -  
+[2014-06-13 11:42:19.256] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:19.266] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:19.270] [DEBUG] gameLogger -  
+[2014-06-13 11:42:19.271] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:19.272] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canMove 1
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:19.275] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:19.286] [DEBUG] gameLogger - 
+[2014-06-13 11:42:19.286] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:42:19.287] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:42:19.287] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:42:19.288] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:19.290] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:19.291] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:42:19.292] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:19.292] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.295] [room] gameLogger - 
+[2014-06-13 11:42:19.297] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.298] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:42:19.299] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:42:19.300] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:19.301] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:19.301] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:19.302] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:19.303] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:19.305] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:19.305] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:19.305] [DEBUG] gameLogger - 
+[2014-06-13 11:42:19.306] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:42:19.307] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:42:19.308] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:42:19.309] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:19.310] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:19.311] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:42:19.312] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:19.313] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.314] [room] gameLogger - 
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:19.314] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:19.323] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:19.323] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:19.324] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:19.325] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:19.326] [DEBUG] gameLogger - 
+[2014-06-13 11:42:19.328] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 11:42:19.339] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:42:19.340] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:42:19.341] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:19.342] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:19.343] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:42:19.345] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:19.346] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:19.348] [room] gameLogger - 
+[2014-06-13 11:42:19.348] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 3 round.phases_in_round.length: 3
+[2014-06-13 11:42:49.352] [DEBUG] gameLogger - Round #0no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 11:42:49.355] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 11:42:49.356] [DEBUG] gameLogger - roundNumber : 1
+[2014-06-13 11:42:49.357] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 11:42:49.358] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:49.360] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:42:49.361] [DEBUG] gameLogger - phaseTime : 60000
+[2014-06-13 11:42:49.362] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:42:49.363] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:42:49.364] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:42:49.365] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:42:49.366] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:42:49.368] [DEBUG] gameLogger -  
+[2014-06-13 11:42:49.369] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:49.370] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:49.372] [DEBUG] gameLogger -  
+[2014-06-13 11:42:49.373] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:49.374] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:49.376] [DEBUG] gameLogger -  
+[2014-06-13 11:42:49.377] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:49.378] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:49.380] [DEBUG] gameLogger -  
+[2014-06-13 11:42:49.381] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:49.382] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:49.385] [DEBUG] gameLogger -  
+[2014-06-13 11:42:49.386] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:42:49.386] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:42:49.389] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:42:49.390] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:42:49.391] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.392] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:42:49.400] [DEBUG] gameLogger -    canMove 1
+[2014-06-13 11:42:49.401] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:49.402] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:49.404] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:49.404] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:49.405] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:49.406] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:49.414] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:49.416] [DEBUG] gameLogger - 
+[2014-06-13 11:42:49.417] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:42:49.418] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:42:49.418] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:42:49.419] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:49.420] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:49.421] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:42:49.422] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:49.423] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.424] [room] gameLogger - 
+[2014-06-13 11:42:49.427] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.428] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:42:49.429] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:42:49.429] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:49.430] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:49.430] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:49.431] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:49.432] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:49.432] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:49.433] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:49.434] [DEBUG] gameLogger - 
+[2014-06-13 11:42:49.434] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:42:49.435] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:42:49.436] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:42:49.437] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:49.438] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:49.439] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:42:49.441] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:49.442] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.445] [room] gameLogger - 
+[2014-06-13 11:42:49.447] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.448] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:42:49.448] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:42:49.449] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:42:49.450] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:42:49.450] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:42:49.451] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:42:49.452] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:42:49.452] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:42:49.453] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger - 
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:42:49.454] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:42:49.463] [room] gameLogger - 
+[2014-06-13 11:42:49.465] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 2
+[2014-06-13 11:43:49.466] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 11:43:49.468] [DEBUG] gameLogger - roundNumber : 1
+[2014-06-13 11:43:49.469] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 11:43:49.470] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:43:49.472] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:43:49.473] [DEBUG] gameLogger - phaseTime : 30000
+[2014-06-13 11:43:49.475] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:43:49.476] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:43:49.477] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:43:49.478] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:43:49.479] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:43:49.482] [DEBUG] gameLogger -  
+[2014-06-13 11:43:49.483] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:43:49.484] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:43:49.487] [DEBUG] gameLogger -  
+[2014-06-13 11:43:49.488] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:43:49.488] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:43:49.491] [DEBUG] gameLogger -  
+[2014-06-13 11:43:49.492] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:43:49.493] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:43:49.496] [DEBUG] gameLogger -  
+[2014-06-13 11:43:49.497] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:43:49.498] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:43:49.503] [DEBUG] gameLogger -  
+[2014-06-13 11:43:49.504] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:43:49.505] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:43:49.508] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:43:49.509] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:43:49.510] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.511] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:43:49.512] [DEBUG] gameLogger -    canMove 1
+[2014-06-13 11:43:49.513] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:43:49.514] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:43:49.515] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:43:49.516] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:43:49.517] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:43:49.518] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:43:49.520] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:43:49.521] [DEBUG] gameLogger - 
+[2014-06-13 11:43:49.522] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:43:49.523] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:43:49.523] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:43:49.524] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:43:49.526] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:43:49.527] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:43:49.528] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:43:49.529] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.532] [room] gameLogger - 
+[2014-06-13 11:43:49.548] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.549] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:43:49.550] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:43:49.551] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:43:49.552] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:43:49.553] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:43:49.553] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:43:49.554] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:43:49.555] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:43:49.556] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:43:49.557] [DEBUG] gameLogger - 
+[2014-06-13 11:43:49.557] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:43:49.558] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:43:49.559] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:43:49.560] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:43:49.561] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:43:49.562] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:43:49.563] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:43:49.564] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.567] [room] gameLogger - 
+[2014-06-13 11:43:49.569] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.570] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:43:49.571] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:43:49.572] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:43:49.574] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:43:49.575] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:43:49.577] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:43:49.578] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:43:49.579] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:43:49.580] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:43:49.582] [DEBUG] gameLogger - 
+[2014-06-13 11:43:49.583] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 11:43:49.584] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:43:49.585] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:43:49.586] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:43:49.588] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:43:49.590] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:43:49.591] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:43:49.592] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:43:49.596] [room] gameLogger - 
+[2014-06-13 11:43:49.598] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 2
+[2014-06-13 11:44:19.599] [DEBUG] gameLogger - Round #1no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 11:44:19.601] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 11:44:19.602] [DEBUG] gameLogger - roundNumber : 2
+[2014-06-13 11:44:19.602] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 11:44:19.603] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:44:19.605] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:44:19.606] [DEBUG] gameLogger - phaseTime : 60000
+[2014-06-13 11:44:19.606] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:44:19.607] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:44:19.608] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:44:19.609] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:44:19.610] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:44:19.612] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.613] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.614] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.616] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.617] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.618] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.620] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.621] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.621] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.625] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.625] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.626] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.628] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.629] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.630] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.633] [DEBUG] gameLogger -  
+[2014-06-13 11:44:19.633] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:44:19.634] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:44:19.637] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:44:19.638] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:44:19.639] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.640] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:44:19.641] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:44:19.641] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:44:19.642] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:44:19.643] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:44:19.643] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:44:19.644] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:44:19.645] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:44:19.646] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:44:19.646] [DEBUG] gameLogger - 
+[2014-06-13 11:44:19.647] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:44:19.648] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:44:19.648] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:44:19.649] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:44:19.650] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:44:19.651] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:44:19.652] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:44:19.653] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.656] [room] gameLogger - 
+[2014-06-13 11:44:19.658] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.659] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:44:19.660] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:44:19.662] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:44:19.663] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:44:19.664] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:44:19.665] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:44:19.666] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:44:19.667] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:44:19.667] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:44:19.668] [DEBUG] gameLogger - 
+[2014-06-13 11:44:19.669] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:44:19.670] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:44:19.671] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:44:19.672] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:44:19.674] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:44:19.676] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:44:19.676] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:44:19.677] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.680] [room] gameLogger - 
+[2014-06-13 11:44:19.682] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.682] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:44:19.683] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:44:19.684] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:44:19.685] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:44:19.685] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:44:19.686] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:44:19.688] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:44:19.689] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:44:19.691] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:44:19.693] [DEBUG] gameLogger - 
+[2014-06-13 11:44:19.694] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:44:19.695] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:44:19.696] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 11:44:19.696] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:44:19.698] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:44:19.699] [DEBUG] gameLogger -    phaseTime 60000
+[2014-06-13 11:44:19.699] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:44:19.700] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:44:19.703] [room] gameLogger - 
+[2014-06-13 11:44:19.704] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 2
+[2014-06-13 11:45:19.719] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 11:45:19.721] [DEBUG] gameLogger - roundNumber : 2
+[2014-06-13 11:45:19.722] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 11:45:19.723] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:45:19.724] [DEBUG] gameLogger - players : [object Object],[object Object],[object Object]
+[2014-06-13 11:45:19.726] [DEBUG] gameLogger - phaseTime : 30000
+[2014-06-13 11:45:19.727] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 11:45:19.728] [DEBUG] gameLogger - colors : pink,grey,purple,green,yellow
+[2014-06-13 11:45:19.729] [DEBUG] gameLogger - gameId : 651
+[2014-06-13 11:45:19.730] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 11:45:19.731] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 11:45:19.734] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.734] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.735] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.738] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.739] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.740] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.742] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.742] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.743] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.747] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.748] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.749] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.751] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.752] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.753] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.757] [DEBUG] gameLogger -  
+[2014-06-13 11:45:19.758] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 11:45:19.759] [DEBUG] gameLogger - checkActions 
+[2014-06-13 11:45:19.762] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 11:45:19.763] [DEBUG] gameLogger - room.playerList.length: 3
+[2014-06-13 11:45:19.764] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.765] [DEBUG] gameLogger - player1 attributes:
+[2014-06-13 11:45:19.765] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:45:19.766] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:45:19.767] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:45:19.768] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:45:19.768] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:45:19.769] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:45:19.770] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:45:19.771] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:45:19.771] [DEBUG] gameLogger - 
+[2014-06-13 11:45:19.772] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:45:19.773] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 11:45:19.774] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:45:19.775] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:45:19.777] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:45:19.778] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:45:19.779] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:45:19.779] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.782] [room] gameLogger - 
+[2014-06-13 11:45:19.784] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.789] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 11:45:19.790] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:45:19.790] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:45:19.791] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:45:19.792] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:45:19.793] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:45:19.794] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:45:19.795] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:45:19.796] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:45:19.797] [DEBUG] gameLogger - 
+[2014-06-13 11:45:19.797] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:45:19.798] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 11:45:19.799] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:45:19.800] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:45:19.801] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:45:19.802] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:45:19.803] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:45:19.804] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.807] [room] gameLogger - 
+[2014-06-13 11:45:19.809] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.810] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 11:45:19.810] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 11:45:19.811] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 11:45:19.812] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 11:45:19.813] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 11:45:19.814] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 11:45:19.814] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 11:45:19.815] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 11:45:19.817] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 11:45:19.836] [DEBUG] gameLogger - 
+[2014-06-13 11:45:19.837] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 11:45:19.838] [DEBUG] gameLogger -    playerID 2
+[2014-06-13 11:45:19.839] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 11:45:19.840] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 11:45:19.841] [DEBUG] gameLogger -    players [object Object],[object Object],[object Object]
+[2014-06-13 11:45:19.842] [DEBUG] gameLogger -    phaseTime 30000
+[2014-06-13 11:45:19.843] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 11:45:19.844] [DEBUG] gameLogger - ***********************
+[2014-06-13 11:45:19.847] [room] gameLogger - 
+[2014-06-13 11:45:19.849] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 2
+[2014-06-13 11:45:49.858] [DEBUG] gameLogger - Round #2no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 11:45:49.859] [DEBUG] gameLogger - player #0has not moved for 2round. the game is over
+[2014-06-13 11:45:49.866] [DEBUG] gameLogger - room 0v1GDlz0vcRf7m2o4OPWJ,B-s29XVwWN9pYVU6OPWK,QWXtgt7pcRjRLjYNOPWL
+[2014-06-13 11:45:49.869] [DEBUG] gameLogger - game is over
+[2014-06-13 11:45:49.870] [DEBUG] gameLogger - winner: player2
+[2014-06-13 11:45:49.872] [DEBUG] gameLogger - score: 115
+[2014-06-13 11:45:49.873] [DEBUG] gameLogger - 
+[2014-06-13 11:45:49.873] [DEBUG] gameLogger - number of games1
+[2014-06-13 11:45:49.874] [DEBUG] gameLogger - currentGame: 0
+[2014-06-13 11:45:49.879] [room] gameLogger - 
+[2014-06-13 11:45:49.883] [room] gameLogger - 
+[2014-06-13 11:45:49.887] [room] gameLogger - 
+[2014-06-13 11:45:49.888] [DEBUG] gameLogger - NO MORE GAMES
+[2014-06-13 12:01:15.433] [buffer: {
+	"Type" : "createConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : [7]				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_rol] gameLogger - 
+[2014-06-13 12:01:15.491] [buffer: {
+	"Type" : "createConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : [7]				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+			]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 12:02:03.944] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : [7]				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLoca] gameLogger - 
+[2014-06-13 12:02:03.978] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : [7]				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+			]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 12:02:15.732] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" ] gameLogger - 
+[2014-06-13 12:02:15.795] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+			]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 12:02:15.924] [DEBUG] gameLogger - Game #917 was created
+[2014-06-13 12:02:15.926] [DEBUG] gameLogger - player #1 was added to room #917
+[2014-06-13 12:02:15.927] [DEBUG] gameLogger - player #2 was added to room #917
+[2014-06-13 12:02:15.930] [DEBUG] gameLogger - Starting game: Game_1
+[2014-06-13 12:02:15.931] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:15.933] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:15.934] [DEBUG] gameLogger - Server board was created.
+[2014-06-13 12:02:16.003] [DEBUG] gameLogger - player2 GUIid: 0
+[2014-06-13 12:02:16.004] [DEBUG] gameLogger - player2 id: 0
+[2014-06-13 12:02:16.005] [DEBUG] gameLogger - player2 externalId: 1
+[2014-06-13 12:02:16.005] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-06-13 12:02:16.006] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-06-13 12:02:16.007] [DEBUG] gameLogger - player2 score: 115
+[2014-06-13 12:02:16.008] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-06-13 12:02:16.009] [DEBUG] gameLogger - ****************************
+[2014-06-13 12:02:16.010] [DEBUG] gameLogger - player3 GUIid: 1
+[2014-06-13 12:02:16.011] [DEBUG] gameLogger - player3 id: 1
+[2014-06-13 12:02:16.011] [DEBUG] gameLogger - player3 externalId: 2
+[2014-06-13 12:02:16.012] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-06-13 12:02:16.013] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-06-13 12:02:16.014] [DEBUG] gameLogger - player3 score: 100
+[2014-06-13 12:02:16.014] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-06-13 12:02:16.016] [DEBUG] gameLogger - ****************************
+[2014-06-13 12:02:16.017] [DEBUG] gameLogger - ###########################
+[2014-06-13 12:02:16.018] [DEBUG] gameLogger - numberOfTimesToRepeatRounds: 1
+[2014-06-13 12:02:16.019] [DEBUG] gameLogger - guiboard: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:16.021] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 12:02:16.022] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 12:02:16.023] [DEBUG] gameLogger - phaseName : strategy
+[2014-06-13 12:02:16.023] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:16.025] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:02:16.026] [DEBUG] gameLogger - phaseTime : 5000
+[2014-06-13 12:02:16.027] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:02:16.027] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:02:16.028] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:02:16.029] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:02:16.032] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:02:16.036] [DEBUG] gameLogger -  
+[2014-06-13 12:02:16.036] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:02:16.037] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:02:16.039] [DEBUG] gameLogger -  
+[2014-06-13 12:02:16.042] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:02:16.043] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:02:16.048] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:02:16.049] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:02:16.050] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:16.051] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:02:16.052] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:02:16.052] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:02:16.053] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:02:16.054] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:02:16.055] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:02:16.055] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:02:16.056] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:02:16.057] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:02:16.057] [DEBUG] gameLogger - 
+[2014-06-13 12:02:16.058] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:02:16.059] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:02:16.059] [DEBUG] gameLogger -    phaseName strategy
+[2014-06-13 12:02:16.060] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:16.062] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:02:16.063] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:02:16.064] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:02:16.065] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:16.068] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:02:16.070] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:16.070] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:02:16.071] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:02:16.072] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:02:16.072] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:02:16.073] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:02:16.074] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:02:16.075] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:02:16.076] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:02:16.076] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:02:16.077] [DEBUG] gameLogger - 
+[2014-06-13 12:02:16.078] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:02:16.079] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:02:16.079] [DEBUG] gameLogger -    phaseName strategy
+[2014-06-13 12:02:16.080] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:16.081] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:02:16.084] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:02:16.086] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:02:16.087] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:16.090] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:02:16.091] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 3
+[2014-06-13 12:02:21.094] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 12:02:21.106] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 12:02:21.108] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 12:02:21.109] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:21.111] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:02:21.113] [DEBUG] gameLogger - phaseTime : 50000
+[2014-06-13 12:02:21.115] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:02:21.123] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:02:21.125] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:02:21.127] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:02:21.129] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:02:21.132] [DEBUG] gameLogger -  
+[2014-06-13 12:02:21.134] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:02:21.135] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:02:21.137] [DEBUG] gameLogger -  
+[2014-06-13 12:02:21.138] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:02:21.143] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:02:21.150] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:02:21.150] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:02:21.150] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:21.154] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:02:21.157] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:02:21.158] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:02:21.159] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:02:21.160] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:02:21.161] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:02:21.162] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:02:21.163] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:02:21.164] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:02:21.165] [DEBUG] gameLogger - 
+[2014-06-13 12:02:21.166] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:02:21.167] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:02:21.169] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:02:21.170] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:21.172] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:02:21.173] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:02:21.174] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:02:21.175] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:21.180] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:02:21.196] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:21.201] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:02:21.203] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:02:21.204] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:02:21.205] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:02:21.206] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:02:21.207] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:02:21.208] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:02:21.209] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:02:21.210] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:02:21.212] [DEBUG] gameLogger - 
+[2014-06-13 12:02:21.213] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:02:21.214] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:02:21.216] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:02:21.217] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:02:21.219] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:02:21.221] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:02:21.223] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:02:21.224] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:02:21.228] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:02:21.230] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 3
+[2014-06-13 12:03:11.232] [DEBUG] gameLogger - phaseIndex: 2
+[2014-06-13 12:03:11.234] [DEBUG] gameLogger - roundNumber : 0
+[2014-06-13 12:03:11.235] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 12:03:11.236] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:11.238] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:03:11.239] [DEBUG] gameLogger - phaseTime : 5000
+[2014-06-13 12:03:11.239] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:03:11.241] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:03:11.242] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:03:11.243] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:03:11.245] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:03:11.248] [DEBUG] gameLogger -  
+[2014-06-13 12:03:11.249] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:03:11.250] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:03:11.253] [DEBUG] gameLogger -  
+[2014-06-13 12:03:11.253] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:03:11.255] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:03:11.258] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:03:11.259] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:03:11.261] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:11.262] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:03:11.263] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:03:11.264] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:03:11.265] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:03:11.266] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:03:11.267] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:03:11.268] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:03:11.269] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:03:11.270] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:03:11.271] [DEBUG] gameLogger - 
+[2014-06-13 12:03:11.272] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:03:11.273] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:03:11.274] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:03:11.275] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:11.277] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:03:11.279] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:03:11.279] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:03:11.280] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:11.283] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:03:11.286] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:11.286] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:03:11.287] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:03:11.288] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:03:11.288] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:03:11.289] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:03:11.292] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:03:11.293] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:03:11.293] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:03:11.294] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:03:11.295] [DEBUG] gameLogger - 
+[2014-06-13 12:03:11.295] [DEBUG] gameLogger -    RoundNumber 0
+[2014-06-13 12:03:11.296] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:03:11.297] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:03:11.298] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:11.299] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:03:11.300] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:03:11.300] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:03:11.301] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:11.304] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:03:11.305] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 3 round.phases_in_round.length: 3
+[2014-06-13 12:03:16.319] [DEBUG] gameLogger - Round #0no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 12:03:16.322] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 12:03:16.324] [DEBUG] gameLogger - roundNumber : 1
+[2014-06-13 12:03:16.325] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 12:03:16.327] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:16.329] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:03:16.336] [DEBUG] gameLogger - phaseTime : 50000
+[2014-06-13 12:03:16.340] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:03:16.341] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:03:16.343] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:03:16.344] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:03:16.346] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:03:16.350] [DEBUG] gameLogger -  
+[2014-06-13 12:03:16.352] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:03:16.353] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:03:16.358] [DEBUG] gameLogger -  
+[2014-06-13 12:03:16.360] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:03:16.361] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:03:16.365] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:03:16.366] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:03:16.367] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:16.368] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:03:16.369] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:03:16.370] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:03:16.371] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:03:16.372] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:03:16.374] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:03:16.374] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:03:16.375] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:03:16.376] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:03:16.377] [DEBUG] gameLogger - 
+[2014-06-13 12:03:16.378] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 12:03:16.379] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:03:16.382] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:03:16.383] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:16.385] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:03:16.389] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:03:16.391] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:03:16.392] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:16.396] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:03:16.398] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:16.399] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:03:16.400] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:03:16.401] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:03:16.402] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:03:16.403] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:03:16.404] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:03:16.405] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:03:16.406] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:03:16.407] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:03:16.409] [DEBUG] gameLogger - 
+[2014-06-13 12:03:16.410] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 12:03:16.411] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:03:16.412] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:03:16.413] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:03:16.415] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:03:16.416] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:03:16.417] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:03:16.418] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:03:16.422] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:03:16.424] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 2
+[2014-06-13 12:04:06.426] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 12:04:06.427] [DEBUG] gameLogger - roundNumber : 1
+[2014-06-13 12:04:06.428] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 12:04:06.429] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:06.430] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:04:06.431] [DEBUG] gameLogger - phaseTime : 5000
+[2014-06-13 12:04:06.432] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:04:06.433] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:04:06.434] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:04:06.435] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:04:06.436] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:04:06.439] [DEBUG] gameLogger -  
+[2014-06-13 12:04:06.440] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:04:06.441] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:04:06.450] [DEBUG] gameLogger -  
+[2014-06-13 12:04:06.451] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:04:06.452] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:04:06.455] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:04:06.455] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:04:06.459] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:06.460] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:04:06.461] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:04:06.462] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:04:06.463] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:04:06.464] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:04:06.465] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:04:06.466] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:04:06.467] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:04:06.468] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:04:06.469] [DEBUG] gameLogger - 
+[2014-06-13 12:04:06.470] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 12:04:06.471] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:04:06.472] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:04:06.481] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:06.482] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:04:06.483] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:04:06.484] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:04:06.485] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:06.489] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:04:06.496] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:06.497] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:04:06.498] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:04:06.498] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:04:06.499] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:04:06.500] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:04:06.500] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:04:06.501] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:04:06.502] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:04:06.502] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:04:06.504] [DEBUG] gameLogger - 
+[2014-06-13 12:04:06.504] [DEBUG] gameLogger -    RoundNumber 1
+[2014-06-13 12:04:06.506] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:04:06.507] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:04:06.507] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:06.509] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:04:06.510] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:04:06.511] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:04:06.511] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:06.515] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:04:06.517] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 2
+[2014-06-13 12:04:11.519] [DEBUG] gameLogger - Round #1no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 12:04:11.521] [DEBUG] gameLogger - phaseIndex: 0
+[2014-06-13 12:04:11.522] [DEBUG] gameLogger - roundNumber : 2
+[2014-06-13 12:04:11.523] [DEBUG] gameLogger - phaseName : communication
+[2014-06-13 12:04:11.524] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:11.526] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:04:11.527] [DEBUG] gameLogger - phaseTime : 50000
+[2014-06-13 12:04:11.529] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:04:11.530] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:04:11.531] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:04:11.533] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:04:11.534] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:04:11.537] [DEBUG] gameLogger -  
+[2014-06-13 12:04:11.537] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:04:11.538] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:04:11.541] [DEBUG] gameLogger -  
+[2014-06-13 12:04:11.544] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:04:11.545] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:04:11.549] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:04:11.550] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:04:11.551] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:11.552] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:04:11.553] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:04:11.554] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:04:11.554] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:04:11.555] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:04:11.557] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:04:11.558] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:04:11.559] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:04:11.560] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:04:11.561] [DEBUG] gameLogger - 
+[2014-06-13 12:04:11.562] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 12:04:11.563] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:04:11.564] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:04:11.565] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:11.566] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:04:11.568] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:04:11.569] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:04:11.570] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:11.575] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:04:11.578] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:11.579] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:04:11.580] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:04:11.581] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:04:11.583] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:04:11.584] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:04:11.585] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:04:11.586] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:04:11.587] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:04:11.589] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:04:11.590] [DEBUG] gameLogger - 
+[2014-06-13 12:04:11.591] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 12:04:11.592] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:04:11.593] [DEBUG] gameLogger -    phaseName communication
+[2014-06-13 12:04:11.594] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:04:11.596] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:04:11.598] [DEBUG] gameLogger -    phaseTime 50000
+[2014-06-13 12:04:11.599] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:04:11.600] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:04:11.604] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:04:11.606] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 1 round.phases_in_round.length: 2
+[2014-06-13 12:05:01.608] [DEBUG] gameLogger - phaseIndex: 1
+[2014-06-13 12:05:01.610] [DEBUG] gameLogger - roundNumber : 2
+[2014-06-13 12:05:01.612] [DEBUG] gameLogger - phaseName : movement
+[2014-06-13 12:05:01.613] [DEBUG] gameLogger - board : 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:05:01.615] [DEBUG] gameLogger - players : [object Object],[object Object]
+[2014-06-13 12:05:01.617] [DEBUG] gameLogger - phaseTime : 5000
+[2014-06-13 12:05:01.618] [DEBUG] gameLogger - Goals : 0,0,0,8
+[2014-06-13 12:05:01.619] [DEBUG] gameLogger - colors : pink,blue,purple,green,yellow
+[2014-06-13 12:05:01.621] [DEBUG] gameLogger - gameId : 917
+[2014-06-13 12:05:01.623] [DEBUG] gameLogger - clearPlayersAttributes
+[2014-06-13 12:05:01.625] [DEBUG] gameLogger - buildPlayersAttributs
+[2014-06-13 12:05:01.628] [DEBUG] gameLogger -  
+[2014-06-13 12:05:01.629] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:05:01.630] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:05:01.633] [DEBUG] gameLogger -  
+[2014-06-13 12:05:01.635] [DEBUG] gameLogger - ***************************** 
+[2014-06-13 12:05:01.641] [DEBUG] gameLogger - checkActions 
+[2014-06-13 12:05:01.646] [DEBUG] gameLogger - finish building attributes
+[2014-06-13 12:05:01.647] [DEBUG] gameLogger - room.playerList.length: 2
+[2014-06-13 12:05:01.648] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:05:01.649] [DEBUG] gameLogger - player2 attributes:
+[2014-06-13 12:05:01.650] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:05:01.651] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:05:01.652] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:05:01.653] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:05:01.663] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:05:01.664] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:05:01.666] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:05:01.667] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:05:01.668] [DEBUG] gameLogger - 
+[2014-06-13 12:05:01.670] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 12:05:01.671] [DEBUG] gameLogger -    playerID 0
+[2014-06-13 12:05:01.672] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:05:01.673] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:05:01.675] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:05:01.676] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:05:01.677] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:05:01.678] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:05:01.682] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:05:01.684] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:05:01.685] [DEBUG] gameLogger - player3 attributes:
+[2014-06-13 12:05:01.687] [DEBUG] gameLogger -    canMove 0
+[2014-06-13 12:05:01.687] [DEBUG] gameLogger -    canOffer 0
+[2014-06-13 12:05:01.689] [DEBUG] gameLogger -    canTransfer 0
+[2014-06-13 12:05:01.690] [DEBUG] gameLogger -    canSeeChips 1
+[2014-06-13 12:05:01.691] [DEBUG] gameLogger -    canSeeLocations 1
+[2014-06-13 12:05:01.692] [DEBUG] gameLogger -    num_of_offers_per_player -1
+[2014-06-13 12:05:01.693] [DEBUG] gameLogger -    total_num_of_offers -1
+[2014-06-13 12:05:01.694] [DEBUG] gameLogger -    canOfferToList 
+[2014-06-13 12:05:01.695] [DEBUG] gameLogger - 
+[2014-06-13 12:05:01.696] [DEBUG] gameLogger -    RoundNumber 2
+[2014-06-13 12:05:01.697] [DEBUG] gameLogger -    playerID 1
+[2014-06-13 12:05:01.699] [DEBUG] gameLogger -    phaseName movement
+[2014-06-13 12:05:01.719] [DEBUG] gameLogger -    board 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:05:01.721] [DEBUG] gameLogger -    players [object Object],[object Object]
+[2014-06-13 12:05:01.723] [DEBUG] gameLogger -    phaseTime 5000
+[2014-06-13 12:05:01.724] [DEBUG] gameLogger -    Goals 0,0,0,8
+[2014-06-13 12:05:01.725] [DEBUG] gameLogger - ***********************
+[2014-06-13 12:05:01.730] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:05:01.733] [DEBUG] gameLogger - room.gameOver: false newPhaseIndex: 2 round.phases_in_round.length: 2
+[2014-06-13 12:05:06.735] [DEBUG] gameLogger - Round #2no more phases!!!!!!!!!!!!!!!!!!!!!!!!!!
+[2014-06-13 12:05:06.737] [DEBUG] gameLogger - player #0has not moved for 2round. the game is over
+[2014-06-13 12:05:06.739] [DEBUG] gameLogger - room 0MaLDqfoJslOMIE7bcysY,Aquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa
+[2014-06-13 12:05:06.741] [DEBUG] gameLogger - game is over
+[2014-06-13 12:05:06.743] [DEBUG] gameLogger - winner: player2
+[2014-06-13 12:05:06.744] [DEBUG] gameLogger - score: 115
+[2014-06-13 12:05:06.746] [DEBUG] gameLogger - 
+[2014-06-13 12:05:06.747] [DEBUG] gameLogger - number of games1
+[2014-06-13 12:05:06.748] [DEBUG] gameLogger - currentGame: 0
+[2014-06-13 12:05:06.751] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:05:06.756] [roomAquc9K3hpSQkxn01cysZ,-jX-MFy1UGJ-ntfKcysa] gameLogger - 
+[2014-06-13 12:05:06.758] [DEBUG] gameLogger - NO MORE GAMES
+[2014-06-13 12:08:42.277] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles] gameLogger - 
+[2014-06-13 12:08:42.279] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+	] gameLogger - 
+[2014-06-13 12:08:42.281] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+			]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 12:08:42.283] [DEBUG] gameLogger - Game #833 was created
+[2014-06-13 12:08:42.284] [DEBUG] gameLogger - player #0 was added to room #833
+[2014-06-13 12:08:42.284] [DEBUG] gameLogger - player #1 was added to room #833
+[2014-06-13 12:08:42.285] [DEBUG] gameLogger - player #2 was added to room #833
+[2014-06-13 12:08:42.286] [DEBUG] gameLogger - Starting game: Game_1
+[2014-06-13 12:08:42.287] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:08:42.287] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:08:42.288] [DEBUG] gameLogger - Server board was created.
+[2014-06-13 12:08:42.288] [DEBUG] gameLogger - player2 GUIid: 0
+[2014-06-13 12:08:42.289] [DEBUG] gameLogger - player2 id: 0
+[2014-06-13 12:08:42.289] [DEBUG] gameLogger - player2 externalId: 0
+[2014-06-13 12:08:42.289] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-06-13 12:08:42.290] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-06-13 12:08:42.290] [DEBUG] gameLogger - player2 score: 115
+[2014-06-13 12:08:42.290] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-06-13 12:08:42.291] [DEBUG] gameLogger - ****************************
+[2014-06-13 12:08:42.292] [DEBUG] gameLogger - player3 GUIid: 1
+[2014-06-13 12:08:42.292] [DEBUG] gameLogger - player3 id: 1
+[2014-06-13 12:08:42.292] [DEBUG] gameLogger - player3 externalId: 1
+[2014-06-13 12:08:42.293] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-06-13 12:08:42.293] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-06-13 12:08:42.293] [DEBUG] gameLogger - player3 score: 100
+[2014-06-13 12:08:42.294] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-06-13 12:08:42.294] [DEBUG] gameLogger - ****************************
+[2014-06-13 12:09:37.518] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLoc] gameLogger - 
+[2014-06-13 12:09:37.563] [buffer: {
+	"Type" : "runConfig",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1,2],
+			
+			"agentList" : []				
+		}
+	],
+		
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green","yellow"],
+
+		"boards" : {
+			"board_1" :[[1,3,3,3,3,3,3,3,4],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]],
+			"board_2" : [[2,4,4,4,4,4,4,4,1],
+							[1,2,2,2,2,2,2,2,4],
+							[1,1,3,3,3,3,3,4,4],
+							[0,1,1,2,2,2,4,4,0],
+							[0,0,1,1,3,4,4,0,0],
+							[0,0,0,1,0,4,0,0,0]]
+		}					
+	},
+	
+	
+	"Logs" : [{
+  	  "Name" : "usersLogger.csv",
+
+  	  "Tables" : [{
+  		  "tableName" : "Users",
+
+  		  "columns" : ["id","score"],
+
+  		  "event" : ["update","create"]}]
+    }],
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			
+			"AutomaticChipSwitch" : 1,
+				
+			"roles" : {
+					"proposer" : {
+							"canOffer" : 1,
+							"canTransfer" : 1,
+							"canOfferTo" : ["responder"]
+					},
+					"responder" : {
+							"canSeeChips" : 0,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
+					},
+					"customer" : {
+							"canMove" : 1,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					},
+					"provider" : {
+							"canMove" : 0,
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
+					}
+			},
+				
+			"rounds" : {
+				"General" : {
+					"numberOfTimesToRepeatRounds" : 1
+				},
+				"rounds_defenitions" : [
+					{
+						"name": "initial_round",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						]
+					}, 
+					{					
+						"name" : "round_1",
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 0,
+								"role" : ["responder"]
+							},
+							{
+								"id" : 1,
+								"role" : ["responder"]
+							}
+						]
+					},
+					{
+						"name" : "round_2", 	
+						"phases_in_round" : ["phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 2,
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"role" : ["proposer"]
+							},
+							{
+								"id" : 1,
+								"role" : ["proposer"]
+							}
+						],
+						"max_num_of_movements" : -1
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "strategy",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canTransfer" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "communication",
+						"time" : 50000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							}
+						]
+					},
+					"phase4" : {
+						"name" : "feedback",
+						"time" : 5000,
+						"players_roles" : [
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
+							}
+						]
+					}
+				},
+					
+
+			"GameConditions" :{
+				"GoalCordinates": [[0,0],[0,8]],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"numOfRoundsStandStill" : 2
+					},
+					"score" : {
+						"onReachGoalGoalView" : 150, 
+						"onReachGoalPlayerView" : 150, 
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player2",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 0,
+						"chips": [4,5,4,5,5]
+					},
+					{
+						"id" : 1,
+						"name": "player3",
+						"basic_role" : ["provider"],
+						"locationX" : 0,
+						"locationY" : 8,
+						"chips": [5,1,5,3,6]
+					}
+				],
+			"agents" : [
+					{
+						"id" : 2,
+						"name": "player1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+			]
+		}
+	]		
+}
+] gameLogger - 
+[2014-06-13 12:09:37.720] [DEBUG] gameLogger - Game #455 was created
+[2014-06-13 12:09:37.720] [DEBUG] gameLogger - player #0 was added to room #455
+[2014-06-13 12:09:37.720] [DEBUG] gameLogger - player #1 was added to room #455
+[2014-06-13 12:09:37.720] [DEBUG] gameLogger - player #2 was added to room #455
+[2014-06-13 12:09:37.731] [DEBUG] gameLogger - Starting game: Game_1
+[2014-06-13 12:09:37.732] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:09:37.734] [DEBUG] gameLogger - board: 1,3,3,3,3,3,3,3,4,1,2,2,2,2,2,2,2,4,1,1,3,3,3,3,3,4,4,0,1,1,2,2,2,4,4,0,0,0,1,1,3,4,4,0,0,0,0,0,1,0,4,0,0,0
+[2014-06-13 12:09:37.737] [DEBUG] gameLogger - Server board was created.
+[2014-06-13 12:09:37.739] [DEBUG] gameLogger - player2 GUIid: 0
+[2014-06-13 12:09:37.740] [DEBUG] gameLogger - player2 id: 0
+[2014-06-13 12:09:37.741] [DEBUG] gameLogger - player2 externalId: 0
+[2014-06-13 12:09:37.741] [DEBUG] gameLogger - player2 chips: 4,5,4,5,5
+[2014-06-13 12:09:37.742] [DEBUG] gameLogger - player2 locationX: 0 locationY: 0
+[2014-06-13 12:09:37.743] [DEBUG] gameLogger - player2 score: 115
+[2014-06-13 12:09:37.744] [DEBUG] gameLogger - player2 basic_role: provider
+[2014-06-13 12:09:37.745] [DEBUG] gameLogger - ****************************
+[2014-06-13 12:09:37.746] [DEBUG] gameLogger - player3 GUIid: 1
+[2014-06-13 12:09:37.747] [DEBUG] gameLogger - player3 id: 1
+[2014-06-13 12:09:37.748] [DEBUG] gameLogger - player3 externalId: 1
+[2014-06-13 12:09:37.749] [DEBUG] gameLogger - player3 chips: 5,1,5,3,6
+[2014-06-13 12:09:37.750] [DEBUG] gameLogger - player3 locationX: 0 locationY: 8
+[2014-06-13 12:09:37.751] [DEBUG] gameLogger - player3 score: 100
+[2014-06-13 12:09:37.752] [DEBUG] gameLogger - player3 basic_role: provider
+[2014-06-13 12:09:37.753] [DEBUG] gameLogger - ****************************
