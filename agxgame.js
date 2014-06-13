@@ -32,7 +32,7 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = true;
+var DATABASE = false;
 
 var async_function = function(val, callback){
 	process.nextTick(function(){
@@ -607,6 +607,7 @@ try{
 				data = {
 						action : "Move",
 						playerId: data1.playerId,
+						isGoal: player.goal,
 						x: data1.x,
 						y: data1.y,
 						chip: data1.chip,
