@@ -409,9 +409,6 @@ jQuery(function($){
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
 			var c = data.chip*2 +1;
-			if(App.Player.myid == data.playerId){
-				alert(data.chip+' '+App.Player.Chips[data.playerId][data.chip]);
-			}
 			$('#player'+data.playerId).find('#Chips tr:eq(0) td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
 			
 			//alert(data.Goal);
@@ -688,30 +685,28 @@ jQuery(function($){
 				
 				
 				for(var i=0;i<data.Goals.length;i++){
-				for(var j=0;j<data.players.length;j++){
-					if(data.players[j].location.x==data.Goals[i][0] && data.players[j].location.y==data.Goals[i][1]){
-						var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
-						App.Player.playerImages[j]= url;
-						$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
-						data.Goals[i][0]=-1;
-					}
-					else{
-						var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
-						if(App.Player.playerImages[j] == null){
+					for(var j=0;j<data.players.length;j++){
+						if(data.players[j].location.x==data.Goals[i][0] && data.players[j].location.y==data.Goals[i][1]){
+							var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
 							App.Player.playerImages[j]= url;
-						}			
-						$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
+							//$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
+							data.Goals[i][0]=-1;
+						}
+						else{
+							var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
+							if(App.Player.playerImages[j] == null){
+								App.Player.playerImages[j]= url;
+							}			
+						//	$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
+						}
+						//alert(App.Player.playerImages[j]);
 					}
-					//alert(App.Player.playerImages[j]);
-				}
-				if(data.Goals[i][0]!=-1){
-					var url = "Pictures/goal.png";
-					$('#board table tr:eq('+ data.Goals[i][1] +') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-				}
-				
-				App.Player.addPlayers(data);	
+					if(data.Goals[i][0]!=-1){
+						var url = "Pictures/goal.png";
+						$('#board table tr:eq('+ data.Goals[i][1] +') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+					}	
 			}
-				
+			App.Player.addPlayers(data);	
 			
    		   }
 		   else{
@@ -818,7 +813,7 @@ jQuery(function($){
         		$('#addOffer').remove();
 				//Remove unresponded offers:
     		}
-			
+			//alert(App.Player.canTransfer);
 			if(App.Player.canTransfer==1)
         	{
 				$('#addTransaction').append('<div id="addTrans" class="operationTrans"><div>');
