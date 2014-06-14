@@ -409,6 +409,9 @@ jQuery(function($){
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
 			var c = data.chip*2 +1;
+			if(App.Player.myid == data.playerId){
+				alert(data.chip+' '+App.Player.Chips[data.playerId][data.chip]);
+			}
 			$('#player'+data.playerId).find('#Chips tr:eq(0) td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
 			
 			//alert(data.Goal);
@@ -560,7 +563,8 @@ jQuery(function($){
 				tablesCode += "<tr class='trails'>";
 				for(var j=0; j< board[0].length; j++)
 				{
-					tablesCode += "<td class='trails' style=background:" + App.getColor(colors[board[i][j]]) +" ;></td>" 
+					'style="width:45px; height:40px;"'
+					tablesCode += '<td class="trails" style="background: '+ App.getColor(colors[board[i][j]]) +';"></td>'; 
 					//tablesCode += '<td style="width:45px; height:45px;" >'+App.getCellColor(colors[board[i][j]])+'</td>'; 
 				}
 				tablesCode += "</tr>";
@@ -772,13 +776,11 @@ jQuery(function($){
 			
 			
 			
-			//put goals
-			
-						
+			//put goals			
 			//on click board 
 			$('#board table tr').each(function(){
 					 $(this).find('td').each(function(){
-						 $(this).click(function(){
+						 $(this).unbind().click(function(){
 						 if(App.Player.canMove === 1){
 							var data = {
 								id : App.Player.myid,
