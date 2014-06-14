@@ -609,7 +609,6 @@ try{
 			room.board[data1.currX][data1.currY] = 0;
 			var ind = findPlayerInd(room.playerList, data1.playerId);
 			var data;
-			updateLocation(room, ind, data1.x, data1.y);
 			for(var i=0;i<room.playerList.length;i++){
 				data = {
 						action : "Move",
@@ -639,8 +638,11 @@ try{
 						data.score = -1;
 					}
 				}
+
 				sendMsg(room, room.playerList[i].externalId ,room.playerList[i].GUIid , 'movePlayer', data);
 			}
+						updateLocation(room, ind, data1.x, data1.y);
+
 			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			if(room.gameOver){
 				gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
@@ -830,10 +832,10 @@ try{
 				data.players = room.playerList;
 			}
 			
-			if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
+		/*	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
 				data.players[i].canTransfer = data.players[i].canOffer;
 			}
-			gameLogger.debug('***********************');
+		*/	gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
 			gameLogger.debug('   canMove '+room.playerList[i].canMove);
 			gameLogger.debug('   canOffer '+room.playerList[i].canOffer);
