@@ -1492,10 +1492,15 @@ jQuery(function($){
 						
 						playerCount[id].refresh(playerCount[id].getIcons());
 						var ic = playerCount[id].getIcons();
+						var found =0;
 						for(var k=0;k<ic.length;k++){
 							if(ic[k]["iconValue"] == App.Player.myid){
 								playerCount[id].setSelectedIndex(k);
+								found=1;
 							}
+						}
+						if(found==0){
+							playerCount[id].setSelectedIndex(0);
 						}
 					}
 				}
