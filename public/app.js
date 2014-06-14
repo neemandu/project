@@ -398,19 +398,9 @@ jQuery(function($){
 	     */
 	    updateChips: function(data)
 	    {
-	    //	alert(data.player1.id);
-		//	alert(App.Player.myid);
-		//	alert($('#sendOffer'+data.player1.offerId).parent());
-			if(data.player1.id === App.Player.myid){
-				$('#sendOffer'+data.player1.offerId).parent().html('<font color="green">accepted</font>');
-			}
-	    	if(data.player1.chips != undefined){
 				App.Player.addChips(data.player1);
-			}
-			
-			if(data.player2.chips != undefined){
+		
 				App.Player.addChips(data.player2);
-			}
 			
 	    	App.Player.updateScore(data.player1.id,data.player1.score);
 	    	App.Player.updateScore(data.player2.id,data.player2.score);
@@ -421,7 +411,15 @@ jQuery(function($){
 			var c = data.chip*2 +1;
 			$('#player'+data.playerId).find('#Chips tr:eq(0) td:eq('+c+')').html(App.Player.Chips[data.playerId][data.chip]);
 			
-			
+			//alert(data.Goal);
+			if(data.Goal==true){	
+				for(var i = 0;i<App.Player.goals.length;i++){
+					if(App.Player.goals[i][0]==data.prevX && App.Player.goals[i][1]==data.prevY){
+						App.Player.goals[i][0] = data.x;
+						App.Player.goals[i][1] = data.y;
+					}
+				}
+			}
 			
 			//previous cell and
 			//id of previous cell element
@@ -761,7 +759,7 @@ jQuery(function($){
 			App.Player.score =  data.players[data.playerID].score;
 			App.Player.offerToPlayers = data.players[data.playerID].canOfferToList;
 			App.players = data.players;
-			App.players.goals = data.Goals;
+			App.Player.goals = data.Goals;
 			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
 		
@@ -807,7 +805,7 @@ jQuery(function($){
 			
 			
 			
-        	if(App.Player.offerToPlayers.length>0/* && $('#addTransaction').find('#addTrans').length === 0*/)
+        	if(App.Player.canOffer==1/* && $('#addTransaction').find('#addTrans').length === 0*/)
         	{
 				$('#addTransaction').append('<div id="addOffer" class="operationOffer"><div>');
 			}
@@ -1218,7 +1216,7 @@ jQuery(function($){
 								var JcolorsToSend = JSON.stringify(colorsToSend); 
 								var playerSentFrom ={
 									id : App.Player.myid,
-									colorsToAdd : JcolorsToSend,
+									colorsToAdd : colorsToSend,
 								};
 								var player2send ={
 									id : player,
@@ -1615,8 +1613,9 @@ jQuery(function($){
 				//+ ' tr';
 				 $(myPlayerTable).each(function(){
 					 $(this).find('#Chips td:odd').each(function(i){
-						 //var currChips = parseInt($(this).html()) + parseInt(colors[i]);
-						 $(this).html(data.chips[i]);
+						if(data.chips[i]!= undefined){
+							$(this).html(data.chips[i]);
+						 }
 					 })
 				 })
     		},
