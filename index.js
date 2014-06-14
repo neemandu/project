@@ -80,14 +80,10 @@ var testerIO = net.createServer(function (c)
 		i++;
 	
 		buffer += data.toString();
-		
-   
-    	gameLogger.log('buffer: '+buffer);
-		
 		try{
 			var s = JSON.parse(buffer);	
 			var res = tester.initGame(s);
-			console.log(res);
+		//	console.log(res);
 			c.write(res);
 			c.pipe(c);
 			console.log('data finished: '+i);
@@ -115,7 +111,7 @@ var testerIO = net.createServer(function (c)
 });
 testerIO.listen(8014, function ()
 { //'listening' listener
-    console.log('nodeServer listening port:8011');
+    console.log('nodeServer listening port:8015');
 });
 
 

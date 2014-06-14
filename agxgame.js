@@ -255,7 +255,15 @@ try{
 		gameLogger.debug('is agent: '+room.playerList[i].agent);
 		gameLogger.debug('****************************');
 	}
+
 	checkIfPlayersAreGoals(room);
+	for (var i = 0; i < room.playerList.length; i++)
+	{ 
+		
+		gameLogger.debug('****************************');
+		gameLogger.debug('player - ' +room.playerList[i].name+'goal?! - '+room.playerList[i].goal);
+		gameLogger.debug('****************************');
+	}
 	gameLogger.debug('###########################');
 	beginRounds(room, game);
 
@@ -267,22 +275,19 @@ try{
 };
 
 
-function checkIfPlayersAreGoals(pl, id) {
+function checkIfPlayersAreGoals(room) {
 try{
 	var ans;
 	for(var i=0;i<room.playerList.length; i++){
 		ans = false;
 		for(var j=0; j<room.Goals.length && !ans; j++){
+			gameLogger.log('x: '+room.Goals[j][0]+'y: '+room.Goals[j][1]);
 			if((room.playerList[i].location.x === room.Goals[j][0])
 			&& (room.playerList[i].location.y === room.Goals[j][1])){
 				room.playerList[i].goal = true;
 				room.playerList[i].goalIndex = j;
 				ans = true;
 			}
-		}
-		if(!ans){
-			room.playerList[i].goal = false;
-			room.playerList[i].goalIndex = -1;
 		}
 	}
 }
@@ -336,6 +341,8 @@ try{
 function makePlayerAttributes(game, player, id) {
 try{
 	var p = {};
+	p.goal = false;
+	p.goalIndex = -1;
 	p.GUIid = player.id;
 	p.id = player.id;
 	p.externalId = id;
@@ -610,6 +617,8 @@ try{
 						isGoal: player.goal,
 						x: data1.x,
 						y: data1.y,
+						prevX : data1.currX,
+						prevY : data1.currY,
 						chip: data1.chip,
 						score : player1.score
 				}
