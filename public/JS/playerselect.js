@@ -81,7 +81,6 @@ function PlayerSelect($$elementID, $$parameters) {
     
     //Tüm iconları yeniden yükle.
     this.refresh = function($icons){
-        
         _icons = [];
        // alert('after '+$icons.length);
     //    var setSelectedIndex = this.setSelectedIndex;
@@ -129,7 +128,14 @@ function PlayerSelect($$elementID, $$parameters) {
             //eski icondan seçilme özelliğini kaldır.
             if(_selectedIndex != -1) _icons[_selectedIndex].element.setAttribute('class','icon');
             _selectedIndex = $index;
-            _View.selectedIconImgElement.setAttribute('src', icon.iconFilePath);
+			
+			//alert(_icons.length);
+			if(_icons.length>1){
+				_View.selectedIconImgElement.setAttribute('src', icon.iconFilePath.slice(0,icon.iconFilePath.length-4)+'plus.png');
+			}
+			else{
+				_View.selectedIconImgElement.setAttribute('src', icon.iconFilePath);
+			}
             if(_selectedIndex != -1) _icons[_selectedIndex].element.setAttribute('class','icon selected');
         }
         

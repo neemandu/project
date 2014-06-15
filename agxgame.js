@@ -32,7 +32,7 @@ var conf;
 
 var OK = 200;
 
-var DATABASE = true;
+var DATABASE = false;
 
 var async_function = function(val, callback){
 	process.nextTick(function(){
@@ -67,6 +67,7 @@ exports.initGame = function(sio, socket){
 //	gameSocket.on('hostCountdownFinished', hostStartGame);
 
 	// Player Events
+	gameSocket.on('disconnect', playerDisconnect);
 	gameSocket.on('playerJoinGame', playerJoinGame);
 	gameSocket.on('playerRestart', playerRestart);
 	gameSocket.on('sendOffer', sendOffer);
@@ -143,7 +144,16 @@ exports.runConfigurtion = function(confsToRun, i){
  *                             *
  ******************************* */
 
-
+function playerDisconnect(){
+	var rooms = io.sockets.manager.roomClients[gameSocket.id];
+       for(var room in rooms) {
+		   room.gameOver = true;
+		   if(room.playerList != null){
+			   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');
+			   socket.leave(room);
+		   }
+       }
+}
 
 
 //joining the players to the room
@@ -189,7 +199,7 @@ try{
 };
 function hostStartGame(room) {
 try{
-	var game = room.conf.Games[room.currentGame];
+	var game = JSON.parse(JSON.stringify(room.conf.Games[room.currentGame]));
 	gameLogger.debug("Starting game: " +room.conf.Games[room.currentGame].GAME_NAME);
 	room.gameOver = false;
 	room.haveWinner = false;
@@ -204,7 +214,6 @@ try{
 	gameLogger.debug('Server board was created.');
 
 	room.Goals = game.GameConditions.GoalCordinates;
-
 	/**
 	 * create players data:
 	 */
@@ -214,11 +223,7 @@ try{
 		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		player.socketId = room[i];
-		/*
-		var socketId = room[i];
-		var socket = io.sockets.sockets[socketId];
-		player.socket = socket;
-		 */
+		
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
@@ -250,6 +255,15 @@ try{
 		gameLogger.debug('is agent: '+room.playerList[i].agent);
 		gameLogger.debug('****************************');
 	}
+
+	checkIfPlayersAreGoals(room);
+	for (var i = 0; i < room.playerList.length; i++)
+	{ 
+		
+		gameLogger.debug('****************************');
+		gameLogger.debug('player - ' +room.playerList[i].name+'goal?! - '+room.playerList[i].goal);
+		gameLogger.debug('****************************');
+	}
 	gameLogger.debug('###########################');
 	beginRounds(room, game);
 
@@ -259,6 +273,29 @@ try{
 		error('hostStartGame '+e);
 	}
 };
+
+
+function checkIfPlayersAreGoals(room) {
+try{
+	var ans;
+	for(var i=0;i<room.playerList.length; i++){
+		ans = false;
+		for(var j=0; j<room.Goals.length && !ans; j++){
+			gameLogger.log('x: '+room.Goals[j][0]+'y: '+room.Goals[j][1]);
+			if((room.playerList[i].location.x === room.Goals[j][0])
+			&& (room.playerList[i].location.y === room.Goals[j][1])){
+				room.playerList[i].goal = true;
+				room.playerList[i].goalIndex = j;
+				ans = true;
+			}
+		}
+	}
+}
+	catch(e){
+		error('findPlayer '+e);
+	}
+}
+
 
 function findPlayer(pl, id) {
 try{
@@ -304,6 +341,8 @@ try{
 function makePlayerAttributes(game, player, id) {
 try{
 	var p = {};
+	p.goal = false;
+	p.goalIndex = -1;
 	p.GUIid = player.id;
 	p.id = player.id;
 	p.externalId = id;
@@ -560,51 +599,53 @@ try{
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 				}
 			}
+			player.chips[data1.chip]--;
+			player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			var player1 = JSON.parse(JSON.stringify(player));
 			
-			if((room.board[data1.x][data1.y] === 0) ||(room.gameOver)){
-				player.chips[data1.chip]--;
-				player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
-				var player1 = JSON.parse(JSON.stringify(player));
-				
-				player.moved = true;
-				player.roundsNotMoving = 0;
-				room.board[data1.x][data1.y] = 1;
-				room.board[data1.currX][data1.currY] = 0;
-				var ind = findPlayerInd(room.playerList, data1.playerId);
-				var data;
-				updateLocation(room, ind, data1.x, data1.y);
-				for(var i=0;i<room.playerList.length;i++){
-					data = {
-							action : "Move",
-							playerId: data1.playerId,
-							x: data1.x,
-							y: data1.y,
-							chip: data1.chip,
-							score : player1.score
-					}
-					if(i != player.GUIid){
-						if((room.playerList[i].canSeeChips === 0)
-							&& (room.playerList[i].canSeeLocations === 0)){
-							data.x = -1; 
-							data.y = -1;
-							data.chip = -1;
-							data.score = -1;
-						}
-						else if(room.playerList[i].canSeeLocations === 0){
-							data.x = -1;
-							data.y = -1;
-						}
-						else if(room.playerList[i].canSeeChips === 0){
-							data.chip = -1;
-							data.score = -1;
-						}
-					}
-					sendMsg(room, room.playerList[i].externalId ,room.playerList[i].GUIid , 'movePlayer', data);
+			player.moved = true;
+			player.roundsNotMoving = 0;
+			room.board[data1.x][data1.y] = 1;
+			room.board[data1.currX][data1.currY] = 0;
+			var ind = findPlayerInd(room.playerList, data1.playerId);
+			var data;
+			for(var i=0;i<room.playerList.length;i++){
+				data = {
+						action : "Move",
+						playerId: data1.playerId,
+						isGoal: player.goal,
+						x: data1.x,
+						y: data1.y,
+						prevX : data1.currX,
+						prevY : data1.currY,
+						chip: data1.chip,
+						score : player1.score
 				}
-			//	io.sockets.in(data.gameId).emit('movePlayer', data);
+				if(i != player.GUIid){
+					if((room.playerList[i].canSeeChips === 0)
+						&& (room.playerList[i].canSeeLocations === 0)){
+						data.x = -1; 
+						data.y = -1;
+						data.chip = -1;
+						data.score = -1;
+					}
+					else if(room.playerList[i].canSeeLocations === 0){
+						data.x = -1;
+						data.y = -1;
+					}
+					else if(room.playerList[i].canSeeChips === 0){
+						data.chip = -1;
+						data.score = -1;
+					}
+				}
+
+				sendMsg(room, room.playerList[i].externalId ,room.playerList[i].GUIid , 'movePlayer', data);
 			}
+						updateLocation(room, ind, data1.x, data1.y);
+
+			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			if(room.gameOver){
-				gameOver(room, room.conf.Games[room.currentGame]);
+				gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
 			}
 		}
 	}
@@ -642,6 +683,10 @@ try{
 	var p = findPlayer(room.playerList, playerId);
 	p.location.x = x;
 	p.location.y = y;
+	if(p.goal){
+		room.Goals[p.goalIndex][0] = x;
+		room.Goals[p.goalIndex][1] = y;		
+	}
 	console.log('new x: '+ p.location.x + '       new y: '+ p.location.y);
 	console.log('player id: '+p.id);
 	}
@@ -787,10 +832,10 @@ try{
 				data.players = room.playerList;
 			}
 			
-			if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
+		/*	if(room.conf.Games[room.currentGame].AutomaticChipSwitch === 1){
 				data.players[i].canTransfer = data.players[i].canOffer;
 			}
-			gameLogger.debug('***********************');
+		*/	gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
 			gameLogger.debug('   canMove '+room.playerList[i].canMove);
 			gameLogger.debug('   canOffer '+room.playerList[i].canOffer);
@@ -906,7 +951,7 @@ try{
 							gameLogger.debug('player #'+i+'has not moved for '+rr+'round. the game is over');
 							stop = true;
 							room.gameOver = true;
-							gameOver(room, game);
+							gameOver(room, game, 'gameOver');
 						}
 					}
 					else{
@@ -920,7 +965,7 @@ try{
 					beginphase(numberOfTimesToRepeatRounds, room, game, 0);
 				}
 				else{
-					gameOver(room, game);
+					gameOver(room, game, 'gameOver');
 				}
 			}
 			}
@@ -977,12 +1022,13 @@ try{
 		error('sendMsg '+e);
 	}
 }
-function gameOver(room, game){
+function gameOver(room, game, reason){
 try{
 	gameLogger.debug('room 0'+gameSocket.manager.rooms["/" + 0]);
 	gameLogger.debug('game is over');
 	var winner = checkWinner(room, game);
 	var data = {
+			reasonForEndingTheGame : reason,
 			action : 'gameOver',
 			playerId : room.playerList[winner].GUIid
 	}
@@ -1327,9 +1373,9 @@ try{
 				gameLogger.trace('sum1: '+sum1);
 				gameLogger.trace('before');
 				
-				p1.chips[i] =+p1.chips[i] + +sum1;
+				p1.chips[i] =+p1.chips[i] - +sum1;
 				gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
-				p2.chips[i] =+p2.chips[i] - +sum1;
+				p2.chips[i] =+p2.chips[i] + +sum1;
 				gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
 				
 			}
@@ -1396,6 +1442,7 @@ try{
 					else{
 						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
 					}
+					sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'recieveTransaction', data);
 				}
 				else{
 					if(room.playerList[i].canSeeChips === 0){
