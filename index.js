@@ -111,7 +111,7 @@ var testerIO = net.createServer(function (c)
 });
 testerIO.listen(8011, function ()
 { //'listening' listener
-    console.log('nodeServer listening port:8015');
+    console.log('nodeServer listening port:8011');
 });
 
 

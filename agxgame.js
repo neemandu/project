@@ -56,8 +56,11 @@ if (DATABASE){
  * @param sio The Socket.IO library
  * @param socket The socket object for the connected client.
  */
+ 
+
 exports.initGame = function(sio, socket){
 	io = sio;
+//	ObjectValues(io);
 	gameSocket = socket;
 	gameSocket.emit('connected', { message: "You are connected!" });
 
@@ -145,13 +148,19 @@ exports.runConfigurtion = function(confsToRun, i){
  ******************************* */
 
 function playerDisconnect(){
+	gameLogger.log('playerDisconnect');
 	var rooms = io.sockets.manager.roomClients[gameSocket.id];
-       for(var room in rooms) {
-		   room.gameOver = true;
+	gameLogger.log('gameSocket.id: '+gameSocket.id+' has left the building');
+       for(var roomNumber in rooms){	
+	   var room = gameSocket.manager.rooms[roomNumber];
+				gameLogger.log('1 room: '+roomNumber);
+	   
 		   if(room.playerList != null){
-			   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');
-			   socket.leave(room);
+			   gameLogger.log('2 room: '+roomNumber);
+			   room.gameOver = true;
+			   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');   
 		   }
+		   gameSocket.leave(roomNumber);
        }
 }
 
@@ -1052,6 +1061,13 @@ try{
 		setTimeout(function(){ return exports.runConfigurtion(room.confsToRun, room.currentConf);}, 5000);
 	}
 	else{
+		for(var i=0 ; i<room.playerList.length; i++){
+			if(room.playerList[i].agent === false){
+				var socket = io.sockets.sockets[room.playerList[i].socketId];
+				socket.leave(room);
+			}
+		}
+		
 		gameSocket.manager.rooms["/" + room.gameId] = undefined;
 		gameLogger.debug('NO MORE GAMES');
 		gameIDs[room.gameId] = 0;
