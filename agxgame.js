@@ -60,14 +60,8 @@ if (DATABASE){
 
 exports.initGame = function(sio, socket){
 	io = sio;
-//	ObjectValues(io);
 	gameSocket = socket;
 	gameSocket.emit('connected', { message: "You are connected!" });
-
-	// Host Events
-//	gameSocket.on('hostCreateNewGame', hostCreateNewGame);
-//	gameSocket.on('hostRoomFull', hostPrepareGame);
-//	gameSocket.on('hostCountdownFinished', hostStartGame);
 
 	// Player Events
 	gameSocket.on('disconnect', playerDisconnect);
@@ -232,7 +226,10 @@ try{
 		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		player.socketId = room[i];
-		
+		room.playerList[i].chipsToAddAtEndOfPhase = [];
+		for(var j=0; j< numOfChips ; j++){
+			room.playerList[i].chipsToAddAtEndOfPhase[j] = 0;
+		}
 		room.board[player.location.x][player.location.y] = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
@@ -444,16 +441,16 @@ try{
 	}
 	if(data.answer === 'no'){
 		data.action = "IllegalOffer";
-		sendMsg(room, sender.externalId, sender.GUIid, 'recieveMessage', data);
+		sendMsg(room, sender.GUIid, 'recieveMessage', data);
 		//	this.emit('recieveMessage',data);
 	}
 	else{
-		sendMsg(room,  sender.externalId, sender.GUIid, 'addRowToHistory', data);
+		sendMsg(room,  sender.GUIid, 'addRowToHistory', data);
 		//this.emit('addRowToHistory',data);
 		data.playerId = this.GUIid;
 		data.offer = true;
 		
-		sendMsg(room, reciever.externalId, reciever.GUIid, 'recieveMessage', data);
+		sendMsg(room, reciever.GUIid, 'recieveMessage', data);
 	}
 	}
 	catch(e){
@@ -549,10 +546,7 @@ try{
 
 			// Emit an event notifying the clients that the player has joined the room.
 			sock.emit('playerJoinedRoom', data);
-//			if (room.length === roomSize + 1) {//the room contains all the players and the host - reason for adding 1
-//			console.log('Room is full. Almost ready!');
-//			hostPrepareGame(data.gameId);
-//			}
+
 		}
 	} else {
 		data.mySocketId = sock.id;
@@ -560,7 +554,7 @@ try{
 		//join the current open room.
 		sock.join(currRoom.toString());
 
-		data.playerId = 0;//minus the host. this player is the last in the room.
+		data.playerId = 0;
 
 		console.log('Player ' + data.playerId + ' joined the game');
 
@@ -594,12 +588,6 @@ try{
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
-		/*
-		var emptyChips = [];
-		//for those that cant see chips
-		for(var i=0; i<player.chips.length; i++){
-			emptyChips[i] = -1;
-		}*/
 		if(room.board[data1.x][data1.y] != undefined){
 			for(var i=0;i<room.Goals.length;i++){
 				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
@@ -648,11 +636,10 @@ try{
 					}
 				}
 
-				sendMsg(room, room.playerList[i].externalId ,room.playerList[i].GUIid , 'movePlayer', data);
+				sendMsg(room ,room.playerList[i].GUIid , 'movePlayer', data);
 			}
 						updateLocation(room, ind, data1.x, data1.y);
 
-			//	io.sockets.in(data.gameId).emit('movePlayer', data);
 			if(room.gameOver){
 				gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
 			}
@@ -726,7 +713,6 @@ try{
 	console.log('socket to  look for: '+socket.id);
 	//	console.log('room #  :'+roomID+' size: '+idRoomPair[roomID].length);
 	for(var key in room){	
-		//console.log('idSocketPair[key]: '+ idRoomPair[roomID][key].id);
 		if(room[key] === socket.id){
 			console.log('founded it!!!!, key = '+key);
 			return i;
@@ -746,14 +732,12 @@ try{
  */
 function playerRestart(data) {
 try{
-	// console.log('Player: ' + data.playerName + ' ready for new game.');
 	var room = gameSocket.manager.rooms["/" + data.gameId];	
 	// Emit the player's data back to the clients in the game room.
 	data.playerId = this.id;
 	for(var i=0;i<room.playerList.length;i++){
-		sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid, 'playerJoinedRoom', data);
+		sendMsg(room, room.playerList[i].GUIid, 'playerJoinedRoom', data);
 	}
-	//io.sockets.in(data.gameId).emit('playerJoinedRoom',data);
 	}
 	catch(e){
 		error('playerRestart '+e);
@@ -826,6 +810,16 @@ try{
 		for(var i=0; i<room.playerList.length; i++){
 			data.internalId = room.playerList[i].id;
 			room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
+			
+			
+			for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
+					room.playerList[i].chips[i] =+room.playerList[i].chips[i] + +room.playerList[i].chipsToAddAtEndOfPhase[i];
+					gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+			}
+			
+			for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
+				room.playerList[i].chipsToAddAtEndOfPhase[i] = 0;
+			}
 			data.playerID = room.playerList[i].GUIid;
 			if((room.playerList[i].canSeeChips === 0)
 				&& (room.playerList[i].canSeeLocations === 0)){
@@ -864,7 +858,7 @@ try{
 			gameLogger.debug('   Goals '+data.Goals);
 			gameLogger.debug('***********************');
 			
-			sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid, 'beginFaze', data);
+			sendMsg(room, room.playerList[i].GUIid, 'beginFaze', data);
 		}
 		var newPhaseIndex = phaseIndex;
 		newPhaseIndex++;
@@ -984,7 +978,7 @@ try{
 }
 
 
-function sendMsg(room, id, GUIid, funcName, data){
+function sendMsg(room, GUIid, funcName, data){
 try{
 	var player = findPlayer(room.playerList, GUIid);
 	console.log('player.agent: '+player.agent);
@@ -992,12 +986,11 @@ try{
 	console.log('data: '+data);
 	if(player.agent === false){
 		console.log('GUIid' + GUIid);
-		console.log('externalid' + id);
-		gameLogger.log('room' + room);
-//		var socketId = room[id];
 		var socket = io.sockets.sockets[player.socketId];
-		console.log('socketId: ' + player.socketId);
-		socket.emit(funcName, data);
+		if(socket != null){
+			console.log('socketId: ' + player.socketId);
+			socket.emit(funcName, data);
+		}
 	}
 	else if(player.agent === true){
 		console.log('port: '+player.listening_port);
@@ -1047,10 +1040,8 @@ try{
 	gameLogger.debug('number of games'+conf.Games.length);
 	gameLogger.debug('currentGame: '+room.currentGame);
 	for(var i=0;i<room.playerList.length;i++){
-		sendMsg(room, room.playerList[i].externalId ,room.playerList[i].GUIid ,'Winner', data);
+		sendMsg(room, room.playerList[i].GUIid ,'Winner', data);
 	}
-	//var self = this;
-	//io.sockets.in(room.gameId).emit('Winner', data);
 	if(room.currentGame < room.conf.Games.length-1){
 		room.currentGame++;
 		setTimeout(function(){ return hostStartGame(room);}, 10000);
@@ -1234,10 +1225,7 @@ try{
 	gameLogger.debug(' ');
 	gameLogger.debug('***************************** ');
 	gameLogger.debug('checkActions ');
-	for(var h in searchPlace){
-		//	gameLogger.debug('player: '+player.name);	
-		//gameLogger.debug('att: '+h);		
-		//gameLogger.debug('val: '+searchPlace[h]);					
+	for(var h in searchPlace){				
 		switch(h){
 		case 'canMove':
 			player.canMove = searchPlace[h];
@@ -1298,7 +1286,6 @@ try{
 
 function getColor(i,j){
 	var loc = conf.Blocks[j];
-	//console.dir(loc[1]);
 	switch(conf.Board.Colors[loc[i]]) 
 	{
 	case "purple":
@@ -1328,24 +1315,6 @@ function getColor(i,j){
 	default:
 		return "#AAAAAA";
 	}
-}
-
-function paintBoard(){
-	var tablesCode = "<table class='trails'>";
-	var Color = 0;
-	for (var i=0; i<conf.Board.Size.Lines; i++)
-	{
-		tablesCode += "<tr class='trails'>";
-		for(var j=0; j< conf.Board.Size.Rows; j++)
-		{
-			tablesCode += "<td class='trails' style=background:" + getColor(i,j) +" ;></td>" 
-		}
-		tablesCode += "</tr>";
-	}
-	tablesCode += "</table>";
-	//var myDiv = document.getElementsByClassName("gameBoard");
-	//myDiv.innerHTML = tablesCode;
-	return tablesCode;
 }
 
 function createServerBoard(game){
@@ -1391,8 +1360,15 @@ try{
 				
 				p1.chips[i] =+p1.chips[i] - +sum1;
 				gameLogger.trace('pl 1 chips['+i+']: '+p1.chips[i]);
-				p2.chips[i] =+p2.chips[i] + +sum1;
-				gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+				if((room.conf.Games[room.currentGame].TransferChipsAtEndOfPhase === 0) ||
+				(room.conf.Games[room.currentGame].TransferChipsAtEndOfPhase === undefined)){ 
+					p2.chips[i] =+p2.chips[i] + +sum1;
+					gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
+				}
+				else{
+					p2.chipsToAddAtEndOfPhase[i] =+p2.chips[i] + +sum1;
+					gameLogger.trace('pl 2 should add chips['+i+']: '+p2.chips[i]+' at the end of the phase');
+				}
 				
 			}
 			
@@ -1445,31 +1421,30 @@ try{
 			for(var i=0;i<room.playerList.length;i++){
 				if(i == p1.id){
 					if(p1.canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', data);
 					}
 				}
 				else if(i == p2.id){
 					if(p2.canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', data);
 					}
-					sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'recieveTransaction', data);
+					sendMsg(room, room.playerList[i].GUIid , 'recieveTransaction', data);
 				}
 				else{
 					if(room.playerList[i].canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room , room.playerList[i].GUIid , 'updateChips', data);
 					}
 				}
 			}
-			//io.sockets.in(data.gameId).emit('updateChips', data );
 		}
  
 	}catch(e){
@@ -1522,6 +1497,7 @@ try{
 			data.player2.chips = p2.chips;
 			data.player1.score = p1.score;
 			data.player2.score = p2.score;
+		
 			
 			
 			//for those that cant see chips.
@@ -1563,35 +1539,36 @@ try{
 			for(var i=0;i<room.playerList.length;i++){
 				if(i == p1.id){
 					if(p1.canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', p1cantSeeChipsData);
+						
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room,  room.playerList[i].GUIid , 'updateChips', data);
 					}
+					sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'acceptOffer', data.offerId);
 				}
 				else if(i == p2.id){
 					if(p2.canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', p2cantSeeChipsData);
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', data);
 					}
 				}
 				else{
 					if(room.playerList[i].canSeeChips === 0){
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
+						sendMsg(room, room.playerList[i].GUIid , 'updateChips', cantSeeChipsData);
 					}
 					else{
-						sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'updateChips', data);
+						sendMsg(room,  room.playerList[i].GUIid , 'updateChips', data);
 					}
 				}
 			}
-			//io.sockets.in(data.gameId).emit('updateChips', data );
 		}
 	}
 	else{
 		data.accepted = true;
-		sendMsg(room, p1.externalId, p1.GUIid , 'updateChips', data);
+		sendMsg(room, p1.GUIid , 'updateChips', data);
 	}
 	}catch(e){
 		error('updateChips '+e);
@@ -1611,16 +1588,10 @@ try{
 	};
 	var p = findPlayer(room.playerList, data.sentFrom);
 	gameLogger.log('rejectOffer function');
-	sendMsg(room, p.externalId, p.id, 'rejectOffer', send);
+	sendMsg(room,  p.id, 'rejectOffer', send);
 }catch(e){
 		error('rejectOffer '+e);
 	}
-//	var socketId = room[''+data.id];
-//	var socket = io.sockets.sockets[socketId];
-//	var send ={
-//	rowid : data.rowid
-//	}
-//	socket.emit('rejectOffer',send);
 }
 
 exports.getPlayers = function(pl, al){
