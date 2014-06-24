@@ -397,7 +397,7 @@ jQuery(function($){
 		},
 		
 		acceptOffer : function(data) {
-		//alert (data);
+		alert (data);
 			$('#sendOffer'+data).parent().html('<font color="green">accepted</font>');
 		},
 	    /**
@@ -689,38 +689,22 @@ jQuery(function($){
 					
 				}
 				App.paintBoard(data.board,data.colors);
-				
-				for(var i=0;i<data.Goals.length;i++){
-					for(var j=0;j<data.players.length;j++){
-						if(data.players[j].location.x==data.Goals[i][0] && data.players[j].location.y==data.Goals[i][1] /*&& data.players[j].isGoal == 1*/){
-							var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
-							App.Player.playerImages[j]= url;
-							//$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
-							data.Goals[i][0]=-1; //remove from goal list
-							
-							if(data.playerID == 0){
-								alert(j+' if loc x '+data.players[j].location.x);
-								alert(j+' Goal val is '+data.Goals[i][0]);
-							}						
-						
-							//data.Goals.splice(i,1);
-							//i--;
-						}
-						else{
-							var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
-							if(App.Player.playerImages[j] == null){
-								App.Player.playerImages[j]= url;
-							}			
-						//	$('#board table tr:eq('+data.Goals[i][1]+') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
-						}
-						//alert(App.Player.playerImages[j]);
-					}
-					if(data.Goals[i][0]!=-1){
+		
+				for(var i=0;i<data.GoalsThatAreNotPlayers.length;i++){
 						var url = "Pictures/goal.png";
-						$('#board table tr:eq('+ data.Goals[i][1] +') td:eq('+data.Goals[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-					}	
-			}
+						$('#board table tr:eq('+ data.GoalsThatAreNotPlayers[i][1] +') td:eq('+data.GoalsThatAreNotPlayers[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+				}
 			
+				for(var j=0;j<data.players.length;j++){
+					if(data.players[j].goal == true){
+						var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
+						App.Player.playerImages[j]= url;
+					}
+					else{
+						var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
+						App.Player.playerImages[j]= url;
+					}
+				}
 			
 			
 			

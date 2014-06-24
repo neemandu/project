@@ -1,2 +1,3 @@
 remove join button after join
-why shows only one goal
+when the goal moves on another player it is not end of game
+again not showing the accept for some reason
