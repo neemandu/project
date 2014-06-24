@@ -1,0 +1,2 @@
+remove join button after join
+why shows only one goal
