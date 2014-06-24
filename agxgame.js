@@ -226,12 +226,13 @@ try{
 		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		player.socketId = room[i];
+		
+		room.board[player.location.x][player.location.y] = 1;
+		room.playerList[i] = player;
 		room.playerList[i].chipsToAddAtEndOfPhase = [];
 		for(var j=0; j< numOfChips ; j++){
 			room.playerList[i].chipsToAddAtEndOfPhase[j] = 0;
 		}
-		room.board[player.location.x][player.location.y] = 1;
-		room.playerList[i] = player;
 		room.playerList[i].offer = [];
 		gameLogger.debug(player.name+' GUIid: '+room.playerList[i].GUIid);
 		gameLogger.debug(player.name+' id: '+room.playerList[i].id);
@@ -286,12 +287,16 @@ try{
 	var ans;
 	for(var i=0;i<room.playerList.length; i++){
 		ans = false;
+		room.playerList[i].goal = false;
+		room.playerList[i].goalIndex = -1;	
 		for(var j=0; j<room.Goals.length && !ans; j++){
+			room.Goals[j].isPlayer = false;
 			gameLogger.log('x: '+room.Goals[j][0]+'y: '+room.Goals[j][1]);
 			if((room.playerList[i].location.x === room.Goals[j][0])
 			&& (room.playerList[i].location.y === room.Goals[j][1])){
 				room.playerList[i].goal = true;
 				room.playerList[i].goalIndex = j;
+				room.Goals[i].isPlayer = true;
 				ans = true;
 			}
 		}
@@ -793,6 +798,14 @@ try{
 		
 		deleteFormerOffers(room);
 		
+		var gtanp = new Array();
+		
+		for(var i=0; i<room.Goals.length; i++){
+			if(room.Goals[i].isPlayer === false){
+				gtanp[i] = (room.Goals[i]);
+			}
+		}
+		
 		var data = {
 					action : "BeginPhase",
 					automaticChipSwitch	: room.conf.Games[room.currentGame].AutomaticChipSwitch,
@@ -803,23 +816,15 @@ try{
 					phaseTime : game.phases[round.phases_in_round[phaseIndex]].time,
 					Goals : room.Goals,
 					colors : conf.Global.Colors,
-					gameId : room.gameId
+					gameId : room.gameId,
+					GoalsThatAreNotPlayers : gtanp
 				}
 
 				
 		for(var i=0; i<room.playerList.length; i++){
 			data.internalId = room.playerList[i].id;
 			room.playerListCopy = JSON.parse(JSON.stringify(room.playerList));
-			
-			
-			for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
-					room.playerList[i].chips[i] =+room.playerList[i].chips[i] + +room.playerList[i].chipsToAddAtEndOfPhase[i];
-					gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
-			}
-			
-			for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
-				room.playerList[i].chipsToAddAtEndOfPhase[i] = 0;
-			}
+
 			data.playerID = room.playerList[i].GUIid;
 			if((room.playerList[i].canSeeChips === 0)
 				&& (room.playerList[i].canSeeLocations === 0)){
@@ -831,7 +836,7 @@ try{
 			else if(room.playerList[i].canSeeChips === 0){
 				data.players = playersWithoutChips(room, i);
 			}
-			else{
+			else{ 
 				data.players = room.playerList;
 			}
 			
@@ -840,6 +845,8 @@ try{
 			}
 		*/	gameLogger.debug('***********************');
 			gameLogger.debug(room.playerList[i].name+' attributes:');
+			gameLogger.debug('   chips :'+room.playerList[i].chips);
+			gameLogger.debug('   score :'+room.playerList[i].score);
 			gameLogger.debug('   canMove '+room.playerList[i].canMove);
 			gameLogger.debug('   canOffer '+room.playerList[i].canOffer);
 			gameLogger.debug('   canTransfer '+room.playerList[i].canTransfer);
@@ -864,10 +871,10 @@ try{
 		newPhaseIndex++;
 		gameLogger.debug('room.gameOver: '+room.gameOver + ' newPhaseIndex: '+newPhaseIndex+' round.phases_in_round.length: '+round.phases_in_round.length);
 		if(newPhaseIndex < round.phases_in_round.length){
-			setTimeout(function(){ return beginphase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			setTimeout(function(){ return endPhase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
 		}
 		else{
-			setTimeout(function(){ return nextRound(room, numberOfTimesToRepeatRounds, game);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			setTimeout(function(){ return endRound(room, numberOfTimesToRepeatRounds, game);}, game.phases[round.phases_in_round[phaseIndex]].time);
 		}
 	}
 	}
@@ -875,6 +882,31 @@ try{
 		error('beginphase '+e);
 	}
 }
+function commitTransfer(room){
+	gameLogger.log('commitTransfer');
+	for(var i=0; i<room.playerList.length; i++){
+		for(var j=0; j<room.playerList[i].chips.length; j++){
+			gameLogger.log('pl '+i+' room.playerList[i].chipsToAddAtEndOfPhase['+j+']: '+room.playerList[i].chipsToAddAtEndOfPhase[j]);
+			room.playerList[i].chips[j] =+room.playerList[i].chips[j] + +room.playerList[i].chipsToAddAtEndOfPhase[j];
+			gameLogger.trace('pl '+i+' chips['+j+']: '+room.playerList[i].chips[j]);
+		}
+		gameLogger.log('pl '+i+' room.playerList[i].chips['+j+']: '+room.playerList[i].chips[j]);
+		room.playerList[i].score = setScore(room.playerList[i].chips, room.conf.Games[room.currentGame].GameConditions.score);		
+		for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
+			room.playerList[i].chipsToAddAtEndOfPhase[j] = 0;
+		}
+	}
+}
+function endPhase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex){
+	commitTransfer(room);
+	beginphase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);
+
+}
+function endRound(room, numberOfTimesToRepeatRounds, game){
+	commitTransfer(room);
+	nextRound(room, numberOfTimesToRepeatRounds, game);
+}
+
 
 function playersWithoutChipsAndLocations(room, self){
 try{
@@ -1353,7 +1385,7 @@ try{
 	gameLogger.log('p2.id '+p2.id);
 	data.action = "AcceptOffer";	
 		if(p1 != undefined && p2 != undefined){
-			for(var i=0;i<numOfColors;i++){
+			for(var i=0;i<p1.chips.length;i++){
 				var sum1 = data.player1.colorsToAdd[i];
 				gameLogger.trace('sum1: '+sum1);
 				gameLogger.trace('before');
@@ -1366,8 +1398,8 @@ try{
 					gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
 				}
 				else{
-					p2.chipsToAddAtEndOfPhase[i] =+p2.chips[i] + +sum1;
-					gameLogger.trace('pl 2 should add chips['+i+']: '+p2.chips[i]+' at the end of the phase');
+					p2.chipsToAddAtEndOfPhase[i] =+p2.chipsToAddAtEndOfPhase[i] + +sum1;
+					gameLogger.trace('pl 2 should add chips['+i+']: '+p2.chipsToAddAtEndOfPhase[i]+' at the end of the phase');
 				}
 				
 			}
