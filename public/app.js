@@ -153,10 +153,19 @@ jQuery(function($){
 		$('#downTable').attr("class", "downTable");
        // 	alert(App.Player.currentCount);
         	if(data.answer === 'no'){
-        		alert('illegal offer');
+			var c =App.Player.currentCount-1;
+			if($('#sendOffer'+c).parent().find('#illegal'+c).html() == undefined){
+        		$('#sendOffer'+c).parent().append('<div id="illegal'+c+'"><font size="1" color="red">illegal offer</font></div>');
+				}
         	}
         	else{
 			var cur =  App.Player.currentCount;
+			App.Player.pendingReq[App.Player.pendingReqInd]= {};
+			App.Player.pendingReq[App.Player.pendingReqInd].id=App.Player.currentCount;
+			App.Player.pendingReq[App.Player.pendingReqInd].offerId =data.offerId;
+			App.Player.pendingReq[App.Player.pendingReqInd].sentFrom=data.sentFrom;
+			App.Player.pendingReqInd++;
+			
 				$('#downTable').append('<tr id="historyRow'+App.Player.currentCount+'"></tr>');
 				var calc;
 				calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.04;
@@ -170,12 +179,12 @@ jQuery(function($){
 				calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.36;
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" cellpadding="0" style="width:'+calc+'px; height:100%"><b>In exchange for</b><table id="colorsToGet'+ App.Player.currentCount+'"><tr></tr></table></td>');
 				calc = $('#historyRow'+App.Player.currentCount).css('width').slice(0, -2) * 0.08;
-				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width:'+calc+'px;"><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td></tr>');
+				$('#historyRow'+App.Player.currentCount).append('<td id="offerStatus'+App.Player.currentCount+'" align="center" style="width:'+calc+'px;"><div><button id="acceptOffer'+App.Player.currentCount+'"> accept </button></div><div><button id="rejectOffer'+App.Player.currentCount+'"> reject </button></div></td></tr>');
 
 			var k =0			 
 			$('#acceptOffer'+App.Player.currentCount).click(function()
 					{
-						
+						App.Player.pendingReqInd--;
 						var id = this.id[this.id.length-1];
 						var params;
 						//alert(data.JcolorsToGet);
@@ -220,6 +229,7 @@ jQuery(function($){
 					
 			$('#rejectOffer'+App.Player.currentCount).click(function()
 					{
+						App.Player.pendingReqInd--;
 						var id = this.id[this.id.length-1];
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
@@ -397,7 +407,6 @@ jQuery(function($){
 		},
 		
 		acceptOffer : function(data) {
-		alert (data);
 			$('#sendOffer'+data).parent().html('<font color="green">accepted</font>');
 		},
 	    /**
@@ -769,7 +778,11 @@ jQuery(function($){
 			//- canSeeChips
 			//- canSeeLocations
 
-					
+			
+			//reject all pendingOffers
+			App.Player.rejectAllLeftOffers();
+
+			
 
 			
 			
@@ -1115,6 +1128,8 @@ jQuery(function($){
         	currentCount: 0,
 			historyCount: 0,
         	myid: 0,
+			pendingReq : [],
+			pendingReqInd : 0,
 			inMyCell: 0,
 			playerCountInd: 0,
 			currentCountArr: 0,
@@ -1165,7 +1180,7 @@ jQuery(function($){
 				$('#historyRow'+App.Player.currentCount).append('<td align="center" style="width=width:'+calc+'px;  height:100%;"><br><div style="padding:5px; width=100%;"><button style="width:100%;" id="sendOffer'+ App.Player.currentCount+'"> send </button></div></td>');
 				
 				for (var k =0; k<App.Player.chipsImages.length;k++){
-					$('#colorsToSend'+ App.Player.currentCount+' tr').append('<td style="width: auto; height: 100%;">'+App.Player.chipsImages[k]+'</td><td style="width: auto; height: 100%;"><input align="left" type="number" min="1" style="width:25px; height:auto;"></td>');
+					$('#colorsToSend'+ App.Player.currentCount+' tr').append('<td style="width: auto; height: 100%;">'+App.Player.chipsImages[k]+'</td><td style="width: auto; height: 100%;"><input align="left" type="text" min="1" style="width:25px; height:auto;"></td>');
 				}
 				
 				var icons = [];
@@ -1286,12 +1301,12 @@ jQuery(function($){
 			//	var k=0;
 				for (var k =0; k<App.Player.chipsImages.length;k++){
 				calc = 100/12;
-				$('#colorsToOffer'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="number" min="1" style="width:100%; height:auto;"></td>');
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
 				}
 				
 				for(var k=0;k<App.Player.chipsImages.length;k++){
 				calc = 100/12;
-				$('#colorsToGet'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="number" min="1" style="width:100%; height:auto;"></td>');
+				$('#colorsToGet'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
 				}
 					
 				var icons = [];
@@ -1352,9 +1367,14 @@ jQuery(function($){
 									{
 										CTO = colorsToOffer[colorsNum];
 										CTG = colorsToGet[colorsNum];
-										if( /*CTO == '' || CTG == '' || */(CTO < 0) || (CTG < 0) )
+									//	alert(isNaN(JSON.stringify(CTO)));
+										if( /*CTO == '' || CTG == '' || */(CTO < 0) || (CTG < 0) || isNaN(CTO)==true || isNaN(CTG)==true )
 											{
-												alert('chips value must be a number greater than 0');
+												var c =App.Player.currentCount-1;
+												if($('#sendOffer'+c).parent().find('#illegal'+c).html() == undefined){
+													$('#sendOffer'+c).parent().append('<div id="illegal'+c+'"><font size="1" color="red">illegal offer</font></div>');
+													}
+        	
 												return;
 											}
 									}
@@ -1641,10 +1661,36 @@ jQuery(function($){
     			clearTimeout(App.timeout);
     			App.timeout = setTimeout(function(){App.$gameArea.html(App.$CTtemplateIntroScreen);}, 15000);
     		},*/
+			rejectAllLeftOffers : function(){
+				for(var i=0;i<App.Player.pendingReqInd;i++){
+					var offerId = App.Player.pendingReq[i].offerId;
+					var id = App.Player.pendingReq[i].id;
+					var p = App.Player.pendingReq[i].sentFrom;
+					var player1 = {sentFrom :p, gameId : App.gameId, offerId :  offerId};	
+					IO.socket.emit('rejectOffer',player1);
+					//$(this).parent().parent().attr('id','offerStatus'+id).html('<div><font color="red">you rejected</font></div>');
+					
+					$('#offerStatus'+id).html('<div><font color="red">you rejected</font></div>');			
+					var h = $('#historyRow'+id);
+					$('#historyRow'+id).remove();
+					
+					if($('#downTable tr').length == 0){
+						$('#downTable').attr("class", "playersListNoBorder");
+					}	
+					
+					$('#histTable').attr("class", "downTable");
+					$('#histTable').prepend(h);
+			
+					
+			}
+
+			App.Player.pendingReqInd=0;
+				
+			},
 			thereIsAWinner: function(data)
     		{
 				App.firstphase=1;
-				
+				App.Player.rejectAllLeftOffers();
 				var param = {playerId: data.playerId, time: 10};
 				//App.Player.countdownToIntroScreen(param);
 				clearTimeout(App.timeout);
