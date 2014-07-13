@@ -228,6 +228,7 @@ try{
 		player.socketId = room[i];
 		
 		room.board[player.location.x][player.location.y] = 1;
+		room.board[player.location.x][player.location.y].players[room.board[player.location.x][player.location.y].players.length] = player.GUIid;
 		room.playerList[i] = player;
 		room.playerList[i].chipsToAddAtEndOfPhase = [];
 		for(var j=0; j< numOfChips ; j++){
@@ -263,7 +264,7 @@ try{
 		gameLogger.debug('****************************');
 	}
 
-	checkIfPlayersAreGoals(room);
+//checkIfPlayersAreGoals(room);
 	for (var i = 0; i < room.playerList.length; i++)
 	{ 
 		
@@ -290,13 +291,17 @@ try{
 		room.playerList[i].goal = false;
 		room.playerList[i].goalIndex = -1;	
 		for(var j=0; j<room.Goals.length && !ans; j++){
-			room.Goals[j].isPlayer = false;
+			if(room.Goals[j].isPlayer === undefined){
+				room.Goals[j].isPlayer = false;
+				room.Goals[j].playerId = -1;
+			}
 			gameLogger.log('x: '+room.Goals[j][0]+'y: '+room.Goals[j][1]);
 			if((room.playerList[i].location.x === room.Goals[j][0])
 			&& (room.playerList[i].location.y === room.Goals[j][1])){
 				room.playerList[i].goal = true;
 				room.playerList[i].goalIndex = j;
-				room.Goals[i].isPlayer = true;
+				room.Goals[j].isPlayer = true;
+				room.Goals[j].playerId = room.playerList[i].GUIid;
 				ans = true;
 			}
 		}
@@ -352,7 +357,7 @@ try{
 function makePlayerAttributes(game, player, id) {
 try{
 	var p = {};
-	p.goal = false;
+	p.isGoal = player.isGoal;
 	p.goalIndex = -1;
 	p.GUIid = player.id;
 	p.id = player.id;
@@ -364,6 +369,8 @@ try{
 	p.score = setScore(p.chips, game.GameConditions.score);
 	p.agent = false;
 	
+	buildPlayerGoals(p, player, game);
+	
 	presistance.addPlayer(p);
 	
 	return p;
@@ -372,6 +379,28 @@ try{
 		error('makePlayerAttributes '+e);
 	}
 }
+
+function buildPlayerGoals(p, player, game){
+	p.goals = new Array();
+	var goals = game.GameConditions.GoalCordinates;
+	for(var i=0; i< goals.length; i++){
+		p.goals[i].type = plain;
+		p.goals[i].x = goals[i][0];
+		p.goals[i].y = goals[i][1];
+	}
+	for(var i=0; i< player.Goals.length; i++){
+		p.goals[i].type = player.Goals.type;
+		if(p.goals[i].type === plain){
+			p.goals[i].x = goals[i].x;
+			p.goals[i].y = goals[i].y;
+		}
+		else{
+			p.goals[i].id = goals[i].id;
+		}
+	}
+
+}
+
 function makeAgentAttributes(game, player, agent) {
 try{
 	var p = makePlayerAttributes(game, player, agent.ID);
@@ -594,61 +623,86 @@ try{
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
 		if(room.board[data1.x][data1.y] != undefined){
-			for(var i=0;i<room.Goals.length;i++){
-				if((data1.x === room.Goals[i][0]) && (data1.y === room.Goals[i][1])){
+			for(var i=0;i<player.goals.length;i++){
+				if((data1.x === player.goals[i].x) && (data1.y === player.goals[i].y)){
 					room.gameOver = true;
-					
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
+					break;
 				}
 			}
-			player.chips[data1.chip]--;
-			player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
-			var player1 = JSON.parse(JSON.stringify(player));
-			
-			player.moved = true;
-			player.roundsNotMoving = 0;
-			room.board[data1.x][data1.y] = 1;
-			room.board[data1.currX][data1.currY] = 0;
-			var ind = findPlayerInd(room.playerList, data1.playerId);
-			var data;
-			for(var i=0;i<room.playerList.length;i++){
-				data = {
-						action : "Move",
-						playerId: data1.playerId,
-						isGoal: player.goal,
-						x: data1.x,
-						y: data1.y,
-						prevX : data1.currX,
-						prevY : data1.currY,
-						chip: data1.chip,
-						score : player1.score
-				}
-				if(i != player.GUIid){
-					if((room.playerList[i].canSeeChips === 0)
-						&& (room.playerList[i].canSeeLocations === 0)){
-						data.x = -1; 
-						data.y = -1;
-						data.chip = -1;
-						data.score = -1;
-					}
-					else if(room.playerList[i].canSeeLocations === 0){
-						data.x = -1;
-						data.y = -1;
-					}
-					else if(room.playerList[i].canSeeChips === 0){
-						data.chip = -1;
-						data.score = -1;
+			if(player.isGoal){
+				for(var i=0; i<room.board[data1.x][data1.y].players.length; i++){
+					var pl = findPlayer(room.playerList, room.board[data1.x][data1.y].players);
+					if(pl != undefined){
+						for(var f= 0; f< pl.goals.length; f++){
+							if((pl.goals.type === player) && (pl.goals.id === player.GUIid)){
+								room.gameOver = true;
+								updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
+								break;
+							}
+						}
 					}
 				}
-
-				sendMsg(room ,room.playerList[i].GUIid , 'movePlayer', data);
 			}
-						updateLocation(room, ind, data1.x, data1.y);
-
-			if(room.gameOver){
-				gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
+		player.chips[data1.chip]--;
+		player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
+		var player1 = JSON.parse(JSON.stringify(player));
+		
+		player.moved = true;
+		player.roundsNotMoving = 0;
+		room.board[data1.x][data1.y] = 1;
+		//add player to the board
+		room.board[data1.x][data1.y].players[room.board[data1.x][data1.y].players.length] = player.GUIid;
+		room.board[data1.currX][data1.currY] = 0;
+		//delete player from prev position in the board.
+		for(var k=0; k<room.board[data1.currX][data1.currY].players.length; k++){
+			if(room.board[data1.currX][data1.currY].players[k] != undefined){
+				if(room.board[data1.currX][data1.currY].players[k] = player.GUIid){
+					room.board[data1.currX][data1.currY].players[k] = undefined;
+					break;
+				}
 			}
 		}
+		var ind = findPlayerInd(room.playerList, data1.playerId);
+		var data;
+		for(var i=0;i<room.playerList.length;i++){
+			data = {
+					action : "Move",
+					playerId: data1.playerId,
+					isGoal: player.isGoal,
+					x: data1.x,
+					y: data1.y,
+					prevX : data1.currX,
+					prevY : data1.currY,
+					chip: data1.chip,
+					score : player1.score
+			}
+			if(i != player.GUIid){
+				if((room.playerList[i].canSeeChips === 0)
+					&& (room.playerList[i].canSeeLocations === 0)){
+					data.x = -1; 
+					data.y = -1;
+					data.chip = -1;
+					data.score = -1;
+				}
+				else if(room.playerList[i].canSeeLocations === 0){
+					data.x = -1;
+					data.y = -1;
+				}
+				else if(room.playerList[i].canSeeChips === 0){
+					data.chip = -1;
+					data.score = -1;
+				}
+			}
+
+			sendMsg(room ,room.playerList[i].GUIid , 'movePlayer', data);
+		}
+		updateLocation(room, ind, data1.x, data1.y);
+
+		if(room.gameOver){
+			gameOver(room, room.conf.Games[room.currentGame], 'gameOver');
+		}
+	}
 	}
 	}
 	catch(e){
@@ -1360,6 +1414,7 @@ try{
 	for (var i=0; i<board.length; i++){
 		for(var j=0; j< board[i].length; j++){
 			newBoard[i][j] = 0;
+			newBoard[i][j].players = new Array();
 		}
 	}
 	return newBoard;
@@ -1577,7 +1632,7 @@ try{
 					else{
 						sendMsg(room,  room.playerList[i].GUIid , 'updateChips', data);
 					}
-					sendMsg(room, room.playerList[i].externalId, room.playerList[i].GUIid , 'acceptOffer', data.offerId);
+					sendMsg(room, room.playerList[i].GUIid , 'acceptOffer', data.offerId);
 				}
 				else if(i == p2.id){
 					if(p2.canSeeChips === 0){
