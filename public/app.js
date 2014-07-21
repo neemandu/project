@@ -43,6 +43,7 @@ jQuery(function($){
             IO.socket.on('error', IO.error );
 			IO.socket.on('beginFaze',App.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
+			IO.socket.on('reveal',App.Player.reveal);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
 			IO.socket.on('Winner', App.Player.thereIsAWinner);
         },
@@ -797,6 +798,7 @@ jQuery(function($){
 			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
 			App.Player.reveal=data.players[data.playerID].reveal;
+			App.Player.players = data.players;
 			//NEED TO ADD
 			//canSeeChips
 			//canSeeLocations
@@ -1212,16 +1214,37 @@ jQuery(function($){
 			onRevealClick : function(){			
 				data = {id : App.Player.myid, gameId : App.gameId};
 				IO.socket.emit('reveal', data);
-					 for(var i=0 i< App.Player.goals.length;i++){
+				$('#downTable').html('');
+        		$('#addOffer').remove();
+				/*	 for(var i=0 i< App.Player.goals.length;i++){
 						if(App.Player.goals[i].real == 0){
 								$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
 						}
 					 }
+				*/
 			
 			},
 			
 			onDontRevealClick : function(){
+				data = {id : App.Player.myid, gameId : App.gameId};
 				IO.socket.emit('dontReveal', data);
+				$('#downTable').html('');
+        		$('#addOffer').remove();
+			},
+			
+			reveal : function(id){
+				for(var i=0;i<App.Player.players[id].goals.length;i++){
+					if(App.Player.players[id].goals[i].real==1){
+						if(id != App.Player.myid){
+							var url = "Pictures/flagTroop"+id+"NQpng.png";
+							$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[id].goals[i].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+						}
+					}
+					else{
+						$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+					}
+				}
+				
 			},
 			
 			onAddTransClick : function(){
