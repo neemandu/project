@@ -43,7 +43,7 @@ jQuery(function($){
             IO.socket.on('error', IO.error );
 			IO.socket.on('beginFaze',App.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
-			IO.socket.on('reveal',App.Player.reveal);
+			IO.socket.on('reveal',IO.reveal);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
 			IO.socket.on('Winner', App.Player.thereIsAWinner);
         },
@@ -427,7 +427,22 @@ jQuery(function($){
 	    	App.Player.updateScore(data.player1.id,data.player1.score);
 	    	App.Player.updateScore(data.player2.id,data.player2.score);
 	    },
-	
+		
+		reveal : function(id){
+				for(var i=0;i<App.Player.players[id].goals.length;i++){
+					if(App.Player.players[id].goals[i].real==1){
+						if(id != App.Player.myid){
+							var url = "Pictures/flagTroop"+id+"NQpng.png";
+							$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[id].goals[i].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+						}
+					}
+					else{
+						$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+					}
+				}
+				
+			},
+			
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
 			var c = data.chip*2 +1;
@@ -723,23 +738,62 @@ jQuery(function($){
 					}
 					
 					
-					//currently supports only a possibility of goals and only goals who are not players
-					for(var k=0;k<data.players[j].goals.length;k++){
-						if(data.players[j].playerId != App.Player.myid){
-							if(data.players[j].goals[k].type==plain && data.players[j].goals[k].isShown==1){
-								var url = "Pictures/flagTroop"+data.players[j].id+"Q.png" ;
-								$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-							}	
-						}
-						else{
-							App.Player.goals = data.players[j].goals;
-							var url = "Pictures/goal.png";
-							if(data.players[j].goals[k].real==0){
-								var url = "Pictures/goalfake.png";
+				//	if(data.players[j].revealed ==false){
+						//currently supports only a possibility of goals and only goals who are not players
+						for(var k=0;k<data.players[j].goals.length;k++){
+							
+							if(data.players[j].id != App.Player.myid){
+								if(data.players[j].goals[k].type=='plain' && data.players[j].goals[k].isShown==1){
+									var url="";
+									if(data.players[j].revealed ==true){
+										if(App.Player.players[j].goals[k].real==1){
+											url = "Pictures/flagTroop"+j+"NQpng.png";
+											$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+										}
+										else{
+											$('#board table tr:eq('+App.Player.goals[k].x+') td:eq('+App.Player.goals[k].y+')').html('');
+										}
+									}
+									else{
+										 url = "Pictures/flagTroop"+data.players[j].id+"Q.png" ;
+										$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+									}
+								}	
 							}
-							$('#board table tr:eq('+ data.GoalsThatAreNotPlayers[i][1] +') td:eq('+data.GoalsThatAreNotPlayers[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+							else{
+								App.Player.goals = data.players[j].goals;
+								var url = "Pictures/goal.png";
+								if(data.players[j].goals[k].real==0){
+									if(data.players[j].revealed ==true){
+										$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('');
+									}
+									else{
+										var url = "Pictures/goalfake.png";
+									}
+								}
+								else{
+									$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+								}
+								
+							}
+
 						}
-					}
+					
+			//		}
+			//		else{
+					/*	for(var i=0;i<App.Player.players[j].goals.length;i++){
+							if(App.Player.players[j].goals[i].real==1){
+								if(j != App.Player.myid){
+									var url = "Pictures/flagTroop"+j+"NQpng.png";
+									$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[j].goals[i].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+								}
+							}
+							else{
+								$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+							}
+						}*/
+			//		}
+					
 				}
 			
 			
@@ -1212,40 +1266,18 @@ jQuery(function($){
             myName: '',
 			
 			onRevealClick : function(){			
-				data = {id : App.Player.myid, gameId : App.gameId};
+				var data = {id : App.Player.myid, gameId : App.gameId};
 				IO.socket.emit('reveal', data);
-				$('#downTable').html('');
-        		$('#addOffer').remove();
-				/*	 for(var i=0 i< App.Player.goals.length;i++){
-						if(App.Player.goals[i].real == 0){
-								$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
-						}
-					 }
-				*/
+				$('#addTransaction').html('');
 			
 			},
 			
 			onDontRevealClick : function(){
 				data = {id : App.Player.myid, gameId : App.gameId};
 				IO.socket.emit('dontReveal', data);
-				$('#downTable').html('');
-        		$('#addOffer').remove();
+				$('#addTransaction').html('');
 			},
 			
-			reveal : function(id){
-				for(var i=0;i<App.Player.players[id].goals.length;i++){
-					if(App.Player.players[id].goals[i].real==1){
-						if(id != App.Player.myid){
-							var url = "Pictures/flagTroop"+id+"NQpng.png";
-							$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[id].goals[i].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
-						}
-					}
-					else{
-						$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
-					}
-				}
-				
-			},
 			
 			onAddTransClick : function(){
 				$('#downTable').attr("class", "downTable");
