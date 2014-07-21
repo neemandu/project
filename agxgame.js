@@ -226,9 +226,11 @@ try{
 		var player = makePlayerAttributes(game, p, room.confsToRun[room.currentConf].playerList[i]);
 		player.agent = false;
 		player.socketId = room[i];
-		
-		room.board[player.location.x][player.location.y] = 1;
+		gameLogger.log("player "+i+" data was created");
+		room.board[player.location.x][player.location.y].full = 1;
+		gameLogger.log("room.board["+player.location.x+"]["+player.location.y+"].players: "+room.board[player.location.x][player.location.y].players);
 		room.board[player.location.x][player.location.y].players[room.board[player.location.x][player.location.y].players.length] = player.GUIid;
+		gameLogger.log("board.players was updated");
 		room.playerList[i] = player;
 		room.playerList[i].chipsToAddAtEndOfPhase = [];
 		for(var j=0; j< numOfChips ; j++){
@@ -250,7 +252,7 @@ try{
 	{ 
 		var p = game.agents[i-l];
 		var player = makeAgentAttributes(game, p, agents[room.confsToRun[room.currentConf].agentList[i-l]]);
-		room.board[player.location.x][player.location.y] = 1;
+		room.board[player.location.x][player.location.y].full = 1;
 		room.playerList[i] = player;
 		room.playerList[i].offer = [];
 		gameLogger.debug(player.name+' GUIid: '+room.playerList[i].GUIid);
@@ -368,10 +370,11 @@ try{
 	p.name = player.name;
 	p.score = setScore(p.chips, game.GameConditions.score);
 	p.agent = false;
-	
+	gameLogger.log("before buildPlayerGoals");
 	buildPlayerGoals(p, player, game);
+	gameLogger.log("after buildPlayerGoals");
 	
-	presistance.addPlayer(p);
+	//presistance.addPlayer(p);
 	
 	return p;
 	}
@@ -381,24 +384,39 @@ try{
 }
 
 function buildPlayerGoals(p, player, game){
-	p.goals = new Array();
-	var goals = game.GameConditions.GoalCordinates;
-	for(var i=0; i< goals.length; i++){
-		p.goals[i].type = plain;
-		p.goals[i].x = goals[i][0];
-		p.goals[i].y = goals[i][1];
-	}
-	for(var i=0; i< player.Goals.length; i++){
-		p.goals[i].type = player.Goals.type;
-		if(p.goals[i].type === plain){
-			p.goals[i].x = goals[i].x;
-			p.goals[i].y = goals[i].y;
+gameLogger.log("buildPlayerGoals");
+	try{
+		p.goals = new Array();
+		var goals = game.GameConditions.GoalCordinates;
+		gameLogger.log("goals: "+goals);
+		gameLogger.log("goals.length: "+goals.length);
+		for(var i=0; i< goals.length; i++){
+			p.goals[i] = {};
+			p.goals[i].type = "plain";
+			gameLogger.log("p.goals["+i+"].type:"+p.goals[i].type);
+			p.goals[i].x = goals[i][0];
+			gameLogger.log("p.goals["+i+"].x:"+p.goals[i].x);
+			p.goals[i].y = goals[i][1];
+			gameLogger.log("p.goals["+i+"].y:"+p.goals[i].y);
 		}
-		else{
-			p.goals[i].id = goals[i].id;
+		gameLogger.log("finished creating player "+p.id+" ordinary goals");
+		if(player.Goals != undefined){
+			for(var i=goals.length; i< +goals.length + +player.Goals.length; i++){
+			//	p.goals[i] = {};
+				p.goals[i].type = player.Goals[i - goals.length].type;
+				if(p.goals[i].type === "plain"){
+					p.goals[i].x = player.Goals[i - goals.length].x;
+					p.goals[i].y = player.Goals[i - goals.length].y;
+				}
+				else{
+					p.goals[i].id = player.Goals[i - goals.length].id;
+				}
+			}
 		}
 	}
-
+	catch(e){
+		error('buildPlayerGoals '+e);
+	}
 }
 
 function makeAgentAttributes(game, player, agent) {
@@ -622,7 +640,7 @@ try{
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
-		if(room.board[data1.x][data1.y] != undefined){
+		if(room.board[data1.x][data1.y].full != undefined){
 			for(var i=0;i<player.goals.length;i++){
 				if((data1.x === player.goals[i].x) && (data1.y === player.goals[i].y)){
 					room.gameOver = true;
@@ -650,10 +668,10 @@ try{
 		
 		player.moved = true;
 		player.roundsNotMoving = 0;
-		room.board[data1.x][data1.y] = 1;
+		room.board[data1.x][data1.y].full = 1;
 		//add player to the board
 		room.board[data1.x][data1.y].players[room.board[data1.x][data1.y].players.length] = player.GUIid;
-		room.board[data1.currX][data1.currY] = 0;
+		room.board[data1.currX][data1.currY].full = 0;
 		//delete player from prev position in the board.
 		for(var k=0; k<room.board[data1.currX][data1.currY].players.length; k++){
 			if(room.board[data1.currX][data1.currY].players[k] != undefined){
@@ -1409,12 +1427,18 @@ try{
 	var newBoard = new Array();
 	for(var i=0 ;i<board.length;i++){
 		newBoard[i] = new Array();
+		
+		console.log("newBoard[i]: "+newBoard[i]);
+		console.log("newBoard[i].length: "+newBoard[i].length);
 	}
 
 	for (var i=0; i<board.length; i++){
 		for(var j=0; j< board[i].length; j++){
 			newBoard[i][j] = 0;
+			newBoard[i][j] = {};
 			newBoard[i][j].players = new Array();
+			newBoard[i][j].full = 0;
+			gameLogger.log("newBoard["+i+"]["+j+"].players: "+newBoard[i][j].players);
 		}
 	}
 	return newBoard;
