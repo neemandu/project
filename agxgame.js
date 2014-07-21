@@ -1331,6 +1331,9 @@ try{
 	gameLogger.debug('checkActions ');
 	for(var h in searchPlace){				
 		switch(h){
+		case 'revealGoal':
+			player.reveal = searchPlace[h];
+			break;
 		case 'canMove':
 			player.canMove = searchPlace[h];
 			break;
