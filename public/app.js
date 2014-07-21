@@ -738,61 +738,28 @@ jQuery(function($){
 					}
 					
 					
-				//	if(data.players[j].revealed ==false){
-						//currently supports only a possibility of goals and only goals who are not players
-						for(var k=0;k<data.players[j].goals.length;k++){
-							
-							if(data.players[j].id != App.Player.myid){
-								if(data.players[j].goals[k].type=='plain' && data.players[j].goals[k].isShown==1){
-									var url="";
-									if(data.players[j].revealed ==true){
-										if(App.Player.players[j].goals[k].real==1){
-											url = "Pictures/flagTroop"+j+"NQpng.png";
-											$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-										}
-										else{
-											$('#board table tr:eq('+App.Player.goals[k].x+') td:eq('+App.Player.goals[k].y+')').html('');
-										}
-									}
-									else{
-										 url = "Pictures/flagTroop"+data.players[j].id+"Q.png" ;
-										$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-									}
-								}	
-							}
-							else{
-								App.Player.goals = data.players[j].goals;
-								var url = "Pictures/goal.png";
-								if(data.players[j].goals[k].real==0){
-									if(data.players[j].revealed ==true){
-										$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('');
-									}
-									else{
-										var url = "Pictures/goalfake.png";
-									}
-								}
-								else{
-									$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
-								}
-								
-							}
-
-						}
 					
-			//		}
-			//		else{
-					/*	for(var i=0;i<App.Player.players[j].goals.length;i++){
-							if(App.Player.players[j].goals[i].real==1){
-								if(j != App.Player.myid){
-									var url = "Pictures/flagTroop"+j+"NQpng.png";
-									$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[j].goals[i].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
-								}
+					//currently supports only a possibility of goals and only goals who are not players
+					for(var k=0;k<data.players[j].goals.length;k++){
+						
+						if(data.players[j].id != App.Player.myid){
+							if(data.players[j].goals[k].type=='plain' && data.players[j].goals[k].isShown==1){
+								var url = "Pictures/flagTroop"+data.players[j].id+"Q.png" ;
+								$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+							}	
+						}
+						else{
+							App.Player.goals = data.players[j].goals;
+							var url = "Pictures/goal.png";
+							if(data.players[j].goals[k].real==0){
+								url = "Pictures/goalfake.png";
 							}
-							else{
-								$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
-							}
-						}*/
-			//		}
+							$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+						}
+
+					}
+					
+					
 					
 				}
 			
@@ -818,6 +785,18 @@ jQuery(function($){
 							}
 						}
 					}
+					
+					for(var k=0;k<App.Player.players[i].goals.length;i++){
+					if(App.Player.players[i].goals[k].real==1){
+						if(i != App.Player.myid){
+							var url = "Pictures/flagTroop"+i+"NQpng.png";
+							$('#board table tr:eq('+App.Player.players[i].goals[k].x+') td:eq('+App.Player.players[i].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+						}
+					}
+					else{
+						$('#board table tr:eq('+App.Player.players[i].goals[k].x+') td:eq('+App.Player.players[i].goals[k].y+')').html('');
+					}
+				}
 			   }
 		   }
 			App.Player.addPlayers(data);	
