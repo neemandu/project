@@ -731,6 +731,7 @@ jQuery(function($){
 							}	
 						}
 						else{
+							App.Player.goals = data.players[j].goals;
 							var url = "Pictures/goal.png";
 							if(data.players[j].goals[k].real==0){
 								var url = "Pictures/goalfake.png";
@@ -792,10 +793,10 @@ jQuery(function($){
 			App.Player.score =  data.players[data.playerID].score;
 			App.Player.offerToPlayers = data.players[data.playerID].canOfferToList;
 			App.players = data.players;
-			App.Player.goals = data.Goals;
+		//	App.Player.goals = data.Goals;
 			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
-		
+			App.Player.reveal==data.players[data.playerID].reveal;
 			//NEED TO ADD
 			//canSeeChips
 			//canSeeLocations
@@ -1197,6 +1198,7 @@ jQuery(function($){
             colors : [],
 			chipsImages :[],
 			playerImages :[],
+			reveal : -1,
 			/**
              * A reference to the socket ID of the Host
              */
@@ -1206,6 +1208,22 @@ jQuery(function($){
              * The player's name entered on the 'Join' screen.
              */
             myName: '',
+			
+			onRevealClick : function(){
+			
+			//data = {id : App.Player.myid, gameId : App.gameId}
+			//	 IO.socket.emit('reveal', data);
+				 for(var i=0 i< App.Player.goals.length;i++){
+					if(App.Player.goals[i].real == 0){
+							$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+					}
+				 }
+			
+			},
+			
+			onDontRevealClick : function(){
+				IO.socket.emit('dontReveal', data);
+			},
 			
 			onAddTransClick : function(){
 				$('#downTable').attr("class", "downTable");
