@@ -786,16 +786,17 @@ jQuery(function($){
 					}
 					
 					if(data.players[i].revealed==true){
+					alert('goal size '+data.players[i].goals.length);
 						for(var k=0;k<data.players[i].goals.length;k++){
 							if(data.players[i].goals[k].real==1){
-							alert("real");
 								if(data.players[i].id != App.Player.myid){
-									var url = "Pictures/flagTroop"+i+"NQpng.png";
+									alert('not my id but real = 1');
+									var url = "Pictures/flagTroop"+i+"NQ.png";
 									$('#board table tr:eq('+data.players[i].goals[k].x+') td:eq('+dataplayers[i].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
 								}
 							}
 							else{
-							alert("not real");
+								alert('not real');
 								$('#board table tr:eq('+data.players[i].goals[k].x+') td:eq('+data.players[i].goals[k].y+')').html('');
 							}
 						}
