@@ -569,6 +569,28 @@ td.colorAmount
 		display: inline-block;
 }
 
+.revealButton
+{		cursor: pointer;
+		cursor: hand;
+		width: 90px;
+		height: 40px;
+		text-align:left;
+		background-image:url('../Pictures/revealButton.png');
+		background-size:100% 100%;
+		display: inline-block;
+}
+
+.dontRevealButton
+{		cursor: pointer;
+		cursor: hand;
+		width: 90px;
+		height: 40px;
+		text-align:left;
+		background-image:url('../Pictures/dontRevealButton.png');
+		background-size:100% 100%;
+		display: inline-block;
+}
+
 .operationOffer
 {		cursor: pointer;
 		cursor: hand;

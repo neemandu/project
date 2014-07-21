@@ -228,7 +228,7 @@ jQuery(function($){
 					})
 					
 			$('#rejectOffer'+App.Player.currentCount).click(function()
-					{
+					{	
 						App.Player.pendingReqInd--;
 						var id = this.id[this.id.length-1];
 						//alert(data.sentFrom+' '+App.Player.myid);
@@ -252,6 +252,11 @@ jQuery(function($){
 						
 						$('#histTable').attr("class", "downTable");
 						$('#histTable').prepend(h);
+						
+						if(data.autoCounterOffer==true){
+							App.Player.onAddOfferClick();
+						}
+						
 					})
 					/*
 					 * until here.
@@ -557,6 +562,8 @@ jQuery(function($){
             // Host
             App.$doc.on('click', '#addOffer', App.Player.onAddOfferClick);
 			App.$doc.on('click', '#addTrans', App.Player.onAddTransClick);
+			App.$doc.on('click', '#reveal', App.Player.onRevealClick);
+			App.$doc.on('click', '#dontReveal', App.Player.onDontRevealClick);
 			App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
 			App.$doc.on('click', '#transferCheckbox', App.Host.onTransferChecked);
 			
@@ -699,12 +706,12 @@ jQuery(function($){
 				}
 				App.paintBoard(data.board,data.colors);
 		
-				for(var i=0;i<data.GoalsThatAreNotPlayers.length;i++){
+/*				for(var i=0;i<data.GoalsThatAreNotPlayers.length;i++){
 						var url = "Pictures/goal.png";
 						$('#board table tr:eq('+ data.GoalsThatAreNotPlayers[i][1] +') td:eq('+data.GoalsThatAreNotPlayers[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
 				}
-			
-				for(var j=0;j<data.players.length;j++){
+				
+*/				for(var j=0;j<data.players.length;j++){
 					if(data.players[j].goal == true){
 						var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
 						App.Player.playerImages[j]= url;
@@ -712,6 +719,24 @@ jQuery(function($){
 					else{
 						var url = "Pictures/flagTroop"+data.players[j].id+".png" ;
 						App.Player.playerImages[j]= url;
+					}
+					
+					
+					//currently supports only a possibility of goals and only goals who are not players
+					for(var k=0;k<data.players[j].goals.length;k++){
+						if(data.players[j].playerId != App.Player.myid){
+							if(data.players[j].goals[k].type==plain && data.players[j].goals[k].isShown==1){
+								var url = "Pictures/flagTroop"+data.players[j].id+"Q.png" ;
+								$('#board table tr:eq('+ data.players[j].goals[k].x +') td:eq('+data.players[j].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+							}	
+						}
+						else{
+							var url = "Pictures/goal.png";
+							if(data.players[j].goals[k].real==0){
+								var url = "Pictures/goalfake.png";
+							}
+							$('#board table tr:eq('+ data.GoalsThatAreNotPlayers[i][1] +') td:eq('+data.GoalsThatAreNotPlayers[i][0]+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');
+						}
 					}
 				}
 			
@@ -829,6 +854,22 @@ jQuery(function($){
         		$('#addOffer').remove();
 				//Remove unresponded offers:
     		}
+			
+			
+			if(App.Player.reveal==1 && ($('#addTransaction').html()== undefined||($('#addTransaction').html()!= undefined && $('#addTransaction').find('#reveal').html() == undefined)))
+        	{
+				$('#addTransaction').append('<div id="reveal" class="revealButton"><div>');
+				$('#addTransaction').append('<div id ="dontReveal" class="dontRevealButton"><div>');
+			}
+			
+        	else
+    		{
+        		$('#downTable').html('');
+        		$('#addOffer').remove();
+				//Remove unresponded offers:
+    		}
+			
+			
 			//alert(App.Player.canTransfer);
 			if(App.Player.canTransfer==1 && ($('#addTransaction').html()== undefined||($('#addTransaction').html()!= undefined && $('#addTransaction').find('#addTrans').html() == undefined)))
         	{
