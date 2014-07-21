@@ -72,6 +72,8 @@ exports.initGame = function(sio, socket){
 	gameSocket.on('updateChips', updateChips);
 	gameSocket.on('rejectOffer', rejectOffer);
 	gameSocket.on('movePlayer', movePlayer);
+	gameSocket.on('dontReveal', dontReveal);
+	gameSocket.on('reveal', reveal);
 }
 
 exports.ConfigurtionToDataBase = function(conf){
@@ -93,7 +95,7 @@ exports.ConfigurtionToDataBase = function(conf){
 
 
 exports.runConfigurtion = function(confsToRun, i){
-//	try{
+	try{
 
 
 	console.log('i: '+i);
@@ -128,10 +130,10 @@ exports.runConfigurtion = function(confsToRun, i){
 		console.log('no player have said Hello to the Server yet...');
 		return false;
 	}
-/*	}
+	}
 	catch(e){
 		error('runConfigurtion '+e);
-	}*/
+	}
 
 }
 
@@ -140,7 +142,38 @@ exports.runConfigurtion = function(confsToRun, i){
  *       HOST FUNCTIONS        *
  *                             *
  ******************************* */
+function dontReveal(data){
+	revHelp(data, false);
+}
+ 
+function reveal(data){
+	revHelp(data, true);
+}
 
+function revHelp(data, bool){
+	var room = gameSocket.manager.rooms["/" + data.gameId];
+	var p = findPlayer(room.playerList, data.id);
+	p.revealed = bool;
+	room.revealCounter++;
+	console.log("revealCounter: " +room.revealCounter);
+	endReveal(room);
+}
+
+function endReveal(room){
+	
+	var round = room.game.rounds.rounds_defenitions[room.roundNumber];
+	if(room.newPhaseIndex < round.phases_in_round.length){
+		if(room.revealCounter === room.playerList.length){
+			endPhase(room.numberOfTimesToRepeatRounds, room, room.game, room.newPhaseIndex);
+		}
+	}
+	else{
+		if(room.revealCounter === room.playerList.length){
+			endRound(room, room.numberOfTimesToRepeatRounds, room.game);
+		}
+	}
+} 
+ 
 function playerDisconnect(){
 	gameLogger.log('playerDisconnect');
 	var rooms = io.sockets.manager.roomClients[gameSocket.id];
@@ -212,6 +245,7 @@ try{
 	room.guiboard =room.conf.Global.boards[game.Board];
 	gameLogger.debug("board: "+room.guiboard);
 	room.board = createServerBoard(game);
+	room.revealCounter = 0;//counts how many players pressed on reveal
 	//room.agentsIDs = room.conf.Global.agentList;
 	gameLogger.debug("board: "+room.guiboard);
 	gameLogger.debug('Server board was created.');
@@ -360,6 +394,7 @@ function makePlayerAttributes(game, player, id) {
 try{
 	var p = {};
 	p.isGoal = player.isGoal;
+	p.revealed = false;
 	p.goalIndex = -1;
 	p.GUIid = player.id;
 	p.id = player.id;
@@ -371,10 +406,11 @@ try{
 	p.score = setScore(p.chips, game.GameConditions.score);
 	p.agent = false;
 	gameLogger.log("before buildPlayerGoals");
+	p.goals = new Array();
 	buildPlayerGoals(p, player, game);
 	gameLogger.log("after buildPlayerGoals");
 	
-	//presistance.addPlayer(p);
+	presistance.addPlayer(p);
 	
 	return p;
 	}
@@ -386,7 +422,6 @@ try{
 function buildPlayerGoals(p, player, game){
 gameLogger.log("buildPlayerGoals");
 	try{
-		p.goals = new Array();
 		var goals = game.GameConditions.GoalCordinates;
 		gameLogger.log("goals: "+goals);
 		gameLogger.log("goals.length: "+goals.length);
@@ -401,8 +436,12 @@ gameLogger.log("buildPlayerGoals");
 		}
 		gameLogger.log("finished creating player "+p.id+" ordinary goals");
 		if(player.Goals != undefined){
-			for(var i=goals.length; i< +goals.length + +player.Goals.length; i++){
-			//	p.goals[i] = {};
+			console.log("player inner goals");
+			var j = goals.length + +player.Goals.length;
+			console.log("j: "+j);
+			for(var i=goals.length; i< j; i++){
+				console.log("i: "+i);
+				p.goals[i] = {};
 				p.goals[i].type = player.Goals[i - goals.length].type;
 				if(p.goals[i].type === "plain"){
 					p.goals[i].x = player.Goals[i - goals.length].x;
@@ -411,6 +450,8 @@ gameLogger.log("buildPlayerGoals");
 				else{
 					p.goals[i].id = player.Goals[i - goals.length].id;
 				}
+				p.goals[i].real = player.Goals[i - goals.length].real;
+				p.goals[i].isShown = player.Goals[i - goals.length].isShown;
 			}
 		}
 	}
@@ -943,10 +984,24 @@ try{
 		newPhaseIndex++;
 		gameLogger.debug('room.gameOver: '+room.gameOver + ' newPhaseIndex: '+newPhaseIndex+' round.phases_in_round.length: '+round.phases_in_round.length);
 		if(newPhaseIndex < round.phases_in_round.length){
-			setTimeout(function(){ return endPhase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			if(game.phases[round.phases_in_round[phaseIndex]].time > 0){
+				setTimeout(function(){ return endPhase(numberOfTimesToRepeatRounds, room, game, newPhaseIndex);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			}
+			else{
+				room.numberOfTimesToRepeatRounds = numberOfTimesToRepeatRounds;
+				room.game = game;
+				room.newPhaseIndex = newPhaseIndex;
+			}
 		}
 		else{
-			setTimeout(function(){ return endRound(room, numberOfTimesToRepeatRounds, game);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			if(game.phases[round.phases_in_round[phaseIndex]].time > 0){
+				setTimeout(function(){ return endRound(room, numberOfTimesToRepeatRounds, game);}, game.phases[round.phases_in_round[phaseIndex]].time);
+			}
+			else{
+				room.numberOfTimesToRepeatRounds = numberOfTimesToRepeatRounds;
+				room.newPhaseIndex = newPhaseIndex;
+				room.game = game;
+			}
 		}
 	}
 	}

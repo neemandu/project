@@ -709,7 +709,6 @@ jQuery(function($){
 
 
         beginFaze : function(data){
-		   
 		   //stops the blinking phases: 
         	clearTimeout(App.timeout);
 		   //changing the screen to the game screen
@@ -767,14 +766,14 @@ jQuery(function($){
 			
    		   }
 		   else{
-			   for(var i=0;j<data.players.length;i++){
+			   for(var i=0;i<data.players.length;i++){
 			   //locate players new location
 					if(App.players[i].location.x!=data.players[i].location.x||App.players[i].location.x!=data.players[i].location.x){
 						var url = "Pictures/flagTroop"+data.playerId+".png" ;
 						$('#board table tr:eq('+data.players[i].location.x+') td:eq('+data.players[i].location.y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=image>');
 					}
 				//update chips
-					for(var j=0;j<data.players[i].chips.length;i++){
+					for(var j=0;j<data.players[i].chips.length;j++){
 						if(App.players[i].chips[j]!=data.players[i].chips[j]){
 							if(j<3){
 							$('#player' + data.players[i].id + 'tr:eq(0)').find('#Chips td:eq('+j+')').html(data.players[i].chips[j]);	
@@ -786,16 +785,20 @@ jQuery(function($){
 						}
 					}
 					
-					for(var k=0;k<App.Player.players[i].goals.length;i++){
-					if(App.Player.players[i].goals[k].real==1){
-						if(i != App.Player.myid){
-							var url = "Pictures/flagTroop"+i+"NQpng.png";
-							$('#board table tr:eq('+App.Player.players[i].goals[k].x+') td:eq('+App.Player.players[i].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+					if(data.players[i].revealed==true){
+						for(var k=0;k<data.players[i].goals.length;k++){
+							if(data.players[i].goals[k].real==1){
+							alert("real");
+								if(data.players[i].id != App.Player.myid){
+									var url = "Pictures/flagTroop"+i+"NQpng.png";
+									$('#board table tr:eq('+data.players[i].goals[k].x+') td:eq('+dataplayers[i].goals[k].y+')').html('<img style="width:45px; height:40px;" src=' +url+ ' alt=goal>');;
+								}
+							}
+							else{
+							alert("not real");
+								$('#board table tr:eq('+data.players[i].goals[k].x+') td:eq('+data.players[i].goals[k].y+')').html('');
+							}
 						}
-					}
-					else{
-						$('#board table tr:eq('+App.Player.players[i].goals[k].x+') td:eq('+App.Player.players[i].goals[k].y+')').html('');
-					}
 				}
 			   }
 		   }
