@@ -796,7 +796,7 @@ jQuery(function($){
 		//	App.Player.goals = data.Goals;
 			App.Player.total_num_of_offers = data.players[data.playerID].total_num_of_offers;
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
-			App.Player.reveal==data.players[data.playerID].reveal;
+			App.Player.reveal=data.players[data.playerID].reveal;
 			//NEED TO ADD
 			//canSeeChips
 			//canSeeLocations
@@ -1209,15 +1209,14 @@ jQuery(function($){
              */
             myName: '',
 			
-			onRevealClick : function(){
-			
-			//data = {id : App.Player.myid, gameId : App.gameId}
-			//	 IO.socket.emit('reveal', data);
-				 for(var i=0 i< App.Player.goals.length;i++){
-					if(App.Player.goals[i].real == 0){
-							$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
-					}
-				 }
+			onRevealClick : function(){			
+				data = {id : App.Player.myid, gameId : App.gameId};
+				IO.socket.emit('reveal', data);
+					 for(var i=0 i< App.Player.goals.length;i++){
+						if(App.Player.goals[i].real == 0){
+								$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+						}
+					 }
 			
 			},
 			
