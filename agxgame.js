@@ -1239,8 +1239,8 @@ try{
 		room.playerList[i].reveal = 0;
 		room.playerList[i].canOffer = 0;
 		room.playerList[i].canTransfer = 0;
-		room.playerList[i].canSeeChips = 0;
-		room.playerList[i].canSeeLocations = 0;
+		room.playerList[i].canSeeChips = 1;
+		room.playerList[i].canSeeLocations = 1;
 		room.playerList[i].num_of_offers_per_player = -1;
 		room.playerList[i].total_num_of_offers = -1;
 		room.playerList[i].can_offer_to = [];
