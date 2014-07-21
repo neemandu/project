@@ -1236,6 +1236,7 @@ try{
 	for(var i=0;i<room.playerList.length;i++){
 		room.playerList[i].canOfferTo = new Array();
 		room.playerList[i].canMove = 0;
+		room.playerList[i].reveal = 0;
 		room.playerList[i].canOffer = 0;
 		room.playerList[i].canTransfer = 0;
 		room.playerList[i].canSeeChips = 0;
