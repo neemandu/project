@@ -1768,16 +1768,13 @@ try{
 	};
 	var p = findPlayer(room.playerList, data.sentFrom);
 	var s = findPlayer(room.playerList, data.sentTo);
-	gameLogger.log('data.sentTo: '+data.sentTo);
-	gameLogger.log('data.sentFrom: '+data.sentFrom);
 	sendMsg(room,  p.id, 'rejectOffer', send);
-	gameLogger.log('s: '+s);
-	gameLogger.log('s.canOffer: '+s.canOffer);
-	gameLogger.log('ACO: '+room.conf.Games[room.currentGame].AutoCounterOffer);
 	if((s.canOffer === 0) && (room.conf.Games[room.currentGame].AutoCounterOffer === 1)){
-		gameLogger.log('opening Offer Btn');
+		var data ={
+			id : [p.id]
+		};
 		s.num_of_offers_per_player = 1;
-		sendMsg(room,  s.id, 'counterOffer', send);
+		sendMsg(room,  s.id, 'counterOffer', data);
 	}
 	
 }catch(e){
