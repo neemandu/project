@@ -894,8 +894,6 @@ jQuery(function($){
         		$('#addOffer').remove();
 				//Remove unresponded offers:
     		}
-			
-			
 			if(App.Player.reveal==1 && ($('#addTransaction').html()== undefined||($('#addTransaction').html()!= undefined && $('#addTransaction').find('#reveal').html() == undefined)))
         	{
 				$('#addTransaction').append('<div id="reveal" class="revealButton"><div>');
@@ -905,12 +903,10 @@ jQuery(function($){
         	else
     		{
         		$('#downTable').html('');
-        		$('#addOffer').remove();
-				//Remove unresponded offers:
+        		$('#reveal').remove();
+				$('#dontReveal').remove();
     		}
 			
-			
-			//alert(App.Player.canTransfer);
 			if(App.Player.canTransfer==1 && ($('#addTransaction').html()== undefined||($('#addTransaction').html()!= undefined && $('#addTransaction').find('#addTrans').html() == undefined)))
         	{
 				$('#addTransaction').append('<div id="addTrans" class="operationTrans"><div>');
@@ -923,6 +919,8 @@ jQuery(function($){
 				//Remove unresponded offers:
     		}
 			
+						
+			
 			$('#histTable').each(
 				function()
 				{
@@ -931,10 +929,7 @@ jQuery(function($){
 						$(this).remove();
 				})
 						
-        	if(App.Player.canTransfer)
-        	{
-        		// TODO somthing
-			}
+
 			for(var i=0;i< data.players.length; i++){
 				App.Player.updateScore(i,data.players[i].score);
 			}
@@ -945,9 +940,10 @@ jQuery(function($){
 				if(j>0)
 					App.timeout = setTimeout(function(){func(time, j-1);}, 1000);
 			}
-			var time = data.phaseTime/1000;
-			func(time, time-1);
-			
+			if(data.phaseTime > 0){
+				var time = data.phaseTime/1000;
+				func(time, time-1);
+			}
 
 		},
 
