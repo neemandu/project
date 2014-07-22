@@ -403,11 +403,12 @@ try{
 	p.location = setLocation(player);
 	p.basic_role =  player.basic_role;
 	p.name = player.name;
-	p.score = setScore(p.chips, game.GameConditions.score);
+	
 	p.agent = false;
 	gameLogger.log("before buildPlayerGoals");
 	p.goals = new Array();
 	buildPlayerGoals(p, player, game);
+	p.score = setScore(p.goals[p.goals.real], p, p.chips, game.GameConditions.score);
 	gameLogger.log("after buildPlayerGoals");
 	
 	presistance.addPlayer(p);
@@ -423,8 +424,9 @@ function buildPlayerGoals(p, player, game){
 gameLogger.log("buildPlayerGoals");
 	try{
 		var goals = game.GameConditions.GoalCordinates;
-		gameLogger.log("goals: "+goals);
-		gameLogger.log("goals.length: "+goals.length);
+	
+		var realCount = 0;
+		var realInd = 0;
 		for(var i=0; i< goals.length; i++){
 			p.goals[i] = {};
 			p.goals[i].type = "plain";
@@ -433,6 +435,10 @@ gameLogger.log("buildPlayerGoals");
 			gameLogger.log("p.goals["+i+"].x:"+p.goals[i].x);
 			p.goals[i].y = goals[i][1];
 			gameLogger.log("p.goals["+i+"].y:"+p.goals[i].y);
+			p.goals[i].real = 1;
+			p.goals[i].isShown = 1;
+			realCount++;
+			realInd = i;
 		}
 		gameLogger.log("finished creating player "+p.id+" ordinary goals");
 		if(player.Goals != undefined){
@@ -451,9 +457,14 @@ gameLogger.log("buildPlayerGoals");
 					p.goals[i].id = player.Goals[i - goals.length].id;
 				}
 				p.goals[i].real = player.Goals[i - goals.length].real;
+				if(p.goals[i].real === 1){
+					realCount++;
+					realInd = i;
+				}
 				p.goals[i].isShown = player.Goals[i - goals.length].isShown;
 			}
 		}
+		p.goals.real = realInd;
 	}
 	catch(e){
 		error('buildPlayerGoals '+e);
@@ -587,19 +598,30 @@ try{
 		error('isSumOfOffersLegal '+e);
 	}
 }
-function setScore(chips, score){
+function setScore(goal, player, chips, score){
+console.log("goal: "+goal);
 try{
 	var sum = 0;
 	for(var i=0;i<chips.length;i++){
 		sum += chips[i];
 	}
 	sum *= score.pointsPerChips;
+	if(score.distanceFromGoal != undefined){
+		sum = checkManhettenDistance(goal, player, sum, score.distanceFromGoal);
+	}
 	return sum
 	}
 	catch(e){
 		error('setScore '+e);
 	}
 }
+
+function checkManhettenDistance(goal, player, sum, dfg){
+	 var dis = ((Math.abs(+goal.x - +player.location.x))+(Math.abs(+goal.y - +player.location.y)));
+	 sum += (dis * dfg);
+	 return sum;
+}
+
 function ChipScore(chips){
 try{
 	var sum = 0;
@@ -691,28 +713,34 @@ try{
 		var player = findPlayer(room.playerList, data1.playerId);
 		if(room.board[data1.x][data1.y].full != undefined){
 			for(var i=0;i<player.goals.length;i++){
-				if((data1.x === player.goals[i].x) && (data1.y === player.goals[i].y)){
-					room.gameOver = true;
+				if((player.goals[i].real === 1) && (data1.x === player.goals[i].x) && (data1.y === player.goals[i].y)){
+					if(conf.Games[room.currentGame].GameConditions.endConditions.endOfTime != true){
+						room.gameOver = true;
+					}
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 					break;
 				}
 			}
-			if(player.isGoal){
-				for(var i=0; i<room.board[data1.x][data1.y].players.length; i++){
-					var pl = findPlayer(room.playerList, room.board[data1.x][data1.y].players);
-					if(pl != undefined){
-						for(var f= 0; f< pl.goals.length; f++){
-							if((pl.goals.type === player) && (pl.goals.id === player.GUIid)){
-								room.gameOver = true;
-								updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
-								break;
+			
+				if(player.isGoal){
+					for(var i=0; i<room.board[data1.x][data1.y].players.length; i++){
+						var pl = findPlayer(room.playerList, room.board[data1.x][data1.y].players[i]);
+						if(pl != undefined){
+							for(var f= 0; f< pl.goals.length; f++){
+								if((pl.goals[f].real === 1) && (pl.goals[f].type === player) && (pl.goals[f].id === player.GUIid)){
+									if(conf.Games[room.currentGame].GameConditions.endConditions.endOfTime != true){
+										room.gameOver = true;
+									}
+									updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
+									break;
+								}
 							}
 						}
 					}
 				}
-			}
+			
 		player.chips[data1.chip]--;
-		player.score = setScore(player.chips, room.conf.Games[room.currentGame].GameConditions.score);
+		player.score = setScore(player.goals[player.goals.real], player,player.chips, room.conf.Games[room.currentGame].GameConditions.score);
 		var player1 = JSON.parse(JSON.stringify(player));
 		
 		player.moved = true;
@@ -1027,7 +1055,8 @@ function commitTransfer(room){
 			gameLogger.trace('pl '+i+' chips['+j+']: '+room.playerList[i].chips[j]);
 		}
 		gameLogger.log('pl '+i+' room.playerList[i].chips['+j+']: '+room.playerList[i].chips[j]);
-		room.playerList[i].score = setScore(room.playerList[i].chips, room.conf.Games[room.currentGame].GameConditions.score);		
+		var p = room.playerList[i];
+		room.playerList[i].score = setScore(p.goals[p.goals.real], p, p.chips, room.conf.Games[room.currentGame].GameConditions.score);		
 		for(var j=0; j<room.playerList[i].chipsToAddAtEndOfPhase.length; j++){
 			room.playerList[i].chipsToAddAtEndOfPhase[j] = 0;
 		}
@@ -1552,8 +1581,8 @@ try{
 				
 			}
 			
-			p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
-			p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			p1.score = setScore(p1.goals[p1.goals.real], p1, p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			p2.score = setScore(p2.goals[p2.goals.real], p2, p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
 			gameLogger.trace('pl SCORE: '+p1.score);
 			gameLogger.trace('p2 SCORE: '+p2.score);
 			data.player1.chips = p1.chips;
@@ -1669,8 +1698,8 @@ try{
 				gameLogger.trace('pl 2 chips['+i+']: '+p2.chips[i]);
 			}
 			
-			p1.score = setScore(p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
-			p2.score = setScore(p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			p1.score = setScore(p1.goals[p1.goals.real], p1, p1.chips, room.conf.Games[room.currentGame].GameConditions.score);
+			p2.score = setScore(p2.goals[p2.goals.real], p2, p2.chips, room.conf.Games[room.currentGame].GameConditions.score);
 			gameLogger.trace('pl SCORE: '+p1.score);
 			gameLogger.trace('p2 SCORE: '+p2.score);
 			data.player1.chips = p1.chips;
