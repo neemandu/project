@@ -706,17 +706,18 @@ try{
 	console.log('y: '+data1.y);
 	console.log('currY: '+data1.currY);
 	var room = gameSocket.manager.rooms["/" + data1.gameId];
-
-		
+	var goal = 0;
 	//check if player reached one of the goals
 	if(room != undefined){
 		var player = findPlayer(room.playerList, data1.playerId);
 		if(room.board[data1.x][data1.y].full != undefined){
+			
 			for(var i=0;i<player.goals.length;i++){
 				if((player.goals[i].real === 1) && (data1.x === player.goals[i].x) && (data1.y === player.goals[i].y)){
 					if(conf.Games[room.currentGame].GameConditions.endConditions.endOfTime != true){
 						room.gameOver = true;
 					}
+					goal = 1;
 					updateWinnerChips(room, data1.x, data1.y, player,conf.Games[room.currentGame].GameConditions);
 					break;
 				}
@@ -770,7 +771,8 @@ try{
 					prevX : data1.currX,
 					prevY : data1.currY,
 					chip: data1.chip,
-					score : player1.score
+					score : player1.score,
+					goal : goal
 			}
 			if(i != player.GUIid){
 				if((room.playerList[i].canSeeChips === 0)
