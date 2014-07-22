@@ -485,66 +485,72 @@ try{
 function sendOffer(data) {
 try{
 	gameLogger.trace('sendOffer');
-
+	
 	console.log('game id: '+data.gameId);
 	var tmp =new Array();
 	//which room am i
 	var room = gameSocket.manager.rooms["/" + data.gameId];
 	var reciever = findPlayer(room.playerList, data.recieverId);
 	var sender = findPlayer(room.playerList, data.sentFrom);
-	if(reciever != undefined){	
-		//validating chips
-		data.action = "Offer";
-		data.answer = 'yes';
-		gameLogger.trace('sender Id: '+data.sentFrom);
-		for(var i=0;i<numOfColors;i++){
-			var sum1 = JSON.parse(data.JcolorsToOffer)[i];
-			if(sum1 === undefined){
-				sum1 = 0;
-			}
-			var sum2 = JSON.parse(data.JcolorsToGet)[i];
-			if(sum2 === undefined){
-				sum2 = 0;
-			}
-			gameLogger.trace('offer: '+sum1+'; Have: '+sender.chips[i]+'want: '+sum2+'; Have: '+reciever.chips[i]);
-			if(sum1 > sender.chips[i]){
-				data.answer = 'no';
-				gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
-				gameLogger.trace('sum1: '+sum1+'sender.chips['+i+']: '+sender.chips[i]);
-				break;
-			}
-			else{
-				if(sender.canSeeChips === 1){
-					if(sum2 > reciever.chips[i]){
-						data.answer = 'no';
-						gameLogger.trace('Illegal offer - reciever do not have enough chips to make the switch');
-						gameLogger.trace('sum2: '+sum2+'reciever.chips['+i+']: '+reciever.chips[i]);
-						break;
+	if((sender.offerCounter < sender.num_of_offers_per_player) || (sender.num_of_offers_per_player === -1)){
+		if(reciever != undefined){	
+			//validating chips
+			data.action = "Offer";
+			data.answer = 'yes';
+			gameLogger.trace('sender Id: '+data.sentFrom);
+			for(var i=0;i<numOfColors;i++){
+				var sum1 = JSON.parse(data.JcolorsToOffer)[i];
+				if(sum1 === undefined){
+					sum1 = 0;
+				}
+				var sum2 = JSON.parse(data.JcolorsToGet)[i];
+				if(sum2 === undefined){
+					sum2 = 0;
+				}
+				gameLogger.trace('offer: '+sum1+'; Have: '+sender.chips[i]+'want: '+sum2+'; Have: '+reciever.chips[i]);
+				if(sum1 > sender.chips[i]){
+					data.answer = 'no';
+					gameLogger.trace('Illegal offer - you do not have enough chips to make this offer');
+					gameLogger.trace('sum1: '+sum1+'sender.chips['+i+']: '+sender.chips[i]);
+					break;
+				}
+				else{
+					if(sender.canSeeChips === 1){
+						if(sum2 > reciever.chips[i]){
+							data.answer = 'no';
+							gameLogger.trace('Illegal offer - reciever do not have enough chips to make the switch');
+							gameLogger.trace('sum2: '+sum2+'reciever.chips['+i+']: '+reciever.chips[i]);
+							break;
+						}
 					}
 				}
+				
+				tmp[i] = sum1;
 			}
-			
-			tmp[i] = sum1;
+			//data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
+			gameLogger.trace('reciever Id: '+data.recieverId);
 		}
-		//data.answer = isSumOfOffersLegal(data.sentFrom, room,tmp);
-		gameLogger.trace('reciever Id: '+data.recieverId);
-	}
-	else{
-		data.answer = 'no';
-	}
-	if(data.answer === 'no'){
-		data.action = "IllegalOffer";
-		sendMsg(room, sender.GUIid, 'recieveMessage', data);
-		//	this.emit('recieveMessage',data);
-	}
-	else{
-		sendMsg(room,  sender.GUIid, 'addRowToHistory', data);
-		//this.emit('addRowToHistory',data);
-		data.playerId = this.GUIid;
-		data.offer = true;
-		
-		sendMsg(room, reciever.GUIid, 'recieveMessage', data);
-	}
+		else{
+			data.answer = 'no';
+		}
+		}
+		else{
+			data.answer = 'no';
+		}
+		if(data.answer === 'no'){
+			data.action = "IllegalOffer";
+			sendMsg(room, sender.GUIid, 'recieveMessage', data);
+			//	this.emit('recieveMessage',data);
+		}
+		else{
+			sender.offerCounter++;
+			sendMsg(room,  sender.GUIid, 'addRowToHistory', data);
+			//this.emit('addRowToHistory',data);
+			data.playerId = this.GUIid;
+			data.offer = true;
+			
+			sendMsg(room, reciever.GUIid, 'recieveMessage', data);
+		}
 	}
 	catch(e){
 		error('sendOffer '+e);
@@ -922,6 +928,7 @@ try{
 		var data = {
 					action : "BeginPhase",
 					automaticChipSwitch	: room.conf.Games[room.currentGame].AutomaticChipSwitch,
+					autoCounterOffer	: room.conf.Games[room.currentGame].AutoCounterOffer,
 					cg : room.currentGame,
 					RoundNumber : room.roundNumber,
 					phaseName : game.phases[round.phases_in_round[phaseIndex]].name,
@@ -1297,6 +1304,7 @@ try{
 		room.playerList[i].canSeeChips = 1;
 		room.playerList[i].canSeeLocations = 1;
 		room.playerList[i].num_of_offers_per_player = -1;
+		room.playerList[i].offerCounter = 0;
 		room.playerList[i].total_num_of_offers = -1;
 		room.playerList[i].can_offer_to = [];
 		room.playerList[i].roles = new Array();
