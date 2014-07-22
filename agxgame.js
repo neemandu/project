@@ -533,10 +533,6 @@ try{
 		else{
 			data.answer = 'no';
 		}
-		}
-		else{
-			data.answer = 'no';
-		}
 		if(data.answer === 'no'){
 			data.action = "IllegalOffer";
 			sendMsg(room, sender.GUIid, 'recieveMessage', data);
@@ -550,6 +546,10 @@ try{
 			data.offer = true;
 			
 			sendMsg(room, reciever.GUIid, 'recieveMessage', data);
+		}
+		}
+		else{
+			sendMsg(room, sender.GUIid, 'removeOfferButton', data);
 		}
 	}
 	catch(e){
@@ -1765,8 +1765,14 @@ try{
 			offerId : data.offerId
 	};
 	var p = findPlayer(room.playerList, data.sentFrom);
+	var p2 = findPlayer(room.playerList, data.sentTo);
 	gameLogger.log('rejectOffer function');
 	sendMsg(room,  p.id, 'rejectOffer', send);
+	if((p.canOffer === 0) && (room.conf.Games[room.currentGame].AutoCounterOffer === 1)){
+		p2.num_of_offers_per_player = 1;
+		sendMsg(room,  p2.id, 'counterOffer', send);
+	}
+	
 }catch(e){
 		error('rejectOffer '+e);
 	}
