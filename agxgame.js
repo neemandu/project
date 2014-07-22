@@ -548,7 +548,7 @@ try{
 			sendMsg(room, reciever.GUIid, 'recieveMessage', data);
 		}
 		}
-		else{
+		if(sender.offerCounter === sender.num_of_offers_per_player){
 			sendMsg(room, sender.GUIid, 'removeOfferButton', data);
 		}
 	}
