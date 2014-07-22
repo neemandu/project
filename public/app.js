@@ -447,7 +447,8 @@ jQuery(function($){
 			$('#addOffer').remove();
 		},
 		
-		counterOffer : function(){
+		counterOffer : function(data){
+			App.Player.offerToPlayers = data.id;
 			App.Player.onAddOfferClick();
 		},
 		
