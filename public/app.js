@@ -466,7 +466,7 @@ jQuery(function($){
 					}
 				}
 			}
-			
+
 			//previous cell and
 			//id of previous cell element
 			var cell = $('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+') div').attr('id');
@@ -487,10 +487,20 @@ jQuery(function($){
 				//playerCount[id].setSelectedIndex(ic.length-1);
 				
 			}
-			else{
-				$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');			
+			else {
+				if(App.Player.onGoal==0){
+					$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html(' ');			
+				}
+				else{
+					$('#board table tr:eq('+App.Player.locations[data.playerId][0]+') td:eq('+App.Player.locations[data.playerId][1]+')').html('<img style="width:45px; height:40px;" src="Pictures/goal.png" alt=goal>');			
+				}
 			}
-			
+			if(data.goal==1){
+				App.Player.onGoal=1;
+			}
+			else{
+				App.Player.onGoal=0;
+			}
 			App.Player.locations[data.playerId][0] = data.x;
 			App.Player.locations[data.playerId][1] = data.y;
 			App.Player.locatePlayers(data);
@@ -1231,7 +1241,7 @@ jQuery(function($){
 			num_of_offers_per_player: 0,
 			canSeeChips: 0,
 			canSeeLocations: 0,
-			
+			onGoal: 0,
 			
         	/**
         	 *  an array of chips - represents the chip set of player. 
@@ -1638,8 +1648,12 @@ jQuery(function($){
 				if(hasPlayer==0){
 					App.Player.inMyCell=0;
 					//var z = 100-data.y;
+/*					if(data.goal==1){
+						$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html('<div id="player-icon-select'+data.playerId+'" style="position:relative; z-index:'+z+';"></div>');
+					}*/
 					
 					$('#board table tr:eq('+data.x+') td:eq('+data.y+')').html('<div id="player-icon-select'+data.playerId+'" style="position:relative; z-index:'+z+';"></div>');
+					
 					icons.push({'iconFilePath':App.Player.playerImages[data.playerId], 'iconValue':data.playerId});
 					playerSelectFunc(data.playerId,icons,0);
 				}
