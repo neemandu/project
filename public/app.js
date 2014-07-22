@@ -237,7 +237,7 @@ jQuery(function($){
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
 						//p++;
-						var player1 = {sentFrom :p, gameId : App.gameId, offerId :  data.offerId};	
+						var player1 = {sentTo:id, sentFrom :p, gameId : App.gameId, offerId :  data.offerId};	
 						IO.socket.emit('rejectOffer',player1);
 					//	$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<div><font color="red">you rejected</font></div>');
@@ -256,9 +256,6 @@ jQuery(function($){
 						$('#histTable').attr("class", "downTable");
 						$('#histTable').prepend(h);
 						
-						if(App.Player.autoCounterOffer==true){
-							App.Player.onAddOfferClick();
-						}
 						
 					})
 					/*
