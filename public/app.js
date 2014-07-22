@@ -43,6 +43,8 @@ jQuery(function($){
             IO.socket.on('error', IO.error );
 			IO.socket.on('beginFaze',App.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
+			IO.socket.on('removeOfferButton',IO.removeOfferButton);
+			IO.socket.on('counterOffer',App.Player.onAddOfferClick);
 			IO.socket.on('reveal',IO.reveal);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
 			IO.socket.on('Winner', App.Player.thereIsAWinner);
@@ -254,7 +256,7 @@ jQuery(function($){
 						$('#histTable').attr("class", "downTable");
 						$('#histTable').prepend(h);
 						
-						if(data.autoCounterOffer==true){
+						if(App.Player.autoCounterOffer==true){
 							App.Player.onAddOfferClick();
 						}
 						
@@ -442,7 +444,16 @@ jQuery(function($){
 				}
 				
 			},
-			
+		
+		removeOfferButton : function(){
+			$('#downTable').html('');
+			$('#addOffer').remove();
+		}
+		
+	/*	counterOffer : function(){
+			App.Player.onAddOfferClick();
+		}
+	*/	
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
 			var c = data.chip*2 +1;
@@ -836,6 +847,7 @@ jQuery(function($){
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
 			App.Player.reveal=data.players[data.playerID].reveal;
 			App.Player.players = data.players;
+			App.Player.autoCounterOffer = data.autoCounterOffer;
 			//NEED TO ADD
 			//canSeeChips
 			//canSeeLocations
@@ -1222,6 +1234,7 @@ jQuery(function($){
 			num_of_offers_per_player: 0,
 			canSeeChips: 0,
 			canSeeLocations: 0,
+			autoCounterOffer : 0,
 			
 			
         	/**
