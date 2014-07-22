@@ -44,7 +44,7 @@ jQuery(function($){
 			IO.socket.on('beginFaze',App.beginFaze);
 			IO.socket.on('movePlayer',IO.movePlayer);
 			IO.socket.on('removeOfferButton',IO.removeOfferButton);
-			IO.socket.on('counterOffer',App.Player.onAddOfferClick);
+			IO.socket.on('counterOffer',IO.counterOffer);
 			IO.socket.on('reveal',IO.reveal);
 			IO.socket.on('addRowToHistory',IO.addRowToHistory);
 			IO.socket.on('Winner', App.Player.thereIsAWinner);
@@ -237,7 +237,7 @@ jQuery(function($){
 						//alert(data.sentFrom+' '+App.Player.myid);
 						var p = data.sentFrom;
 						//p++;
-						var player1 = {sentTo:id, sentFrom :p, gameId : App.gameId, offerId :  data.offerId};	
+						var player1 = {sentTo:App.Player.myid, sentFrom :p, gameId : App.gameId, offerId :  data.offerId};	
 						IO.socket.emit('rejectOffer',player1);
 					//	$('#historyRow'+id+' tr:first td:eq(1)').html('made an offer of');
 						$(this).parent().parent().attr('id','offerStatus'+id).html('<div><font color="red">you rejected</font></div>');
@@ -447,10 +447,10 @@ jQuery(function($){
 			$('#addOffer').remove();
 		},
 		
-	/*	counterOffer : function(){
+		counterOffer : function(){
 			App.Player.onAddOfferClick();
-		}
-	*/	
+		},
+		
 		movePlayer : function(data){
 			App.Player.Chips[data.playerId][data.chip]--;
 			var c = data.chip*2 +1;
