@@ -445,7 +445,7 @@ jQuery(function($){
 		removeOfferButton : function(){
 			$('#downTable').html('');
 			$('#addOffer').remove();
-		}
+		},
 		
 	/*	counterOffer : function(){
 			App.Player.onAddOfferClick();
@@ -844,7 +844,6 @@ jQuery(function($){
 			App.Player.num_of_offers_per_player = data.players[data.playerID].num_of_offers_per_player;
 			App.Player.reveal=data.players[data.playerID].reveal;
 			App.Player.players = data.players;
-			App.Player.autoCounterOffer = data.autoCounterOffer;
 			//NEED TO ADD
 			//canSeeChips
 			//canSeeLocations
@@ -1231,7 +1230,6 @@ jQuery(function($){
 			num_of_offers_per_player: 0,
 			canSeeChips: 0,
 			canSeeLocations: 0,
-			autoCounterOffer : 0,
 			
 			
         	/**
