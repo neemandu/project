@@ -1229,7 +1229,8 @@ try{
 	var data = {
 			reasonForEndingTheGame : reason,
 			action : 'gameOver',
-			playerId : room.playerList[winner].GUIid
+			playerId : room.playerList[winner].GUIid,
+			score : room.playerList[winner].score
 	}
 	gameLogger.debug('winner: '+room.playerList[winner].name);
 	gameLogger.debug('score: '+room.playerList[winner].score);
