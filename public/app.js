@@ -1393,12 +1393,12 @@ jQuery(function($){
 			//	var k=0;
 				for (var k =0; k<App.Player.chipsImages.length;k++){
 				calc = 100/12;
-				$('#colorsToOffer'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
+				$('#colorsToOffer'+ App.Player.currentCount+' tr').append('<td align="center" style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
 				}
 				
 				for(var k=0;k<App.Player.chipsImages.length;k++){
 				calc = 100/12;
-				$('#colorsToGet'+ App.Player.currentCount+' tr').append('<td style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
+				$('#colorsToGet'+ App.Player.currentCount+' tr').append('<td align="center" style="width:'+calc+'px;">'+App.Player.chipsImages[k]+'</td><td style="width:calc(100% / 12);"><input align="left" type="text" min="1" style="width:100%; height:auto;"></td>');
 				}
 					
 				var icons = [];
