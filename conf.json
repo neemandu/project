@@ -1,5 +1,5 @@
 {
-	"Type" : "runConfig",
+	"Type" : "createConfig",
 	
  	"Action" : "joinGame",
 	
@@ -45,24 +45,22 @@
 			"GAME_NAME" : "Game_1",		
 			
 			"Board" : "board_1",
-				
+			"AutomaticChipSwitch" : 1,
 			"roles" : {
 					"proposer" : {
-							"canOfferTo" : ["responder"]
+							"canOfferTo" : ["responder"],
+							"canOffer" : 1
+							
 					},
 					"responder" : {
-							"canSeeChips" : 1,
-							"canSeeLocations" : 1,
-							"canTransfer" : 1
-							
+						
 					},
 					"customer" : {
 							"canMove" : 1,
-							"canSeeChips" : 1,
-							"canSeeLocations" : 1						
+							"canSeeChips" : 0,
+							"canSeeLocations" : 0						
 					},
 					"provider" : {
-							"canMove" : 0,
 							"canSeeChips" : 1,
 							"canSeeLocations" : 1						
 					}
@@ -115,11 +113,7 @@
 						"players_roles" : [
 							{
 								"id" : 0,
-								"role" : ["responder"],
-								"additional_actions" : {
-									"canMove" : 0,
-									"canOfferTo" : []
-								}
+								"role" : ["responder"]
 							},
 							{
 								"id" : 1,
@@ -143,23 +137,21 @@
 								"id" : 0,
 								"additional_actions" : {
 									"canMove" : 0,
-									"canTransfer" : 0,
+									"canOffer" : 0,
 									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canMove" : 0,
-									"canTransfer" : 0,
+									"canOffer" : 0,
 									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canMove" : 0,
-									"canTransfer" : 0,
+									"canOffer" : 0,
 									"canOfferTo" : []
 								}
 							}
@@ -174,71 +166,63 @@
 								"additional_actions" : {
 									"canMove" : 0
 								}
-							},
-							{
-								"id" : 1,
-								"additional_actions" : {
-									"canMove" : 0
-								}
-							},
-							{
-								"id" : 2,
-								"additional_actions" : {
-									"canMove" : 0
-								}
 							}
 						]
 					},
 					"phase3" : {
 						"name" : "movement",
-						"time" : 30000,
+						"time" : 60000,
 						"players_roles" : [
 							{
 								"id" : 0,
 								"additional_actions" : {
-									"canMove" : 1,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0
 								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canMove" : 1,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0,
+									"canMove" : 1
+									
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canMove" : 1,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0,
+									"canMove" : 1
 								}
 							}
 						]
 					},
 					"phase4" : {
 						"name" : "feedback",
-						"time" : 5000,
+						"time" : 1000,
 						"players_roles" : [
 							{
 								"id" : 0,
 								"additional_actions" : {
 									"canMove" : 0,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0
 								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canMove" : 0,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canMove" : 0,
-									"canOfferTo" : []
+									"canOfferTo" : [],
+									"canOffer" : 0
 								}
 							}
 						]
@@ -265,7 +249,7 @@
 						"basic_role" : ["customer"],
 						"locationX" : 5,
 						"locationY" : 4,
-						"chips": [5,1,5,1,5]
+						"chips": [10,10,10,10,10]
 					},
 					{
 						"id" : 1,
@@ -273,7 +257,7 @@
 						"basic_role" : ["provider"],
 						"locationX" : 0,
 						"locationY" : 0,
-						"chips": [4,5,4,5,5]
+						"chips": [10,10,10,10,10]
 					},
 					{
 						"id" : 2,
@@ -281,21 +265,10 @@
 						"basic_role" : ["provider"],
 						"locationX" : 0,
 						"locationY" : 8,
-						"chips": [5,1,5,3,6]
+						"chips": [10,10,10,10,10]
 					}
 				],
-			"agents" : [
-					{
-						"id" : 5,
-						"listening_port" : 6060,
-						"IP" : "127.0.0.1",
-						"name": "agent1",
-						"basic_role" : ["customer"],
-						"locationX" : 5,
-						"locationY" : 4,
-						"chips": [5,1,5,1,5]
-					}
-				]
+			"agents" : []
 		}
 	]		
 }
