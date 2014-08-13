@@ -767,7 +767,7 @@ jQuery(function($){
 							}	
 						}
 						else{
-							App.Player.goals = data.players[j].goals;
+							//App.Player.goals = data.players[j].goals;
 							var url = "Pictures/goal.png";
 							if(data.players[j].goals[k].real==0){
 								url = "Pictures/goalfake.png";
