@@ -343,10 +343,12 @@ var transferData = {
 	"gameId" : gameId
 	};
 	
-var acceptData = {
+
+
+var revealData = {
 	"Type" : "Agent",
 	
- 	"Action" : "acceptData",
+ 	"Action" : "revealData",
 	
 	"ID" : 0,
 
@@ -354,6 +356,16 @@ var acceptData = {
 
 	};
 	
+var dontRevealData = {
+	"Type" : "Agent",
+	
+ 	"Action" : "dontRevealData",
+	
+	"ID" : 0,
+
+	"gameId" : gameId
+
+	};
 
 write(conf);
 //write(joinData);

@@ -60,7 +60,23 @@ exports.doAction = function(sock, data){
 		case "acceptOffer" :
 			return acceptOffer(data);
 			break;
+		case "revealData" :
+			return revealData(data);
+			break;
+		case "dontRevealData" :
+			return dontRevealData(data);
+			break;
 	}
+}
+function revealData(data){
+	console.log('revealData');
+	data.agent = true;
+	return agx.revealData(data);
+}
+function dontRevealData(data){
+	console.log('dontRevealData');
+	data.agent = true;
+	return agx.dontRevealData(data);
 }
 
 function joinGame(data){

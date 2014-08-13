@@ -96,9 +96,6 @@ exports.ConfigurtionToDataBase = function(conf){
 
 exports.runConfigurtion = function(confsToRun, i){
 	try{
-
-
-	console.log('i: '+i);
 	conf = tester.getConf(confsToRun[i].confID);
 	console.log('conf.Global.ID: '+conf.Global.ID);
 	numOfColors = conf.Global.Colors.length;
@@ -143,11 +140,21 @@ exports.runConfigurtion = function(confsToRun, i){
  *                             *
  ******************************* */
 function dontReveal(data){
-	revHelp(data, false);
+	try{
+		revHelp(data, false);
+	}
+	catch(e){
+		error('dontReveal '+e);
+	}
 }
  
 function reveal(data){
-	revHelp(data, true);
+	try{
+		revHelp(data, true);
+	}
+	catch(e){
+		error('reveal '+e);
+	}
 }
 
 function revHelp(data, bool){
@@ -175,20 +182,25 @@ function endReveal(room){
 } 
  
 function playerDisconnect(){
-	gameLogger.log('playerDisconnect');
-	var rooms = io.sockets.manager.roomClients[gameSocket.id];
-	gameLogger.log('gameSocket.id: '+gameSocket.id+' has left the building');
-       for(var roomNumber in rooms){	
-	   var room = gameSocket.manager.rooms[roomNumber];
-				gameLogger.log('1 room: '+roomNumber);
-	   
-		   if(room.playerList != null){
-			   gameLogger.log('2 room: '+roomNumber);
-			   room.gameOver = true;
-			   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');   
+	try{
+		gameLogger.log('playerDisconnect');
+		var rooms = io.sockets.manager.roomClients[gameSocket.id];
+		gameLogger.log('gameSocket.id: '+gameSocket.id+' has left the building');
+		   for(var roomNumber in rooms){	
+		   var room = gameSocket.manager.rooms[roomNumber];
+					gameLogger.log('1 room: '+roomNumber);
+		   
+			   if(room.playerList != null){
+				   gameLogger.log('2 room: '+roomNumber);
+				   room.gameOver = true;
+				   gameOver(room, room.conf.Games[room.currentGame], 'playerDisconnect');   
+			   }
+			   gameSocket.leave(roomNumber);
 		   }
-		   gameSocket.leave(roomNumber);
-       }
+	}
+	catch(e){
+		error('playerDisconnect '+e);
+	}
 }
 
 
@@ -1948,6 +1960,17 @@ exports.acceptOffer = function(data){
 	updateChips(data);
 }
 
+exports.revealData = function(data){
+	gameLogger.log('agx.reveal');
+	data.id = data.ID;
+	reveal(data);
+}
+
+exports.dontRevealData = function(data){
+	gameLogger.log('agx.dontReveal');
+	data.id = data.ID;
+	dontReveal(data);
+}
 
 
 exports.doesSpecialIDExist = function(id){
