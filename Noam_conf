@@ -1,0 +1,196 @@
+{
+	"Type" : "createConfig",
+	
+ 	"Action" : "joinGame",
+	
+	"confsToRun" : [
+
+		{
+			"confID" : 2,
+			
+			"playerList" : [0,1],
+			
+			"agentList" : []				
+		}
+	],
+	
+	"ID" : 5,
+	
+ 	"Global" : {
+		
+		"ID" : 2,
+		
+		"RESEARCHER_NAME" : "Kobi",
+				
+		"Colors" : ["pink","blue","purple","green"],
+
+		"boards" : {
+			"board_1" :[[1,0,0,1],
+							[3,0,0,2],
+							[1,0,0,1],
+							[1,0,0,1],
+							[3,0,0,2],
+							[1,0,0,1]]
+		}					
+	},
+	
+	"Games" : [
+		{
+			"GAME_NAME" : "Game_1",		
+			
+			"Board" : "board_1",
+			"AutomaticChipSwitch" : 1,
+			"AutoCounterOffer": 1,
+			"roles" : {
+					"proposer" : {
+							"canOfferTo" : ["responder"],
+							"canOffer" : 1
+							
+					},
+					"responder" : {}
+			},
+			"rounds" : {
+				"General" : {},
+				"rounds_defenitions" : [
+					{
+						"name": "1",
+						"phases_in_round" : ["phase1","phase2","phase3"], 
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role" : []
+							},
+							{
+								"id" : 1,
+								"role" : []
+							}
+						]
+					}
+				]
+			},
+			"phases" : {  	
+					"phase1" : {
+						"name" : "revelation",
+						"time" : -1,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"revealGoal" : 1
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"revealGoal" : 1
+								}
+							}
+						]
+					},
+					"phase2" : {
+						"name" : "proposal",
+						"time" : 20000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"role": ["proposer"],
+								"additional_actions" : {
+									"num_of_offers_per_player" : 1
+								}
+							},
+							{
+								"id" : 1,
+								"role": ["responder"]
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 30000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1	
+								}
+							}
+						]
+					}	
+				},
+					
+
+			"GameConditions" :{
+				    "GoalCordinates": [],
+					"gameGoal" : "max_points",
+					"endConditions" : {
+						"endOfTime" : true
+						},
+					"score" : { 
+						"onReachGoalPlayerView" : 100, 
+						"distanceFromGoal" : -10,
+						"pointsPerChips" : 5 
+					}
+			},   
+			"players" : [
+					{
+						"id" : 0,
+						"name": "player1",
+						"basic_role" : [],
+						"locationX" : 0,
+						"locationY" : 3,
+						"chips": [10,14,20,10],
+						"Goals":[
+							{
+								"type": "plain",
+								"x": 3,
+								"y": 3,
+								"real": 1,
+								"isShown": 1
+							},
+							{
+								"type": "plain",
+								"x": 5,
+								"y": 3,
+								"real": 0,
+								"isShown": 1
+							}
+						],
+						"isGoal": 0 
+						
+					},
+					{
+						"id" : 1,
+						"name": "player2",
+						"basic_role" : [],
+						"locationX" : 5,
+						"locationY" : 0,
+						"chips": [10,14,10,3],
+						"Goals":[
+							{
+								"type": "plain",
+								"x": 0,
+								"y": 0,
+								"real": 1,
+								"isShown": 1
+							},
+							{
+								"type": "plain",
+								"x": 2,
+								"y": 0,
+								"real": 0,
+								"isShown": 1
+							}
+						],
+						"isGoal" : 0 
+					}
+				],
+			"agents" : []
+		}
+	]		
+}
