@@ -14,29 +14,7 @@ exports.initGame = function(data){
 	var del = "\r\n";
 	var res = "";
 	console.log('tester Server!!!!!');
-//	try{
-	//	gameLogger.log('*************************************');
-	//	gameLogger.log(data.toString().slice(0, -4));
-	//	gameLogger.log('*************************************');
-	//	gameLogger.log('********START - initGame********');
-	//	var re = /\0/g;
-		//var str = data.toString().replace(re, "");
-		/*var o = JSON.parse(str);
-		var s = data.toString().slice(0,-4);
-		for(var i=0; i<s.length; i++){
-			
-			gameLogger.log(data.toString().charCodeAt(i));
-		}
-		
-		gameLogger.log('*********');
-		console.log('*********');*/
-	//	gameLogger.log(JSON.stringify(data.toString()));
-		var conf = data;
-	//	gameLogger.log('*********END  -   initGame********');
-//	}
-//	catch(e){
-	//	return "Bad conf file. "+e+del;
-	//}
+	var conf = data;
 	console.log('configuration file received');
 	if(conf.Type === undefined){
 		return noType;
