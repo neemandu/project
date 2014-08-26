@@ -436,7 +436,7 @@ jQuery(function($){
 						}
 					}
 					else{
-						$('#board table tr:eq('+App.Player.goals[i].x+') td:eq('+App.Player.goals[i].y+')').html('');
+						$('#board table tr:eq('+App.Player.players[id].goals[i].x+') td:eq('+App.Player.players[id].goals[i].y+')').html('');
 					}
 				}
 				
@@ -746,7 +746,7 @@ jQuery(function($){
 				}
 				
 */				for(var j=0;j<data.players.length;j++){
-					if(data.players[j].goal == true){
+					if(data.players[j].isGoal == true){
 						var url = "Pictures/flagTroop"+data.players[j].id+"G.png" ;
 						App.Player.playerImages[j]= url;
 					}
