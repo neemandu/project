@@ -1,0 +1,41 @@
+Status Codes 
+The values returned from server for each of the messages sent to it. 
+According to each of the status codes returned from the server, it’s possible to know where the 
+communicaion goes wrong. 
+createConfig /runConfig status codes: 
+200: Ok, the server received a good message.
+301: Illegal player number in the players list. 
+302: One of the players in one of the rounds is not configured. 
+303: Two or more players have the same name. 
+305: One or more of the boards’ values is illegal. (e.g – color’s number larger then 5) 
+306: there are too much colores configured in the conf. (Max amount of colors is 6) 
+307: Two or more games has identical names. 
+308: One or more of the players’ location is invalid. 
+309: One of the roles in the rounds/basic_roles attributes is not configured. 
+310: one of the phases in the rounds is not configured.
+311: essential attribute is missing in “Global” scope. 
+312: essential attribute is missing in “Games” scope. 
+315: essential attribute is missing in “rounds” scope. 
+316: essential attribute is missing in “players” scope. 
+317: no “confsToRun” tag. 
+318: one or more of the conf's id does not exist. 
+319: conf id tag does not exist in runConfig. 
+320: PlayerList tag does not exist in runConfig. 
+321: agentList tag does not exist in runConfig. 
+322: player is not in the players/agents list. 
+323: AutomaticChipSwitch attribute is missing. 
+324: validate runConfig fail. Agents’ status codes 
+400: illegal action value in agent's JSON. 
+401: illegal join value in agent's JSON. 
+402: illegal move value in agent's JSON. 
+403: illegal send offer value in agent's JSON. 
+404: illegal reject offer value in agent's JSON. 
+405: illegal accept offer value in agent's JSON. 
+406: specialID already exist - should choose a different one. 
+407: agentspecialID does not exist. 
+408: listening_port attribute does not exist. 
+409: ID attribute does not exist. 
+410: IP attribute does not exist. 
+411: bad IP address. 
+412: wrong agent id. 
+413: wrong game id. 
