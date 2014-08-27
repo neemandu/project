@@ -86,12 +86,12 @@ var testerIO = net.createServer(function (c)
 		//	console.log(res);
 			c.write(res);
 			c.pipe(c);
-			console.log('data finished: '+i);
+			//console.log('data finished: '+i);
 			
 		}
 		catch(e){
 	
-			console.log('data not finished: '+i);
+		//	console.log('data not finished: '+i);
 		//	c.write('data not finished: '+i+'\r\n');
 		//	c.pipe(c);
 		}	

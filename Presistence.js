@@ -26,7 +26,7 @@ sequelize
 
 var User = sequelize.define('Users', {
 	Id :{type: Sequelize.INTEGER, primaryKey: true},
-	Score :{type: Sequelize.INTEGER}},
+	Score :Sequelize.INTEGER},
 	{getterMethods: {getUser: function () {
 		return [["Users"],["Id",this.getDataValue('Id')],["Score",this.getDataValue('Score')],
 		        ["createdAt",this.getDataValue('createdAt')],["updatedAt",this.getDataValue('updatedAt')]];
@@ -94,6 +94,19 @@ var Game = sequelize.define('Games', {
 	}}
 	}); 
 
+	
+var Movement = sequelize.define('Movements', {
+	Soruce : {type: Sequelize.INTEGER, primaryKey: true},
+	Target : Sequelize.STRING},	
+	{getterMethods: {getMovement: function () {
+		return [["Movements"],
+		        ["Game_id",this.getDataValue('Game_id')],
+		        ["Conf",this.getDataValue('Conf')],
+		        ["createdAt",this.getDataValue('createdAt')],
+		        ["updatedAt",this.getDataValue('updatedAt')]];
+	}}
+	}); 	
+	
 //Configuration.hasMany(Game);
 //Game.belongsTo(Configuration);
 
@@ -163,8 +176,33 @@ var Role = sequelize.define('Roles', {
 		        ["updatedAt",this.getDataValue('updatedAt')]];
 	}}
 	}) ;
+	
+var Offer = sequelize.define('Offers', {
+	Id : {type: Sequelize.INTEGER, primaryKey: true},
+	Form : {type: Sequelize.STRING, primaryKey: true},
+	To : {type: Sequelize.STRING, primaryKey: true},
+	Chips1 : Sequelize.INTEGER  ,
+	Chips2 : Sequelize.INTEGER  ,
+	Chips3 : Sequelize.INTEGER  ,
+	Chips4 : Sequelize.INTEGER  ,
+	Chips5 : Sequelize.INTEGER  ,
+	Chips6 : Sequelize.INTEGER  }, 
+	{getterMethods: {getOffer: function () {
+		return [["Offers"],
+		        ["Form",this.getDataValue('Form')],
+		        ["To",this.getDataValue('To')],
+		        ["Chips1",this.getDataValue('Chips1')],
+		        ["Chips2",this.getDataValue('Chips2')],
+		        ["Chips3",this.getDataValue('Chips3')],
+		        ["Chips4",this.getDataValue('Chips4')],
+		        ["Chips5",this.getDataValue('Chips5')],
+		        ["Chips6",this.getDataValue('Chips6')],
+		        ["createdAt",this.getDataValue('createdAt')],
+		        ["updatedAt",this.getDataValue('updatedAt')]];
+	}}
+	}) ;
 
-
+	
 
 
 //var Phase_sequence = sequelize.define('Phase_sequence', {
@@ -276,15 +314,19 @@ module.exports = {
 		syncDatabase : function(){
 			sequelize.sync({ force: true }).complete(function(err) {
 				if (!!err) {
-					console.log(err)
+					return "fail";
 				} else {
-					console.log('synced')
+				
+					
 				}
 			}).on('success', function() {
 
+			
 
-
-			})},
+			})
+			return "pass";
+			}
+			,
 
 			addUser : function(userId){
 				var user1 = User.create({
@@ -298,6 +340,7 @@ module.exports = {
 						//console.log(logfileList);
 						addToCSV(user1.getUser,'createUsers');
 					}});
+					return "pass";
 
 
 
@@ -306,23 +349,25 @@ module.exports = {
 			addNewGame : function(gameID,conf){
 
 
-				//console.log("-----------------------______________________________-");
-				//console.log(gameID+" " +game);
-				async.each(conf.Games, function(item, callback){
+				//console.log(conf);
 					var game1 = Game.create({
 						Game_id : gameID,
-						Conf : item.GAME_NAME,
+						Conf : conf.GAME_NAME,
 						//Game_goal : goal,
 						//Board_id : board
 					}).complete(function(err,game1) {
 						if (!!err) {
 							console.log('The instance has not been saved:', err)
+							return "fail";
 						} else {
 							addToCSV(game1.getGame,'createGames');
 						}})
-				});
+					
+				
 
-
+				
+				
+				return "pass";	
 
 			},
 
@@ -350,7 +395,87 @@ module.exports = {
 					} else {
 						addToCSV(player1.getPlayer,'createPlayers');
 					}});
+					return "pass";
+	
 
+
+			},
+			
+			
+			
+			addOffer : function(offer){
+
+
+				//console.log("-----------------------______________________________-");
+				//console.log(gameID+" " +game);
+
+				var offer1 = Offer.create({
+					Id : 0,
+					From : offer.from,
+					To : offer.to,
+					Chips1 : offer.chips[0],
+					Chips2 : offer.chips[1],
+					Chips3 : offer.chips[2],
+					Chips4 : offer.chips[3],
+					Chips5 : offer.chips[4],
+					Chips6 : offer.chips[5],
+				}).complete(function(err,offer1) {
+					if (!!err) {
+						console.log('The instance has not been saved:', err)
+					} else {
+						addToCSV(offer1.getPlayer,'createOffers');
+					}});
+					return "pass";
+	
+
+
+			},
+			
+			
+			offerToTransfer : function(offer){
+
+
+				//console.log("-----------------------______________________________-");
+				//console.log(gameID+" " +game);
+
+				var offer1 = Offer.create({
+					Id : 1,
+					From : offer.from,
+					To : offer.to,
+					Chips1 : offer.chips[0],
+					Chips2 : offer.chips[1],
+					Chips3 : offer.chips[2],
+					Chips4 : offer.chips[3],
+					Chips5 : offer.chips[4],
+					Chips6 : offer.chips[5],
+				}).complete(function(err,offer1) {
+					if (!!err) {
+						console.log('The instance has not been saved:', err)
+					} else {
+						addToCSV(offer1.getPlayer,'createOffers');
+					}});
+					return "pass";
+	
+
+
+			},
+			
+			
+			addMovement : function(movement){
+
+
+				//console.log("-----------------------______________________________-");
+				//console.log(gameID+" " +game);
+
+				var movement1 = Movement.create({
+				}).complete(function(err,movement1) {
+					if (!!err) {
+						//console.log('The instance has not been saved:', err)
+					} else {
+						addToCSV(movement1.getMovement,'createMovement');
+					}});
+					return "pass";
+	
 
 
 			},

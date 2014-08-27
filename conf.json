@@ -1,18 +1,7 @@
 {
-	"Type" : "createConfig",
+	"Type" : "runConfig",
 	
- 	"Action" : "joinGame",
-	
-	"confsToRun" : [
-
-		{
-			"confID" : 2,
-			
-			"playerList" : [0,1,2],
-			
-			"agentList" : []				
-		}
-	],
+ 	"Action" : "moveUp",
 	
 	"ID" : 5,
 	
@@ -21,6 +10,10 @@
 		"ID" : 2,
 		
 		"RESEARCHER_NAME" : "Kobi",
+		
+		"playerList" : [0,1,2],
+		
+		"agentList" : [],
 				
 		"Colors" : ["pink","blue","purple","green","yellow"],
 
@@ -45,22 +38,24 @@
 			"GAME_NAME" : "Game_1",		
 			
 			"Board" : "board_1",
-			"AutomaticChipSwitch" : 1,
+				
 			"roles" : {
 					"proposer" : {
-							"canOfferTo" : ["responder"],
-							"canOffer" : 1
-							
+							"canOfferTo" : ["responder"]
 					},
 					"responder" : {
-						
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1,
+							"canTransfer" : 1
+							
 					},
 					"customer" : {
 							"canMove" : 1,
-							"canSeeChips" : 0,
-							"canSeeLocations" : 0						
+							"canSeeChips" : 1,
+							"canSeeLocations" : 1						
 					},
 					"provider" : {
+							"canMove" : 0,
 							"canSeeChips" : 1,
 							"canSeeLocations" : 1						
 					}
@@ -113,7 +108,11 @@
 						"players_roles" : [
 							{
 								"id" : 0,
-								"role" : ["responder"]
+								"role" : ["responder"],
+								"additional_actions" : {
+									"canMove" : 0,
+									"canOfferTo" : []
+								}
 							},
 							{
 								"id" : 1,
@@ -131,27 +130,29 @@
 			"phases" : {  	
 					"phase1" : {
 						"name" : "strategy",
-						"time" : 5000,
+						"time" : 10000,
 						"players_roles" : [
 							{
 								"id" : 0,
 								"additional_actions" : {
 									"canMove" : 0,
-									"canOffer" : 0,
+									"canTransfer" : 0,
 									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canOffer" : 0,
+									"canMove" : 0,
+									"canTransfer" : 0,
 									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canOffer" : 0,
+									"canMove" : 0,
+									"canTransfer" : 0,
 									"canOfferTo" : []
 								}
 							}
@@ -166,63 +167,71 @@
 								"additional_actions" : {
 									"canMove" : 0
 								}
-							}
-						]
-					},
-					"phase3" : {
-						"name" : "movement",
-						"time" : 60000,
-						"players_roles" : [
-							{
-								"id" : 0,
-								"additional_actions" : {
-									"canOfferTo" : [],
-									"canOffer" : 0
-								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canOfferTo" : [],
-									"canOffer" : 0,
-									"canMove" : 1
-									
+									"canMove" : 0
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canOfferTo" : [],
-									"canOffer" : 0,
-									"canMove" : 1
+									"canMove" : 0
+								}
+							}
+						]
+					},
+					"phase3" : {
+						"name" : "movement",
+						"time" : 45000,
+						"players_roles" : [
+							{
+								"id" : 0,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 1,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
+								}
+							},
+							{
+								"id" : 2,
+								"additional_actions" : {
+									"canMove" : 1,
+									"canOfferTo" : []
 								}
 							}
 						]
 					},
 					"phase4" : {
 						"name" : "feedback",
-						"time" : 1000,
+						"time" : 5000,
 						"players_roles" : [
 							{
 								"id" : 0,
 								"additional_actions" : {
 									"canMove" : 0,
-									"canOfferTo" : [],
-									"canOffer" : 0
+									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 1,
 								"additional_actions" : {
-									"canOfferTo" : [],
-									"canOffer" : 0
+									"canMove" : 0,
+									"canOfferTo" : []
 								}
 							},
 							{
 								"id" : 2,
 								"additional_actions" : {
-									"canOfferTo" : [],
-									"canOffer" : 0
+									"canMove" : 0,
+									"canOfferTo" : []
 								}
 							}
 						]
@@ -249,7 +258,7 @@
 						"basic_role" : ["customer"],
 						"locationX" : 5,
 						"locationY" : 4,
-						"chips": [10,10,10,10,10]
+						"chips": [5,1,5,1,5]
 					},
 					{
 						"id" : 1,
@@ -257,7 +266,7 @@
 						"basic_role" : ["provider"],
 						"locationX" : 0,
 						"locationY" : 0,
-						"chips": [10,10,10,10,10]
+						"chips": [4,5,4,5,5]
 					},
 					{
 						"id" : 2,
@@ -265,10 +274,21 @@
 						"basic_role" : ["provider"],
 						"locationX" : 0,
 						"locationY" : 8,
-						"chips": [10,10,10,10,10]
+						"chips": [5,1,5,3,6]
 					}
 				],
-			"agents" : []
+			"agents" : [
+					{
+						"id" : 5,
+						"listening_port" : 6060,
+						"IP" : "127.0.0.1",
+						"name": "agent1",
+						"basic_role" : ["customer"],
+						"locationX" : 5,
+						"locationY" : 4,
+						"chips": [5,1,5,1,5]
+					}
+				]
 		}
 	]		
 }

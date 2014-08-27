@@ -49,7 +49,74 @@ if (DATABASE){
 }
 
 
+var content;
 
+function uploadDemoConf() {
+	
+
+	fs.readFile('./conf.json', function read(err, data) {
+		if (err) {
+			throw err;
+		}
+		content = data;
+		console.log(content);
+		return processFile();         
+});
+return pass;
+
+
+}
+
+function getSimpleConf() {
+  var fs = require('fs');
+	var file = __dirname + '/conf.json';
+ 
+	fs.readFile(file, 'utf8', function (err, data) {
+	if (err) {
+		console.log('Error: ' + err);
+    return;
+	}else{
+	//console.log(data);
+
+	return	;
+	}
+}
+)
+}	
+
+var simpleConf = {"GAME_NAME": "Game_1", "goals":8};
+var simpleplayer1 = {"externalId" : "10",
+					"location": {"x": "4","y":"3"},
+					"score" : 0,
+					"chips" : [1,2,3,4,5,6]};
+var simpleplayer2 = {"externalId" : "15",
+					"location": {"x": "1","y":"2"},
+					"score" : 0,
+					"chips" : [6,7,8,9,0,10]};
+var simpleOffer = {	"from" : "15",
+					"to" : "10",
+					"chips" : [0,0,1,1,0,10]};
+var simpleMovement ={"s" : "15",
+					"t" : "10",
+					"chips" : [0,0,1,1,0,10]};
+					
+exports.preformTests = function(){
+	var report = "initialize server test....\n"
+	console.log("initialize server test....");
+	report = report + "\n Test 1. sync database: " + presistance.syncDatabase();
+	//console.log(presistance.syncDatabase());
+	report = report + "\n Test 2. add user A: " + presistance.addUser(1);
+	report = report + "\n Test 3. add user B: " + presistance.addUser(2);
+	report = report + "\n Test 4. add New game:" + presistance.addNewGame(0,simpleConf);
+	report = report + "\n Test 5. add Player 1:" + presistance.addPlayer(simpleplayer1);
+	report = report + "\n Test 6. add Player 2:" + presistance.addPlayer(simpleplayer2);
+	report = report + "\n Test 6. add Offer:" + presistance.addOffer(simpleOffer);
+	report = report + "\n Test 7. add Transfer: " +presistance.offerToTransfer(simpleOffer);
+	report = report + "\n ------\n finish! " ;
+
+	
+	return report;
+}
 /**
  * This function is called by index.js to initialize a new game instance.
  *

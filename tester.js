@@ -13,7 +13,7 @@ var OK = 200;
 exports.initGame = function(data){
 	var del = "\r\n";
 	var res = "";
-	console.log('tester Server!!!!!');
+	//console.log('tester Server!!!!!');
 	var conf = data;
 	console.log('configuration file received');
 	if(conf.Type === undefined){
@@ -26,6 +26,9 @@ exports.initGame = function(data){
 			break;
 		case "runConfig" :
 			res = runConfig(conf);
+			break;
+		case "ServerTests" :
+			res = agx.preformTests();
 			break;
 		case "Agent" :
 			res = doAction(socket, conf);
@@ -64,7 +67,7 @@ runConfig = function(conf){
 
 	console.log('status: '+status);
 	if(status === OK){
-		console.log('status is OK!!!');
+		//console.log('status is OK!!!');
 		if(conf.confsToRun.length > 0){
 			agx.runConfigurtion(conf.confsToRun, 0);
 		}
@@ -94,3 +97,5 @@ exports.getConf = function(id){
 	}
 	return co;
 }
+
+
