@@ -25,8 +25,8 @@ var idRoomPair ={};
 var numOfColors = 6;
 var numOfChips = 15;
 var colorArray = new Array("purpleOfferSquare","LGOfferSquare","LYOfferSquare","pinkOfferSquare","LBOfferSquare","DBOfferSquare","default");
-var newRoomsQueue = require('./Queue');
-newRoomsQueue.Queue();
+
+
 var admin = false;
 var conf;
 
